@@ -1,7 +1,18 @@
-import { Model, Column, Table, DataType, AllowNull, CreatedAt, PrimaryKey, Default } from 'sequelize-typescript'
-//string boolean number bigint Date Buffer
+import {
+  Model,
+  Column,
+  Table,
+  DataType,
+  AllowNull,
+  CreatedAt,
+  UpdatedAt,
+  PrimaryKey,
+  Default,
+} from 'sequelize-typescript'
+
 @Table({
   tableName: 'user',
+  timestamps: true,
 })
 export class User extends Model<User> {
   @AllowNull(false)
@@ -15,7 +26,7 @@ export class User extends Model<User> {
 
   @AllowNull(false)
   @Column(DataType.STRING(100))
-  email: number
+  email: string
 
   @AllowNull(true)
   @Default(null)
@@ -26,6 +37,11 @@ export class User extends Model<User> {
   @CreatedAt
   @Column(DataType.DATE)
   created_at: Date
+
+  @AllowNull(true)
+  @UpdatedAt
+  @Column(DataType.DATE)
+  updated_at: Date
 
   @AllowNull(true)
   @Default(null)

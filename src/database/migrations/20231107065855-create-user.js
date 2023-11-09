@@ -10,6 +10,7 @@ module.exports = {
         '`email` varchar(100) NOT NULL, ' +
         '`img_url` varchar(1000) DEFAULT NULL,' +
         '`created_at` datetime DEFAULT CURRENT_TIMESTAMP,' +
+        '`updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,' +
         '`refresh_token` varchar(250) DEFAULT NULL,' +
         "`thema_color` int NOT NULL DEFAULT '1'," +
         'PRIMARY KEY (`id`) );'
