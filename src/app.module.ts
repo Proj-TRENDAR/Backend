@@ -4,7 +4,9 @@ import { SequelizeModule } from '@nestjs/sequelize'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { User } from './user/user.model'
+import { Social } from './social/social.model'
 import { UserModule } from './user/user.module'
+import { SocialModule } from './social/social.module'
 
 @Module({
   imports: [
@@ -28,11 +30,12 @@ import { UserModule } from './user/user.module'
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWD,
       database: process.env.DB_DATABASE,
-      models: [User],
+      models: [User, Social],
       autoLoadModels: true, // models will be loaded automatically
       synchronize: true, //  automatically loaded models will be synchronized
     }),
     UserModule,
+    SocialModule,
   ],
   controllers: [AppController],
   providers: [AppService],

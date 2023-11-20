@@ -8,6 +8,7 @@ import {
   UpdatedAt,
   PrimaryKey,
   Default,
+  HasMany,
 } from 'sequelize-typescript'
 
 @Table({
@@ -52,4 +53,7 @@ export class User extends Model<User> {
   @Default(1)
   @Column(DataType.NUMBER)
   thema_color: number
+
+  @HasMany(() => Social)
+  social: Social[]
 }

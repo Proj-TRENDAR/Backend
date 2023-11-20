@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/sequelize'
+import { Social } from '../social/social.model'
+
 import { CreateUserDto } from '../../dto/create-user.dto'
 import { User } from './user.model'
 
@@ -8,7 +10,9 @@ import { User } from './user.model'
 export class UserService {
   constructor(
     @InjectModel(User)
-    private userModel: typeof User
+    private userModel: typeof User,
+    @InjectModel(Social)
+    private socialModel: typeof Social
   ) {}
 
   async findAll(): Promise<User[]> {
@@ -20,6 +24,14 @@ export class UserService {
       where: {
         id,
       },
+      include: [
+        {
+          model: this.socialModel,
+          attributes: ['social', 'connected_at'],
+        },
+      ],
+    })
+  }
     })
   }
 
