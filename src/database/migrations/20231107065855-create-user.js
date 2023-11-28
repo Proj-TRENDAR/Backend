@@ -8,7 +8,7 @@ module.exports = {
         '`id` varchar(45) NOT NULL, ' +
         '`name` varchar(45) NOT NULL, ' +
         '`email` varchar(100) NOT NULL, ' +
-        '`img_url` varchar(1000) DEFAULT NULL,' +
+        '`img_url` TEXT DEFAULT NULL,' +
         '`created_at` datetime DEFAULT CURRENT_TIMESTAMP,' +
         '`updated_at` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,' +
         '`refresh_token` varchar(250) DEFAULT NULL,' +
