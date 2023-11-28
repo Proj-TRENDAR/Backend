@@ -2,11 +2,20 @@ import { NestFactory } from '@nestjs/core'
 import { ValidationPipe } from '@nestjs/common'
 import { AppModule } from './app.module'
 import { ConfigService } from '@nestjs/config'
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
   const configService = app.get(ConfigService)
   const port: number = configService.get('BACK_PORT')
+  const config = new DocumentBuilder()
+    .setTitle('TRENDAR')
+    .setDescription('TRENDAR API 문서입니다.')
+    .setVersion('1.0')
+    .build()
+  const document = SwaggerModule.createDocument(app, config)
+
+  SwaggerModule.setup('api', app, document)
 
   app.enableCors({
     origin: true, //url을 넣어도 됨.
