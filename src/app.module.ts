@@ -13,7 +13,8 @@ import { authenticationModule } from './auth/authentication/authentication.modul
   imports: [
     ConfigModule.forRoot({
       envFilePath: process.env.NODE_ENV == 'dev' ? '.dev.env' : '.prod.env',
-      isGlobal: true,
+      cache: true, // 한 번 읽은 환경 변수의 값을 캐싱하여 속도 향상
+      isGlobal: true, // ConfigModule을 다른 모듈에서불러와야 하는 번거로움 피함
       // Joi 추가 시 사용
       // validationSchema: Joi.object({
       //   NODE_ENV: Joi.string().valid('dev', 'prod').required(),
