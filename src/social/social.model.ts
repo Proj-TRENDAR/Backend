@@ -13,6 +13,7 @@ import { User } from '../user/user.model'
 
 @Table({
   tableName: 'social',
+  timestamps: false,
 })
 export class Social extends Model<Social> {
   @AllowNull(false)

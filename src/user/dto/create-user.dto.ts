@@ -39,4 +39,12 @@ export class CreateUserDto {
   @IsString()
   @IsOptional()
   imgUrl: string
+
+  @ApiProperty({
+    example: 'kakao, naver, google',
+    description: '소셜 로그인 플랫폼',
+  })
+  @IsString()
+  @IsNotEmpty()
+  social: string
 }

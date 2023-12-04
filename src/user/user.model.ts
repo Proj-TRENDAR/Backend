@@ -10,7 +10,7 @@ import {
   Default,
   HasMany,
 } from 'sequelize-typescript'
-
+import { Social } from '../social/social.model'
 @Table({
   tableName: 'user',
   timestamps: true,

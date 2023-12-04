@@ -7,6 +7,7 @@ import { User } from './user/user.model'
 import { Social } from './social/social.model'
 import { UserModule } from './user/user.module'
 import { SocialModule } from './social/social.module'
+import { authenticationModule } from './auth/authentication/authentication.module'
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { SocialModule } from './social/social.module'
     }),
     UserModule,
     SocialModule,
+    authenticationModule,
   ],
   controllers: [AppController],
   providers: [AppService],

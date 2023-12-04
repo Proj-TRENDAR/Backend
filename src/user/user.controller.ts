@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, UsePipes, ValidationPipe } from '@nestjs/common'
-import { CreateUserDto } from '../../dto/create-user.dto'
+import { CreateUserDto } from './dto/create-user.dto'
 import { User } from './user.model'
 import { UserService } from './user.service'
 import { ApiTags, ApiOperation, ApiCreatedResponse } from '@nestjs/swagger'
@@ -18,8 +18,8 @@ export class UserController {
 
   @Get(':id')
   @ApiOperation({ summary: '특정 유저 조회', description: '특정 유저 조회 API' })
-  findOne(@Param('id') id: string): Promise<User> {
-    return this.userService.findOne(id)
+  findSpecificUserUsingId(@Param('id') id: string): Promise<User> {
+    return this.userService.findSpecificUserUsingId(id)
   }
 
   @Post()
