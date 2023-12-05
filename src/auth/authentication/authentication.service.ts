@@ -55,7 +55,7 @@ export class AuthenticationService {
           client_id: process.env.KAKAO_CLIENT_ID,
           redirect_uri: process.env.KAKAO_REDIRECT_URL,
           code,
-          client_secret: process.env.eq4rbani5QgLHjT1D0Slmvvx9qVo1smT,
+          client_secret: process.env.KAKAO_CLIENT_SECRET,
         },
       })
       const kakaoUserInfo = await this.httpService.axiosRef.request({
