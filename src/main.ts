@@ -3,6 +3,7 @@ import { ValidationPipe } from '@nestjs/common'
 import { AppModule } from './app.module'
 import { ConfigService } from '@nestjs/config'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
+import * as cookieParser from 'cookie-parser'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
@@ -18,9 +19,10 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document)
 
   app.enableCors({
-    origin: true, //url을 넣어도 됨.
+    origin: ['http://localhost'], //url을 넣어도 됨.
     credentials: true,
   }) // cors 활성화
+  app.use(cookieParser())
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true, // auto-transformation(request의 payload가 nest의 dto에 맞게 type를 변환 시켜주는 옵션)

@@ -16,7 +16,7 @@ export class AuthenticationService {
     private readonly jwtService: JwtService
   ) {}
 
-  async oauthLogin(@Query('code') code: string, @Query('social') social: string): Promise<TokenResponse> {
+  async oauthLogin(code: string, social: string, res: any): Promise<TokenResponse> {
     console.log(code, social)
     console.log('oauthLogin')
 
@@ -37,7 +37,15 @@ export class AuthenticationService {
         this.generateAccessToken(user.id),
         this.generateRefreshToken(user.id),
       ])
-      return { accessToken, refreshToken }
+
+      await this.userService.setCurrentRefreshToken(user.id, refreshToken)
+
+      res.cookie('refreshToken', refreshToken, {
+        httpOnly: true,
+        secure: true,
+        maxAge: 14 * 24 * 60 * 60 * 1000,
+      })
+      return { accessToken, refreshToken, id: user.id, userName: user.name }
     }
   }
 
