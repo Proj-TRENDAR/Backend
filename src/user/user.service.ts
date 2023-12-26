@@ -88,6 +88,25 @@ export class UserService {
     }
   }
 
+  async setCurrentRefreshToken(id: string, refreshToken: string): Promise<void> {
+    const t = await this.sequelize.transaction()
+    try {
+      await this.userModel.update(
+        { refresh_token: refreshToken },
+        {
+          where: {
+            id,
+          },
+          transaction: t,
+        }
+      )
+      await t.commit()
+      return
+    } catch (error) {
+      await t.rollback()
+    }
+  }
+
   async remove(id: string): Promise<void> {
     const user = await this.findSpecificUserUsingId(id)
     await user.destroy()
