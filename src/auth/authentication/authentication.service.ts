@@ -42,6 +42,7 @@ export class AuthenticationService {
       await this.userService.setCurrentRefreshToken(user.id, refreshToken)
 
       res.cookie('refreshToken', refreshToken, {
+        path: '/',
         httpOnly: true,
         secure: true,
         maxAge: 14 * 24 * 60 * 60 * 1000,
