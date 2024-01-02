@@ -1,6 +1,7 @@
 import { HttpService } from '@nestjs/axios'
 import { Injectable, Query, UnauthorizedException } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
+import { Request, Response } from 'express'
 
 import { ACCESS_TOKEN_EXPIRE, REFRESH_TOKEN_EXPIRE } from '../../../constants'
 
@@ -107,5 +108,15 @@ export class AuthenticationService {
         subject: 'REFRESH',
       }
     )
+  }
+
+  async logout(req: Request, res: Response) {
+    const refreshToken = req.cookies['refreshToken']
+    if (!refreshToken) throw new UnauthorizedException()
+
+    res.clearCookie('refreshToken', {
+      path: '/',
+      httpOnly: true,
+    })
   }
 }

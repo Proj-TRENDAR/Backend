@@ -1,5 +1,6 @@
-import { Controller, Get, Query, Res } from '@nestjs/common'
+import { Controller, Get, Query, Post, Res, Req } from '@nestjs/common'
 import { ApiTags, ApiOperation } from '@nestjs/swagger'
+import { Request, Response } from 'express'
 
 import { AuthenticationService } from './authentication.service'
 import { TokenResponse } from 'src/auth/authentication/dto/token.response'
@@ -17,5 +18,11 @@ export class AuthenticationController {
     @Res({ passthrough: true }) res: Response
   ): Promise<TokenResponse> {
     return await this.authenticationService.oauthLogin(code, social, res)
+  }
+
+  @Post('logout')
+  @ApiOperation({ summary: '토큰을 만료 처리합니다.' })
+  async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response): Promise<void> {
+    return await this.authenticationService.logout(req, res)
   }
 }
