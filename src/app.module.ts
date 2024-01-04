@@ -3,11 +3,11 @@ import { ConfigModule } from '@nestjs/config'
 import { SequelizeModule } from '@nestjs/sequelize'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
-import { User } from './user/user.model'
-import { Social } from './social/social.model'
+import { User, Todo, Social, Event, RecurringEvent } from 'models'
 import { UserModule } from './user/user.module'
 import { SocialModule } from './social/social.module'
-import { authenticationModule } from './auth/authentication/authentication.module'
+import { AuthenticationModule } from './auth/authentication/authentication.module'
+import { EventModule } from './event/event.module'
 
 @Module({
   imports: [
@@ -32,13 +32,14 @@ import { authenticationModule } from './auth/authentication/authentication.modul
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWD,
       database: process.env.DB_DATABASE,
-      models: [User, Social],
+      models: [User, Todo, Social, Event, RecurringEvent],
       autoLoadModels: true, // models will be loaded automatically
       synchronize: true, //  automatically loaded models will be synchronized
     }),
     UserModule,
     SocialModule,
-    authenticationModule,
+    AuthenticationModule,
+    EventModule,
   ],
   controllers: [AppController],
   providers: [AppService],

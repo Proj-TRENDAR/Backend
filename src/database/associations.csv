@@ -1,0 +1,4 @@
+1:N, id, user_id, user, social
+1:N, id, user_id, user, todo
+1:N, id, user_id, user, event
+1:N, event_idx, event_idx, event, recurring_event

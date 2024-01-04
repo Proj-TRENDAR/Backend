@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/sequelize'
 import { Sequelize } from 'sequelize-typescript'
-import { Social } from '../social/social.model'
 
 import { CreateUserDto } from './dto/create-user.dto'
-import { User } from './user.model'
+import { User, Social } from '../../models'
 
 // Injectable을 이용하여 다른 컴포넌트에서도 이 service를 이용할 수 있게 함
 @Injectable()
@@ -37,7 +36,7 @@ export class UserService {
 
   async userOfAllInfo(id: string): Promise<void> {
     this.userModel.hasMany(this.socialModel, {
-      foreignKey: 'user_id',
+      foreignKey: 'userId',
     })
 
     const test = this.userModel.findOne({
@@ -58,7 +57,7 @@ export class UserService {
       id: createUserDto.id,
       name: createUserDto.name,
       email: createUserDto.email,
-      img_url: createUserDto.imgUrl,
+      imgUrl: createUserDto.imgUrl,
     })
   }
 
@@ -70,13 +69,13 @@ export class UserService {
           id: createUserDto.id,
           name: createUserDto.name,
           email: createUserDto.email,
-          img_url: createUserDto.imgUrl,
+          imgUrl: createUserDto.imgUrl,
         },
         { transaction: t }
       )
       await this.socialModel.create(
         {
-          user_id: createUserDto.id,
+          userId: createUserDto.id,
           social: createUserDto.social,
         },
         { transaction: t }
@@ -92,7 +91,7 @@ export class UserService {
     const t = await this.sequelize.transaction()
     try {
       await this.userModel.update(
-        { refresh_token: refreshToken },
+        { refreshToken },
         {
           where: {
             id,
