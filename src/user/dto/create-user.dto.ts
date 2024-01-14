@@ -7,8 +7,8 @@ export class CreateUserDto {
     description: '유저 아이디',
     required: true,
   })
-  @IsString()
   @IsNotEmpty()
+  @IsString()
   @Length(45)
   id: string
 
@@ -17,8 +17,8 @@ export class CreateUserDto {
     description: '유저 이름',
     required: true,
   })
-  @IsString()
   @IsNotEmpty()
+  @IsString()
   @Length(45)
   name: string
 
@@ -27,8 +27,8 @@ export class CreateUserDto {
     description: '유저 이메일',
     required: true,
   })
-  @IsEmail()
   @IsNotEmpty()
+  @IsEmail()
   @Length(100)
   email: string
 
@@ -36,15 +36,16 @@ export class CreateUserDto {
     example: 'image url...',
     description: '유저 이미지',
   })
-  @IsString()
   @IsOptional()
+  @IsString()
   imgUrl: string
 
   @ApiProperty({
     example: 'kakao, naver, google',
     description: '소셜 로그인 플랫폼',
+    required: true,
   })
-  @IsString()
   @IsNotEmpty()
+  @IsString()
   social: string
 }
