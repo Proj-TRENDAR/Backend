@@ -35,6 +35,10 @@ import { EventModule } from './event/event.module'
       models: [User, Todo, Social, Event, RecurringEvent],
       autoLoadModels: true, // models will be loaded automatically
       synchronize: true, //  automatically loaded models will be synchronized
+      timezone: 'Asia/Seoul',
+      dialectOptions: {
+        timezone: '+09:00', // DB에서 가져올 때 시간 설정
+      },
     }),
     UserModule,
     SocialModule,
