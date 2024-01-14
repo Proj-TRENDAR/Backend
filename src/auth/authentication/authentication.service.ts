@@ -39,8 +39,7 @@ export class AuthenticationService {
         this.generateAccessToken(user.id),
         this.generateRefreshToken(user.id),
       ])
-
-      await this.userService.setCurrentRefreshToken(user.id, refreshToken)
+      await this.userService.setCurrentRefreshToken(user.id, refreshToken, transaction)
 
       res.cookie('refreshToken', refreshToken, {
         path: '/',

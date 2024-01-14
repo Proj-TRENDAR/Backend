@@ -83,23 +83,17 @@ export class UserService {
     return userInfo
   }
 
-  async setCurrentRefreshToken(id: string, refreshToken: string): Promise<void> {
-    const t = await this.sequelize.transaction()
-    try {
-      await this.userModel.update(
-        { refreshToken },
-        {
-          where: {
-            id,
-          },
-          transaction: t,
-        }
-      )
-      await t.commit()
-      return
-    } catch (error) {
-      await t.rollback()
-    }
+  async setCurrentRefreshToken(id: string, refreshToken: string, transaction: Transaction): Promise<void> {
+    await this.userModel.update(
+      { refreshToken },
+      {
+        where: {
+          id,
+        },
+        transaction,
+      }
+    )
+    return
   }
 
   async remove(id: string, transaction: Transaction): Promise<void> {
