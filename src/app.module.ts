@@ -39,6 +39,7 @@ import { EventModule } from './event/event.module'
       dialectOptions: {
         timezone: '+09:00', // DB에서 가져올 때 시간 설정
       },
+      logging: true,
     }),
     UserModule,
     SocialModule,
