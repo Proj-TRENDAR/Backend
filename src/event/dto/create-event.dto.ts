@@ -1,4 +1,4 @@
-import { IsString, IsDate, IsOptional, IsNumber, IsNotEmpty, Length } from 'class-validator'
+import { IsString, IsDate, IsOptional, IsNumber, IsNotEmpty, MaxLength } from 'class-validator'
 import { ApiProperty } from '@nestjs/swagger'
 
 export class CreateEventDto {
@@ -9,7 +9,7 @@ export class CreateEventDto {
   })
   @IsNotEmpty()
   @IsString()
-  @Length(80)
+  @MaxLength(80)
   title: string
 
   @ApiProperty({
@@ -52,7 +52,7 @@ export class CreateEventDto {
   })
   @IsOptional()
   @IsString()
-  @Length(200)
+  @MaxLength(200)
   place: string | null
 
   @ApiProperty({
