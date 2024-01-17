@@ -20,8 +20,9 @@ export class TransactionInterceptor implements NestInterceptor {
         await transaction.commit()
       }),
       catchError(async err => {
+        console.log('err:', err.original)
         await transaction.rollback()
-        return throwError(err)
+        return throwError(() => err)
       })
     )
   }
