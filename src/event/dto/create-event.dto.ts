@@ -3,6 +3,16 @@ import { ApiProperty } from '@nestjs/swagger'
 
 export class CreateEventDto {
   @ApiProperty({
+    example: 'userID',
+    description: '로그인 시 저장된 ID',
+    required: true,
+  })
+  @IsNotEmpty()
+  @IsString()
+  @MaxLength(45)
+  userId: string
+
+  @ApiProperty({
     example: 'event title',
     description: '일정 제목',
     required: true,
