@@ -1,16 +1,13 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/sequelize'
-import { Sequelize } from 'sequelize-typescript'
 
 import { CreateUserDto } from './dto/create-user.dto'
-import { User, Social } from '../../models'
-import { Transaction } from 'sequelize'
+import { User, Social } from 'models'
 
 // Injectable을 이용하여 다른 컴포넌트에서도 이 service를 이용할 수 있게 함
 @Injectable()
 export class UserService {
   constructor(
-    private sequelize: Sequelize,
     @InjectModel(User)
     private userModel: typeof User,
     @InjectModel(Social)
@@ -21,7 +18,7 @@ export class UserService {
     return this.userModel.findAll()
   }
 
-  findSpecificUserUsingId(id: string, transaction: Transaction): Promise<User> {
+  findSpecificUserUsingId(id: string): Promise<User> {
     return this.userModel.findOne({
       where: {
         id,
@@ -32,7 +29,6 @@ export class UserService {
           attributes: ['social', 'connected_at'],
         },
       ],
-      transaction,
     })
   }
 
@@ -63,41 +59,34 @@ export class UserService {
     })
   }
 
-  async createUser(createUserDto: CreateUserDto, transaction: Transaction): Promise<User> {
-    const userInfo = await this.userModel.create(
-      {
-        id: createUserDto.id,
-        name: createUserDto.name,
-        email: createUserDto.email,
-        imgUrl: createUserDto.imgUrl,
-      },
-      { transaction }
-    )
-    await this.socialModel.create(
-      {
-        userId: createUserDto.id,
-        social: createUserDto.social,
-      },
-      { transaction }
-    )
+  async createUser(createUserDto: CreateUserDto): Promise<User> {
+    const userInfo = await this.userModel.create({
+      id: createUserDto.id,
+      name: createUserDto.name,
+      email: createUserDto.email,
+      imgUrl: createUserDto.imgUrl,
+    })
+    await this.socialModel.create({
+      userId: createUserDto.id,
+      social: createUserDto.social,
+    })
     return userInfo
   }
 
-  async setCurrentRefreshToken(id: string, refreshToken: string, transaction: Transaction): Promise<void> {
+  async setCurrentRefreshToken(id: string, refreshToken: string): Promise<void> {
     await this.userModel.update(
       { refreshToken },
       {
         where: {
           id,
         },
-        transaction,
       }
     )
     return
   }
 
-  async remove(id: string, transaction: Transaction): Promise<void> {
-    const user = await this.findSpecificUserUsingId(id, transaction)
+  async remove(id: string): Promise<void> {
+    const user = await this.findSpecificUserUsingId(id)
     await user.destroy()
   }
 }

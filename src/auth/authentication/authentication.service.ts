@@ -1,7 +1,6 @@
 import { HttpService } from '@nestjs/axios'
 import { Injectable, Query, UnauthorizedException } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
-import { Transaction } from 'sequelize'
 import { Request, Response } from 'express'
 
 import { ACCESS_TOKEN_EXPIRE, REFRESH_TOKEN_EXPIRE } from '../../../constants'
@@ -18,14 +17,14 @@ export class AuthenticationService {
     private readonly jwtService: JwtService
   ) {}
 
-  async oauthLogin(code: string, social: string, res: any, transaction: Transaction): Promise<TokenResponse> {
+  async oauthLogin(code: string, social: string, res: any): Promise<TokenResponse> {
     console.log(code, social)
     console.log('oauthLogin')
 
     let user: User
     switch (social) {
       case 'kakao':
-        user = await this.kakaoOauthLogin(code, transaction)
+        user = await this.kakaoOauthLogin(code)
         break
       case 'google':
         break
@@ -39,7 +38,7 @@ export class AuthenticationService {
         this.generateAccessToken(user.id),
         this.generateRefreshToken(user.id),
       ])
-      await this.userService.setCurrentRefreshToken(user.id, refreshToken, transaction)
+      await this.userService.setCurrentRefreshToken(user.id, refreshToken)
 
       res.cookie('refreshToken', refreshToken, {
         path: '/',
@@ -51,7 +50,7 @@ export class AuthenticationService {
     }
   }
 
-  async kakaoOauthLogin(code: string, transaction: Transaction): Promise<User> {
+  async kakaoOauthLogin(code: string): Promise<User> {
     try {
       console.log('kakaoOauthLogin')
       const { data } = await this.httpService.axiosRef.request({
@@ -73,7 +72,7 @@ export class AuthenticationService {
         url: 'https://kapi.kakao.com/v2/user/me',
         headers: { Authorization: `Bearer ${data.access_token}` },
       })
-      const userInfo = await this.userService.findSpecificUserUsingId(kakaoUserInfo.data.id, transaction)
+      const userInfo = await this.userService.findSpecificUserUsingId(kakaoUserInfo.data.id)
       if (!userInfo) {
         const createUserObject = {
           id: kakaoUserInfo.data.id,
@@ -82,12 +81,12 @@ export class AuthenticationService {
           imgUrl: kakaoUserInfo.data.properties.profile_image,
           social: 'kakao',
         }
-        await this.userService.createUser(createUserObject, transaction)
+        await this.userService.createUser(createUserObject)
       } else {
         return userInfo
       }
 
-      return await this.userService.findSpecificUserUsingId(kakaoUserInfo.data.id, transaction)
+      return await this.userService.findSpecificUserUsingId(kakaoUserInfo.data.id)
     } catch (err) {
       throw new UnauthorizedException('카카오 로그인에 실패했습니다.')
     }

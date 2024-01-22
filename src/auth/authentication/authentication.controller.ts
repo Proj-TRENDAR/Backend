@@ -1,11 +1,9 @@
 import { Controller, Get, Query, Post, Res, Req, UseInterceptors } from '@nestjs/common'
-import { Transaction } from 'sequelize'
 import { ApiTags, ApiOperation } from '@nestjs/swagger'
 import { Request, Response } from 'express'
 
 import { AuthenticationService } from './authentication.service'
 import { TokenResponse } from 'src/auth/authentication/dto/token.response'
-import { TransactionParam } from 'src/share/transaction/param'
 import { TransactionInterceptor } from 'src/share/transaction/interceptor'
 
 @Controller('auth') // http://localhost:3000/auth
@@ -19,10 +17,9 @@ export class AuthenticationController {
   async login(
     @Query('code') code: string,
     @Query('social') social: string,
-    @Res({ passthrough: true }) res: Response,
-    @TransactionParam() transaction: Transaction
+    @Res({ passthrough: true }) res: Response
   ): Promise<TokenResponse> {
-    return await this.authenticationService.oauthLogin(code, social, res, transaction)
+    return await this.authenticationService.oauthLogin(code, social, res)
   }
 
   @Post('logout')
