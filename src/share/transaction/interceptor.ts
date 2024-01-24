@@ -1,5 +1,12 @@
-import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common'
-import { Observable, throwError } from 'rxjs'
+import {
+  CallHandler,
+  ExecutionContext,
+  HttpException,
+  Injectable,
+  InternalServerErrorException,
+  NestInterceptor,
+} from '@nestjs/common'
+import { Observable } from 'rxjs'
 import { catchError, tap } from 'rxjs/operators'
 import { Transaction } from 'sequelize'
 import { Sequelize } from 'sequelize-typescript'
@@ -8,9 +15,8 @@ import { Sequelize } from 'sequelize-typescript'
 export class TransactionInterceptor implements NestInterceptor {
   constructor(private readonly sequelize: Sequelize) {}
 
-  async intercept(context: ExecutionContext, next: CallHandler<any>): Promise<Observable<any>> {
-    const httpContext = context.switchToHttp()
-    const req = httpContext.getRequest()
+  async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
+    const req = context.switchToHttp().getRequest()
     const transaction: Transaction = await this.sequelize.transaction({
       logging: true,
     })
@@ -20,9 +26,12 @@ export class TransactionInterceptor implements NestInterceptor {
         await transaction.commit()
       }),
       catchError(async err => {
-        console.log('err:', err.original)
+        console.log('err:', err)
         await transaction.rollback()
-        return throwError(() => err)
+        if (err instanceof HttpException) {
+          throw new HttpException(err.getResponse(), err.getStatus())
+        }
+        throw new InternalServerErrorException()
       })
     )
   }
