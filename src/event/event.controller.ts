@@ -36,7 +36,7 @@ export class EventController {
     },
   })
   @UsePipes(ValidationPipe)
-  eventCreate(@Body() createEventDto: CreateEventDto): Promise<Event> {
+  createEvent(@Body() createEventDto: CreateEventDto): Promise<Event> {
     return this.eventService.createEvent(createEventDto)
   }
 }
