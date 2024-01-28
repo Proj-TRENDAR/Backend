@@ -1,8 +1,9 @@
 import { PassportStrategy } from '@nestjs/passport'
-import { Injectable } from '@nestjs/common'
+import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { ExtractJwt, Strategy } from 'passport-jwt'
 import { UserService } from 'src/user/user.service'
+import { User } from 'models'
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -18,6 +19,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   // req.user에 보관할 사용자 정보를 검증하거나 가공하여 반환
-  async validate(data: any): Promise<void> {
-    return data
+  async validate(data: any): Promise<User> {
+    const user = await this.userService.findSpecificUserUsingId(data.id)
+    if (!user) {
+      throw new UnauthorizedException('유효하지 않는 사용자입니다.')
+    }
+    return user
   }
+}
