@@ -2,7 +2,10 @@ import {
   Body,
   Controller,
   Get,
+  Param,
+  ParseIntPipe,
   Post,
+  Put,
   Query,
   Req,
   UseGuards,
@@ -10,11 +13,12 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common'
-import { ApiTags, ApiOperation, ApiCreatedResponse } from '@nestjs/swagger'
+import { ApiTags, ApiOperation, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger'
 import { TransactionInterceptor } from 'src/share/transaction/interceptor'
 import { Event } from 'models'
 import { EventService } from 'src/event/event.service'
 import { CreateEventDto } from 'src/event/dto/create-event.dto'
+import { UpdateEventDto } from 'src/event/dto/update-event.dto'
 import { JwtAuthGuard } from 'src/auth/authentication/jwt-auth.guard'
 import { Request } from 'express'
 
@@ -40,7 +44,7 @@ export class EventController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(TransactionInterceptor)
   @Post()
-  @ApiOperation({ summary: '이벤트 생성', description: '이벤트 생성 API' })
+  @ApiOperation({ summary: '일정 생성', description: '일정 생성 API' })
   @ApiCreatedResponse({
     description: '성공 시(example)',
     schema: {
@@ -62,5 +66,14 @@ export class EventController {
   @UsePipes(ValidationPipe)
   createEvent(@Body() createEventDto: CreateEventDto): Promise<Event> {
     return this.eventService.createEvent(createEventDto)
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(TransactionInterceptor)
+  @Put(':eventIdx')
+  @ApiOperation({ summary: '일정 수정', description: '일정 수정 API' })
+  @ApiOkResponse({ description: '일정 수정' })
+  updateEvent(@Param('eventIdx', ParseIntPipe) eventIdx: number, @Body() updateData: UpdateEventDto) {
+    return this.eventService.updateEvent(eventIdx, updateData)
   }
 }

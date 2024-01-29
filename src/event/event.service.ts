@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/sequelize'
 
 import { CreateEventDto } from 'src/event/dto/create-event.dto'
+import { UpdateEventDto } from 'src/event/dto/update-event.dto'
 import { Event } from 'models'
 import sequelize from 'sequelize'
 
@@ -53,5 +54,30 @@ export class EventService {
       isRecurring: createEventDto.isRecurring,
     })
     return createdEvnet
+  }
+
+  async updateEvent(eventIdx: number, updateEventDto: UpdateEventDto) {
+    const updateEvent = await this.eventModel.update(
+      {
+        title: updateEventDto?.title,
+        isAllDay: updateEventDto?.isAllDay,
+        startTime: updateEventDto?.startTime,
+        endTime: updateEventDto?.endTime,
+        color: updateEventDto?.color,
+        place: updateEventDto?.place,
+        description: updateEventDto?.description,
+        isRecurring: updateEventDto?.isRecurring,
+      },
+      {
+        where: {
+          eventIdx,
+        },
+      }
+    )
+    if (updateEvent[0]) {
+      return { success: true, message: '업데이트 성공' }
+    } else {
+      return { success: false, message: '업데이트 실패' }
+    }
   }
 }
