@@ -1,5 +1,6 @@
 import { IsString, IsDate, IsOptional, IsNumber, IsNotEmpty, MaxLength } from 'class-validator'
 import { ApiProperty } from '@nestjs/swagger'
+import { Transform, Type } from 'class-transformer'
 
 export class CreateEventDto {
   @ApiProperty({
@@ -24,7 +25,7 @@ export class CreateEventDto {
 
   @ApiProperty({
     example: 'true',
-    description: 'true일 경우 startTime, endTime null)',
+    description: '하루종일 여부(true일 경우 startTime, endTime null)',
     required: true,
   })
   @IsNotEmpty()
@@ -33,17 +34,21 @@ export class CreateEventDto {
 
   @ApiProperty({
     example: '2024-01-11 11:20:00',
-    description: 'isAllDay가 true일 경우 null)',
+    description: '하루종일 여부(isAllDay)가 true일 경우 null',
   })
   @IsOptional()
+  @Transform(({ value, obj }) => (obj.isAllDay === true ? null : value))
+  @Type(() => Date)
   @IsDate()
   startTime: Date | null
 
   @ApiProperty({
     example: '2024-01-11 11:50:00',
-    description: 'isAllDay가 true일 경우 null)',
+    description: '하루종일 여부(isAllDay)가 true일 경우 null',
   })
   @IsOptional()
+  @Transform(({ value, obj }) => (obj.isAllDay === true ? null : value))
+  @Type(() => Date)
   @IsDate()
   endTime: Date | null
 
