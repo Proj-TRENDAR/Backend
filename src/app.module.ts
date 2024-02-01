@@ -8,6 +8,7 @@ import { UserModule } from './user/user.module'
 import { SocialModule } from './social/social.module'
 import { AuthenticationModule } from './auth/authentication/authentication.module'
 import { EventModule } from './event/event.module'
+import { TodoModule } from './todo/todo.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { EventModule } from './event/event.module'
     SocialModule,
     AuthenticationModule,
     EventModule,
+    TodoModule,
   ],
   controllers: [AppController],
   providers: [AppService],
