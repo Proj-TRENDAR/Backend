@@ -5,7 +5,7 @@ import { Transform, Type } from 'class-transformer'
 export class CreateEventDto {
   @ApiProperty({
     example: 'userID',
-    description: '로그인 시 저장된 ID',
+    description: '로그인한 ID',
     required: true,
   })
   @IsNotEmpty()
