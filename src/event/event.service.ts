@@ -57,7 +57,7 @@ export class EventService {
   }
 
   async updateEvent(eventIdx: number, updateEventDto: UpdateEventDto) {
-    const updateEvent = await this.eventModel.update(
+    const updatedEvent = await this.eventModel.update(
       {
         title: updateEventDto?.title,
         isAllDay: updateEventDto?.isAllDay,
@@ -74,7 +74,7 @@ export class EventService {
         },
       }
     )
-    if (updateEvent[0]) {
+    if (updatedEvent[0]) {
       return { success: true, message: '업데이트 성공' }
     } else {
       return { success: false, message: '업데이트 실패' }
