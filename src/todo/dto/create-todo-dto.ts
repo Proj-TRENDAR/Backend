@@ -22,7 +22,7 @@ export class CreateTodoDto {
   @ApiPropertyOptional({ example: 'true / false', description: '완료 여부' })
   @IsOptional()
   @IsBoolean()
-  @Transform(({ value }) => (value ? 1 : 0))
+  @Transform(({ value }) => (value ? true : false))
   isDone: number
 
   @ApiPropertyOptional({ example: '2024-01-11 00:00:00', description: '해당 날짜' })
