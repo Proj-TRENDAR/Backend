@@ -27,7 +27,7 @@ export class TodoService {
     return createdTodo
   }
 
-  async updateTodo(todoIdx: number, updateTodoDto: UpdateTodoDto): Promise<UpdateResponse> {
+  async updateTodo(todoIdx: number, updateTodoDto: UpdateTodoDto) {
     const updatedTodo = await this.todoModel.update(
       {
         title: updateTodoDto.title,

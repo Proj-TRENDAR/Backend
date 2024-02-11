@@ -53,11 +53,7 @@ export class TodoController {
   @Put(':todoIdx')
   @ApiOperation({ summary: 'ToDo 수정', description: 'ToDo 수정 API' })
   @ApiOkResponse({ description: 'ToDo 수정' })
-  async updateTodo(
-    @Param('todoIdx', ParseIntPipe) todoIdx: number,
-    @Body() updateTodo: UpdateTodoDto
-  ): Promise<string> {
-    const result = await this.todoService.updateTodo(todoIdx, updateTodo)
-    return result.message
+  async updateTodo(@Param('todoIdx', ParseIntPipe) todoIdx: number, @Body() updateTodo: UpdateTodoDto) {
+    return await this.todoService.updateTodo(todoIdx, updateTodo)
   }
 }
