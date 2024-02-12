@@ -2,6 +2,7 @@ import { Model, Table, Column, DataType, Index, Sequelize, ForeignKey, HasMany }
 import { Social } from './Social'
 import { Todo } from './Todo'
 import { Event } from './Event'
+import { Routine } from './Routine'
 
 export interface UserAttributes {
   id: string
@@ -49,4 +50,7 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
 
   @HasMany(() => Event, { sourceKey: 'id' })
   Events?: Event[]
+
+  @HasMany(() => Routine, { sourceKey: 'id' })
+  Routines?: Routine[]
 }

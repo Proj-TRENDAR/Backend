@@ -1,5 +1,7 @@
+export * from './CompletedRoutine'
 export * from './Event'
 export * from './RecurringEvent'
+export * from './Routine'
 export * from './Sequelizemeta'
 export * from './Social'
 export * from './Todo'
