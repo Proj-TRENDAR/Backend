@@ -1,9 +1,9 @@
 import { Model, Table, Column, DataType, Index, Sequelize, ForeignKey, BelongsTo, HasMany } from 'sequelize-typescript'
 import { User } from './User'
-import { CompletedRoutine } from './CompletedRoutine'
+import { RoutineCompleted } from './RoutineCompleted'
 
 export interface RoutineAttributes {
-  rountineIdx?: number
+  routineIdx?: number
   userId: string
   title: string
   color?: number
@@ -18,9 +18,9 @@ export interface RoutineAttributes {
 
 @Table({ tableName: 'routine', timestamps: false })
 export class Routine extends Model<RoutineAttributes, RoutineAttributes> implements RoutineAttributes {
-  @Column({ field: 'rountine_idx', primaryKey: true, autoIncrement: true, type: DataType.BIGINT })
+  @Column({ field: 'routine_idx', primaryKey: true, autoIncrement: true, type: DataType.BIGINT })
   @Index({ name: 'PRIMARY', using: 'BTREE', order: 'ASC', unique: true })
-  rountineIdx?: number
+  routineIdx?: number
 
   @ForeignKey(() => User)
   @Column({ field: 'user_id', type: DataType.STRING(45) })
@@ -57,6 +57,6 @@ export class Routine extends Model<RoutineAttributes, RoutineAttributes> impleme
   @BelongsTo(() => User)
   User?: User
 
-  @HasMany(() => CompletedRoutine, { sourceKey: 'routineIdx' })
-  CompletedRoutines?: CompletedRoutine[]
+  @HasMany(() => RoutineCompleted, { sourceKey: 'routineIdx' })
+  RoutineCompleteds?: RoutineCompleted[]
 }

@@ -3,12 +3,13 @@ import { ConfigModule } from '@nestjs/config'
 import { SequelizeModule } from '@nestjs/sequelize'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
-import { User, Todo, Social, Event, RecurringEvent } from 'models'
+import { User, Todo, Social, Event, RecurringEvent, Routine, RoutineCompleted } from 'models'
 import { UserModule } from './user/user.module'
 import { SocialModule } from './social/social.module'
 import { AuthenticationModule } from './auth/authentication/authentication.module'
 import { EventModule } from './event/event.module'
-import { TodoModule } from './todo/todo.module';
+import { TodoModule } from './todo/todo.module'
+import { RoutineModule } from './routine/routine.module'
 
 @Module({
   imports: [
@@ -33,7 +34,7 @@ import { TodoModule } from './todo/todo.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWD,
       database: process.env.DB_DATABASE,
-      models: [User, Todo, Social, Event, RecurringEvent],
+      models: [User, Todo, Social, Event, RecurringEvent, Routine, RoutineCompleted],
       autoLoadModels: true, // models will be loaded automatically
       synchronize: true, //  automatically loaded models will be synchronized
       timezone: 'Asia/Seoul',
@@ -47,6 +48,7 @@ import { TodoModule } from './todo/todo.module';
     AuthenticationModule,
     EventModule,
     TodoModule,
+    RoutineModule,
   ],
   controllers: [AppController],
   providers: [AppService],

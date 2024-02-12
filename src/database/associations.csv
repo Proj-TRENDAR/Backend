@@ -2,5 +2,5 @@
 1:N, id, user_id, user, todo
 1:N, id, user_id, user, event
 1:N, id, user_id, user, routine
-1:N, routine_idx, routine_idx, routine, completed_routine
+1:N, routine_idx, routine_idx, routine, routine_completed
 1:N, event_idx, event_idx, event, recurring_event
