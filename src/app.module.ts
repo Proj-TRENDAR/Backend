@@ -35,8 +35,8 @@ import { RoutineModule } from './routine/routine.module'
       password: process.env.DB_PASSWD,
       database: process.env.DB_DATABASE,
       models: [User, Todo, Social, Event, RecurringEvent, Routine, RoutineCompleted],
-      autoLoadModels: true, // models will be loaded automatically
-      synchronize: true, //  automatically loaded models will be synchronized
+      // autoLoadModels: true, // models will be loaded automatically (이렇게 사용하려면 각 폴더에 models를 만들어야 함. ex) user.models.ts)
+      synchronize: true, //  automatically loaded models will be synchronized(개발시에만 true)
       timezone: 'Asia/Seoul',
       dialectOptions: {
         timezone: '+09:00', // DB에서 가져올 때 시간 설정
