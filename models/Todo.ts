@@ -38,7 +38,7 @@ export class Todo extends Model<TodoAttributes, TodoAttributes> implements TodoA
   @Column({ field: 'updated_at', type: DataType.DATE, defaultValue: DataType.NOW })
   updatedAt?: Date
 
-  @Column({ type: DataType.INTEGER, defaultValue: '1' })
+  @Column({ allowNull: true, type: DataType.INTEGER })
   sequence?: number
 
   @BelongsTo(() => User)

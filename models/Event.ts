@@ -7,8 +7,8 @@ export interface EventAttributes {
   userId: string
   title: string
   isAllDay?: number
-  startTime?: Date
-  endTime?: Date
+  startTime: Date
+  endTime: Date
   color?: number
   place?: string
   description?: string
@@ -34,11 +34,11 @@ export class Event extends Model<EventAttributes, EventAttributes> implements Ev
   @Column({ field: 'is_all_day', type: DataType.TINYINT, defaultValue: '0' })
   isAllDay?: number
 
-  @Column({ field: 'start_time', allowNull: true, type: DataType.DATE })
-  startTime?: Date
+  @Column({ field: 'start_time', type: DataType.DATE })
+  startTime!: Date
 
-  @Column({ field: 'end_time', allowNull: true, type: DataType.DATE })
-  endTime?: Date
+  @Column({ field: 'end_time', type: DataType.DATE })
+  endTime!: Date
 
   @Column({ type: DataType.INTEGER, defaultValue: '1' })
   color?: number
