@@ -13,11 +13,10 @@ export class EventService {
     private eventModel: typeof Event
   ) {}
 
-  // FIXME: return type 설정
-  async getEventUsingMonth(userInfo: any, year: string, month: string): Promise<any> {
-    const event = await this.eventModel.findAll({
+  async getEventUsingMonth(userId: string, year: string, month: string): Promise<Event[]> {
+    return await this.eventModel.findAll({
       where: {
-        userId: userInfo.id,
+        userId: userId,
         [sequelize.Op.or]: [
           {
             startTime: {
@@ -38,7 +37,6 @@ export class EventService {
         ],
       },
     })
-    return event
   }
 
   async createEvent(createEventDto: CreateEventDto): Promise<Event> {

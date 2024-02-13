@@ -20,11 +20,7 @@ import { EventService } from 'src/event/event.service'
 import { CreateEventDto } from 'src/event/dto/create-event.dto'
 import { UpdateEventDto } from 'src/event/dto/update-event.dto'
 import { JwtAuthGuard } from 'src/auth/authentication/jwt-auth.guard'
-import { Request } from 'express'
-
-interface RequestWithUser extends Request {
-  user: object // FIXME: 추후 validate해서 넘기는 사용자 정보 제한
-}
+import { IUserReq } from 'src/user/interface/user-req.interface'
 
 @Controller('event')
 @ApiTags('Event API')
@@ -32,13 +28,14 @@ export class EventController {
   constructor(private readonly eventService: EventService) {}
 
   @UseGuards(JwtAuthGuard)
+  @UseInterceptors(TransactionInterceptor)
   @Get()
   getEventUsingMonth(
-    @Req() req: RequestWithUser,
+    @Req() req: IUserReq,
     @Query('year') year: string,
     @Query('month') month: string
-  ): Promise<Event> {
-    return this.eventService.getEventUsingMonth(req.user, year, month)
+  ): Promise<Event[]> {
+    return this.eventService.getEventUsingMonth(req.user.id, year, month)
   }
 
   @UseGuards(JwtAuthGuard)
