@@ -2,10 +2,10 @@ import { Module } from '@nestjs/common'
 import { RoutineController } from 'src/routine/routine.controller'
 import { RoutineService } from 'src/routine/routine.service'
 import { SequelizeModule } from '@nestjs/sequelize'
-import { Routine } from 'models'
+import { Routine, RoutineCompleted } from 'models'
 
 @Module({
-  imports: [SequelizeModule.forFeature([Routine])],
+  imports: [SequelizeModule.forFeature([Routine, RoutineCompleted])],
   controllers: [RoutineController],
   providers: [RoutineService],
 })
