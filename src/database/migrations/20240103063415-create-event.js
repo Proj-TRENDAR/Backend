@@ -10,7 +10,7 @@ module.exports = {
         '`title` VARCHAR(80) NOT NULL,' +
         '`is_all_day` TINYINT NOT NULL DEFAULT 0,' +
         '`start_time` DATETIME NOT NULL,' +
-        '`end_time` DATETIME NOT NULL,' +
+        '`end_time` DATETIME NULL,' +
         "`color` INT(1) NOT NULL DEFAULT '1'," +
         '`place` VARCHAR(200) NULL,' +
         '`description` TEXT NULL,' +

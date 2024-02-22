@@ -38,13 +38,12 @@ export class EventService {
       },
     })
   }
-
   async createEvent(createEventDto: CreateEventDto): Promise<Event> {
     const createdEvnet = this.eventModel.create({
       title: createEventDto.title,
       userId: createEventDto.userId,
       isAllDay: createEventDto.isAllDay,
-      startTime: createEventDto?.startTime,
+      startTime: createEventDto.startTime,
       endTime: createEventDto?.endTime,
       color: createEventDto?.color,
       place: createEventDto?.place,
