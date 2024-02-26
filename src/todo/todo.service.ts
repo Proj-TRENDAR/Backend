@@ -17,23 +17,24 @@ export class TodoService {
   ) {}
 
   async createTodo(createTodoDto: CreateTodoDto): Promise<Todo> {
-    const createdTodo = this.todoModel.create({
-      userId: createTodoDto.userId,
-      title: createTodoDto.title,
-      isDone: createTodoDto.isDone,
-      appliedAt: createTodoDto.appliedAt,
-      sequence: createTodoDto.sequence,
+    const { userId, title, isDone, appliedAt, sequence } = createTodoDto
+    return this.todoModel.create({
+      userId,
+      title,
+      isDone,
+      appliedAt,
+      sequence,
     })
-    return createdTodo
   }
 
   async updateTodo(todoIdx: number, updateTodoDto: UpdateTodoDto) {
+    const { title, isDone, appliedAt, sequence } = updateTodoDto
     const updatedTodo = await this.todoModel.update(
       {
-        title: updateTodoDto.title,
-        isDone: updateTodoDto.isDone,
-        appliedAt: updateTodoDto.appliedAt,
-        sequence: updateTodoDto.sequence,
+        title,
+        isDone,
+        appliedAt,
+        sequence,
       },
       {
         where: { todoIdx },

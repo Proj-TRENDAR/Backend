@@ -5,6 +5,7 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Req,
   UseGuards,
   UseInterceptors,
   UsePipes,
@@ -15,9 +16,9 @@ import { TodoService } from 'src/todo/todo.service'
 import { JwtAuthGuard } from 'src/auth/authentication/jwt-auth.guard'
 import { TransactionInterceptor } from 'src/share/transaction/interceptor'
 import { CreateTodoDto } from 'src/todo/dto/create-todo-dto'
+import { UpdateTodoDto } from 'src/todo/dto/update-todo-dto'
 import { Todo } from 'models'
-import { UpdateTodoDto } from './dto/update-todo-dto'
-import { throwError } from 'rxjs'
+import { IUserReq } from 'src/user/interface/user-req.interface'
 
 @Controller('todo')
 @ApiTags('ToDo API')
@@ -44,7 +45,8 @@ export class TodoController {
     },
   })
   @UsePipes(ValidationPipe)
-  createTodo(@Body() createTodoDto: CreateTodoDto): Promise<Todo> {
+  createTodo(@Body() createTodoDto: CreateTodoDto, @Req() req: IUserReq): Promise<Todo> {
+    createTodoDto.userId = req.user.id
     return this.todoService.createTodo(createTodoDto)
   }
 
