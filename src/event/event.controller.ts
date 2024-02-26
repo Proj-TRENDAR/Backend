@@ -61,7 +61,8 @@ export class EventController {
     },
   })
   @UsePipes(ValidationPipe)
-  createEvent(@Body() createEventDto: CreateEventDto): Promise<Event> {
+  createEvent(@Body() createEventDto: CreateEventDto, @Req() req: IUserReq): Promise<Event> {
+    createEventDto.userId = req.user.id
     return this.eventService.createEvent(createEventDto)
   }
 

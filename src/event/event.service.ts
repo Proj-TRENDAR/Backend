@@ -39,31 +39,33 @@ export class EventService {
     })
   }
   async createEvent(createEventDto: CreateEventDto): Promise<Event> {
+    const { userId, title, isAllDay, startTime, endTime, color, place, description, isRecurring } = createEventDto
     const createdEvnet = this.eventModel.create({
-      title: createEventDto.title,
-      userId: createEventDto.userId,
-      isAllDay: createEventDto.isAllDay,
-      startTime: createEventDto.startTime,
-      endTime: createEventDto?.endTime,
-      color: createEventDto?.color,
-      place: createEventDto?.place,
-      description: createEventDto?.description,
-      isRecurring: createEventDto.isRecurring,
+      userId,
+      title,
+      isAllDay,
+      startTime,
+      endTime,
+      color,
+      place,
+      description,
+      isRecurring,
     })
     return createdEvnet
   }
 
   async updateEvent(eventIdx: number, updateEventDto: UpdateEventDto) {
+    const { title, isAllDay, startTime, endTime, color, place, description, isRecurring } = updateEventDto
     const updatedEvent = await this.eventModel.update(
       {
-        title: updateEventDto?.title,
-        isAllDay: updateEventDto?.isAllDay,
-        startTime: updateEventDto?.startTime,
-        endTime: updateEventDto?.endTime,
-        color: updateEventDto?.color,
-        place: updateEventDto?.place,
-        description: updateEventDto?.description,
-        isRecurring: updateEventDto?.isRecurring,
+        title,
+        isAllDay,
+        startTime,
+        endTime,
+        color,
+        place,
+        description,
+        isRecurring,
       },
       {
         where: {
