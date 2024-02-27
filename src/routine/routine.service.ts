@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/sequelize'
-import { Routine, RoutineCompleted } from 'models'
+import { Routine, RoutineCompleted, RoutineDay } from 'models'
 
 @Injectable()
 export class RoutineService {
@@ -8,7 +8,9 @@ export class RoutineService {
     @InjectModel(Routine)
     private routineModel: typeof Routine,
     @InjectModel(RoutineCompleted)
-    private routineCompletedModel: typeof RoutineCompleted
+    private routineCompletedModel: typeof RoutineCompleted,
+    @InjectModel(RoutineDay)
+    private routineDayModel: typeof RoutineDay
   ) {}
 
   async getRoutine(userId: string): Promise<Routine[]> {
