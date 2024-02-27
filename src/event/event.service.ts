@@ -40,7 +40,7 @@ export class EventService {
   }
   async createEvent(createEventDto: CreateEventDto): Promise<Event> {
     const { userId, title, isAllDay, startTime, endTime, color, place, description, isRecurring } = createEventDto
-    const createdEvnet = this.eventModel.create({
+    return this.eventModel.create({
       userId,
       title,
       isAllDay,
@@ -51,7 +51,6 @@ export class EventService {
       description,
       isRecurring,
     })
-    return createdEvnet
   }
 
   async updateEvent(eventIdx: number, updateEventDto: UpdateEventDto) {

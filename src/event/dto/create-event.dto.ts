@@ -35,8 +35,9 @@ export class CreateEventDto {
   @ApiProperty({
     example: '2024-01-11 11:20:00',
     description: '하루종일 여부(isAllDay)가 true일 경우 설정 날짜 기입(ex) 2024-01-11 00:00:00)',
+    required: true,
   })
-  @IsOptional()
+  @IsNotEmpty()
   @Transform(({ value, obj }) => {
     if (obj.isAllDay) {
       const date = new Date(value)
