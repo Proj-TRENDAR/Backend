@@ -1,6 +1,7 @@
 import { Model, Table, Column, DataType, Index, Sequelize, ForeignKey, BelongsTo, HasMany } from 'sequelize-typescript'
 import { User } from './User'
 import { RoutineCompleted } from './RoutineCompleted'
+import { RoutineDay } from './RoutineDay'
 
 export interface RoutineAttributes {
   routineIdx?: number
@@ -59,4 +60,7 @@ export class Routine extends Model<RoutineAttributes, RoutineAttributes> impleme
 
   @HasMany(() => RoutineCompleted, { sourceKey: 'routineIdx' })
   RoutineCompleteds?: RoutineCompleted[]
+
+  @HasMany(() => RoutineDay, { sourceKey: 'routineIdx' })
+  RoutineDays?: RoutineDay[]
 }

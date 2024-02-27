@@ -1,4 +1,5 @@
-import { Model, Table, Column, DataType, Index, Sequelize, ForeignKey } from 'sequelize-typescript'
+import { Model, Table, Column, DataType, Index, Sequelize, ForeignKey, BelongsTo } from 'sequelize-typescript'
+import { Routine } from './Routine'
 
 export interface RoutineDayAttributes {
   routinedayIdx?: number
@@ -16,10 +17,14 @@ export class RoutineDay extends Model<RoutineDayAttributes, RoutineDayAttributes
   @Index({ name: 'PRIMARY', using: 'BTREE', order: 'ASC', unique: true })
   routinedayIdx?: number
 
+  @ForeignKey(() => Routine)
   @Column({ field: 'routine_idx', type: DataType.BIGINT })
   @Index({ name: 'FK_ROUTINEDAY_ROUTINE_idx', using: 'BTREE', order: 'ASC', unique: false })
   routineIdx!: number
 
   @Column({ type: DataType.INTEGER, defaultValue: '0' })
   day?: number
+
+  @BelongsTo(() => Routine)
+  Routine?: Routine
 }

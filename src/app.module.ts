@@ -3,7 +3,7 @@ import { ConfigModule } from '@nestjs/config'
 import { SequelizeModule } from '@nestjs/sequelize'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
-import { User, Todo, Social, Event, RecurringEvent, Routine, RoutineCompleted } from 'models'
+import { User, Todo, Social, Event, RecurringEvent, Routine, RoutineCompleted, RoutineDay } from 'models'
 import { UserModule } from './user/user.module'
 import { SocialModule } from './social/social.module'
 import { AuthenticationModule } from './auth/authentication/authentication.module'
@@ -34,7 +34,7 @@ import { RoutineModule } from './routine/routine.module'
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWD,
       database: process.env.DB_DATABASE,
-      models: [User, Todo, Social, Event, RecurringEvent, Routine, RoutineCompleted],
+      models: [User, Todo, Social, Event, RecurringEvent, Routine, RoutineCompleted, RoutineDay],
       // autoLoadModels: true, // models will be loaded automatically (이렇게 사용하려면 각 폴더에 models를 만들어야 함. ex) user.models.ts)
       synchronize: true, //  automatically loaded models will be synchronized(개발시에만 true)
       timezone: 'Asia/Seoul',

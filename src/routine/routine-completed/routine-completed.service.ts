@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/sequelize'
 import { RoutineCompleted } from 'models'
 
 @Injectable()
-export class CompletedRoutineService {
+export class RoutineCompletedService {
   constructor(
     @InjectModel(RoutineCompleted)
     private routineCompletedModel: typeof RoutineCompleted
