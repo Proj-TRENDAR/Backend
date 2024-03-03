@@ -12,7 +12,7 @@ export interface RoutineAttributes {
   weeklyCondition?: number
   numOfAchievements?: number
   startTime: Date
-  endTime: Date
+  endTime?: Date
   sequence?: number
   createdAt?: Date
 }
@@ -46,8 +46,8 @@ export class Routine extends Model<RoutineAttributes, RoutineAttributes> impleme
   @Column({ field: 'start_time', type: DataType.DATE })
   startTime!: Date
 
-  @Column({ field: 'end_time', type: DataType.DATE })
-  endTime!: Date
+  @Column({ field: 'end_time', allowNull: true, type: DataType.DATE })
+  endTime?: Date
 
   @Column({ allowNull: true, type: DataType.INTEGER })
   sequence?: number

@@ -13,7 +13,7 @@ module.exports = {
         '  `weekly_condition` INT NOT NULL DEFAULT 1,' +
         '  `num_of_achievements` INT NULL,' +
         '  `start_time` DATETIME NOT NULL,' +
-        '  `end_time` DATETIME NOT NULL,' +
+        '  `end_time` DATETIME NULL DEFAULT NULL,' +
         '  `sequence` INT NULL DEFAULT NULL,' +
         '  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,' +
         '  PRIMARY KEY (`routine_idx`),  INDEX `FK_ROUTINE_USER_ID_idx` (`user_id` ASC) VISIBLE,' +
