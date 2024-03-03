@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/sequelize'
 import { Routine, RoutineCompleted, RoutineDay } from 'models'
 import { CreateRoutineDto } from 'src/routine/dto/create-routine-dto'
+import { CreateRoutineCompletedDto } from 'src/routine/dto/create-routine-completed-dto'
 
 @Injectable()
 export class RoutineService {
@@ -62,5 +63,26 @@ export class RoutineService {
     }
 
     return await this.getRoutineUsingIdx(createdRoutine.routineIdx)
+  }
+
+  async createRoutineCompleted(createRoutineCompletedDto: CreateRoutineCompletedDto): Promise<RoutineCompleted> {
+    const { routineIdx, completedAt } = createRoutineCompletedDto
+    return await this.routineCompletedModel.create({
+      routineIdx,
+      completedAt,
+    })
+  }
+
+  async deleteRoutineCompleted(routinecompIdx) {
+    const result = await this.routineCompletedModel.destroy({
+      where: {
+        routinecompIdx,
+      },
+    })
+    if (result) {
+      return { success: true, message: '삭제 성공' }
+    } else {
+      return { success: false, message: '삭제 실패' }
+    }
   }
 }
