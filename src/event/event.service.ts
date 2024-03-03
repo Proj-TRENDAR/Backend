@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/sequelize'
 
 import { CreateEventDto } from 'src/event/dto/create-event.dto'
@@ -73,9 +73,9 @@ export class EventService {
       }
     )
     if (updatedEvent[0]) {
-      return { success: true, message: '업데이트 성공' }
+      return { success: true, message: '일정 수정 성공' }
     } else {
-      return { success: false, message: '업데이트 실패' }
+      throw new HttpException({ success: false, message: '일정 수정 실패' }, HttpStatus.BAD_REQUEST)
     }
   }
 }

@@ -13,7 +13,7 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common'
-import { ApiTags, ApiOperation, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger'
+import { ApiTags, ApiOperation, ApiCreatedResponse, ApiOkResponse, ApiNotFoundResponse } from '@nestjs/swagger'
 import { TransactionInterceptor } from 'src/share/transaction/interceptor'
 import { Event } from 'models'
 import { EventService } from 'src/event/event.service'
@@ -70,7 +70,8 @@ export class EventController {
   @UseInterceptors(TransactionInterceptor)
   @Put(':eventIdx')
   @ApiOperation({ summary: '일정 수정', description: '일정 수정 API' })
-  @ApiOkResponse({ description: '일정 수정' })
+  @ApiOkResponse({ description: '일정 수정 성공' })
+  @ApiNotFoundResponse({ description: '일정 수정 실패' })
   updateEvent(@Param('eventIdx', ParseIntPipe) eventIdx: number, @Body() updateData: UpdateEventDto) {
     return this.eventService.updateEvent(eventIdx, updateData)
   }

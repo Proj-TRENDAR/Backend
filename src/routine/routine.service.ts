@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common'
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/sequelize'
 import { Routine, RoutineCompleted, RoutineDay } from 'models'
 import { CreateRoutineDto } from 'src/routine/dto/create-routine-dto'
@@ -80,9 +80,9 @@ export class RoutineService {
       },
     })
     if (result) {
-      return { success: true, message: '삭제 성공' }
+      return { success: true, message: '수행한 루틴 삭제 성공' }
     } else {
-      return { success: false, message: '삭제 실패' }
+      throw new HttpException({ success: false, message: '수행한 루틴 삭제 실패' }, HttpStatus.BAD_REQUEST)
     }
   }
 }

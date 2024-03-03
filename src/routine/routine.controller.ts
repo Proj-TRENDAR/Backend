@@ -10,7 +10,7 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common'
-import { ApiBody, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiBody, ApiCreatedResponse, ApiNotFoundResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { Routine, RoutineCompleted } from 'models'
 import { JwtAuthGuard } from 'src/auth/authentication/jwt-auth.guard'
 import { RoutineService } from 'src/routine/routine.service'
@@ -73,6 +73,7 @@ export class RoutineController {
     type: Number,
   })
   @ApiOkResponse({ description: '수행한 루틴 삭제 완료' })
+  @ApiNotFoundResponse({ description: '수행한 루틴 삭제 실패' })
   deleteRoutineCompleted(@Body('routinecompIdx') routinecompIdx: number) {
     return this.routineService.deleteRoutineCompleted(routinecompIdx)
   }
