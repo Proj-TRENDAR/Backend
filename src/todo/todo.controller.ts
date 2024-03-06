@@ -55,7 +55,7 @@ export class TodoController {
   @Put(':todoIdx')
   @ApiOperation({ summary: 'ToDo 수정', description: 'ToDo 수정 API' })
   @ApiOkResponse({ description: 'ToDo 수정' })
-  async updateTodo(@Param('todoIdx', ParseIntPipe) todoIdx: number, @Body() updateTodo: UpdateTodoDto) {
-    return await this.todoService.updateTodo(todoIdx, updateTodo)
+  async updateTodo(@Param('todoIdx', ParseIntPipe) idx: number, @Body() updateTodo: UpdateTodoDto) {
+    return await this.todoService.updateTodo(idx, updateTodo)
   }
 }

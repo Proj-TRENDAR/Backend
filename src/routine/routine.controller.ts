@@ -65,7 +65,7 @@ export class RoutineController {
   @ApiBody({
     schema: {
       example: {
-        routinecompIdx: 1,
+        idx: 1,
       },
     },
     description: '수행한 루틴 인덱스',
@@ -74,7 +74,7 @@ export class RoutineController {
   })
   @ApiOkResponse({ description: '수행한 루틴 삭제 완료' })
   @ApiNotFoundResponse({ description: '수행한 루틴 삭제 실패' })
-  deleteRoutineCompleted(@Body('routinecompIdx') routinecompIdx: number) {
-    return this.routineService.deleteRoutineCompleted(routinecompIdx)
+  deleteRoutineCompleted(@Body('idx') idx: number) {
+    return this.routineService.deleteRoutineCompleted(idx)
   }
 }

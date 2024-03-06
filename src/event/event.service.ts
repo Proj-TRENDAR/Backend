@@ -53,7 +53,7 @@ export class EventService {
     })
   }
 
-  async updateEvent(eventIdx: number, updateEventDto: UpdateEventDto) {
+  async updateEvent(idx: number, updateEventDto: UpdateEventDto) {
     const { title, isAllDay, startTime, endTime, color, place, description, isRecurring } = updateEventDto
     const updatedEvent = await this.eventModel.update(
       {
@@ -68,7 +68,7 @@ export class EventService {
       },
       {
         where: {
-          eventIdx,
+          idx,
         },
       }
     )

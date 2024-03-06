@@ -29,9 +29,9 @@ export class RoutineService {
     })
   }
 
-  async getRoutineUsingIdx(routineIdx: number): Promise<Routine> {
+  async getRoutineUsingIdx(idx: number): Promise<Routine> {
     return await this.routineModel.findOne({
-      where: { routineIdx },
+      where: { idx },
       include: [
         {
           model: this.routineCompletedModel,
@@ -57,12 +57,12 @@ export class RoutineService {
 
     for (const day of days) {
       await this.routineDayModel.create({
-        routineIdx: createdRoutine.routineIdx,
+        idx: createdRoutine.idx,
         day,
       })
     }
 
-    return await this.getRoutineUsingIdx(createdRoutine.routineIdx)
+    return await this.getRoutineUsingIdx(createdRoutine.idx)
   }
 
   async createRoutineCompleted(createRoutineCompletedDto: CreateRoutineCompletedDto): Promise<RoutineCompleted> {
@@ -73,10 +73,10 @@ export class RoutineService {
     })
   }
 
-  async deleteRoutineCompleted(routinecompIdx) {
+  async deleteRoutineCompleted(idx) {
     const result = await this.routineCompletedModel.destroy({
       where: {
-        routinecompIdx,
+        idx,
       },
     })
     if (result) {

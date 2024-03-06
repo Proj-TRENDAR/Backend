@@ -72,7 +72,7 @@ export class EventController {
   @ApiOperation({ summary: '일정 수정', description: '일정 수정 API' })
   @ApiOkResponse({ description: '일정 수정 성공' })
   @ApiNotFoundResponse({ description: '일정 수정 실패' })
-  updateEvent(@Param('eventIdx', ParseIntPipe) eventIdx: number, @Body() updateData: UpdateEventDto) {
-    return this.eventService.updateEvent(eventIdx, updateData)
+  updateEvent(@Param('eventIdx', ParseIntPipe) idx: number, @Body() updateData: UpdateEventDto) {
+    return this.eventService.updateEvent(idx, updateData)
   }
 }

@@ -27,7 +27,7 @@ export class TodoService {
     })
   }
 
-  async updateTodo(todoIdx: number, updateTodoDto: UpdateTodoDto) {
+  async updateTodo(idx: number, updateTodoDto: UpdateTodoDto) {
     const { title, isDone, appliedAt, sequence } = updateTodoDto
     const updatedTodo = await this.todoModel.update(
       {
@@ -37,7 +37,7 @@ export class TodoService {
         sequence,
       },
       {
-        where: { todoIdx },
+        where: { idx },
       }
     )
     if (updatedTodo[0]) {

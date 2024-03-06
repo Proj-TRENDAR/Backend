@@ -5,7 +5,7 @@ import { IsDate, IsNotEmpty, IsNumber } from 'class-validator'
 export class CreateRoutineCompletedDto {
   @ApiProperty({
     example: 'routine idx',
-    description: '루틴 인덱스 숫자',
+    description: '루틴 인덱스',
     required: true,
   })
   @IsNotEmpty()

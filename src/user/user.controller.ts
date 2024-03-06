@@ -47,6 +47,12 @@ export class UserController {
   }
 
   @UseInterceptors(TransactionInterceptor)
+  @Post('info')
+  getInfoUsingMonth(@Body('id') id: string, @Body('date') date: Date): Promise<void> {
+    return this.userService.getInfoUsingMonth(id, date)
+  }
+
+  @UseInterceptors(TransactionInterceptor)
   @Delete(':id')
   @ApiOperation({ summary: '유저 삭제', description: '유저 삭제 API' })
   remove(@Param('id') id: string): Promise<void> {
