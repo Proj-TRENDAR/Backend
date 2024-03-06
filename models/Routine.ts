@@ -4,7 +4,7 @@ import { RoutineCompleted } from './RoutineCompleted'
 import { RoutineDay } from './RoutineDay'
 
 export interface RoutineAttributes {
-  routineIdx?: number
+  idx?: number
   userId: string
   title: string
   color?: number
@@ -19,9 +19,9 @@ export interface RoutineAttributes {
 
 @Table({ tableName: 'routine', timestamps: false })
 export class Routine extends Model<RoutineAttributes, RoutineAttributes> implements RoutineAttributes {
-  @Column({ field: 'routine_idx', primaryKey: true, autoIncrement: true, type: DataType.BIGINT })
+  @Column({ primaryKey: true, autoIncrement: true, type: DataType.BIGINT })
   @Index({ name: 'PRIMARY', using: 'BTREE', order: 'ASC', unique: true })
-  routineIdx?: number
+  idx?: number
 
   @ForeignKey(() => User)
   @Column({ field: 'user_id', type: DataType.STRING(45) })
@@ -58,9 +58,9 @@ export class Routine extends Model<RoutineAttributes, RoutineAttributes> impleme
   @BelongsTo(() => User)
   User?: User
 
-  @HasMany(() => RoutineCompleted, { sourceKey: 'routineIdx' })
+  @HasMany(() => RoutineCompleted, { sourceKey: 'idx' })
   RoutineCompleteds?: RoutineCompleted[]
 
-  @HasMany(() => RoutineDay, { sourceKey: 'routineIdx' })
+  @HasMany(() => RoutineDay, { sourceKey: 'idx' })
   RoutineDays?: RoutineDay[]
 }

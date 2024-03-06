@@ -3,7 +3,7 @@ import { User } from './User'
 import { RecurringEvent } from './RecurringEvent'
 
 export interface EventAttributes {
-  eventIdx?: number
+  idx?: number
   userId: string
   title: string
   isAllDay?: number
@@ -19,9 +19,9 @@ export interface EventAttributes {
 
 @Table({ tableName: 'event', timestamps: false })
 export class Event extends Model<EventAttributes, EventAttributes> implements EventAttributes {
-  @Column({ field: 'event_idx', primaryKey: true, autoIncrement: true, type: DataType.INTEGER })
+  @Column({ primaryKey: true, autoIncrement: true, type: DataType.BIGINT })
   @Index({ name: 'PRIMARY', using: 'BTREE', order: 'ASC', unique: true })
-  eventIdx?: number
+  idx?: number
 
   @ForeignKey(() => User)
   @Column({ field: 'user_id', type: DataType.STRING(45) })
@@ -61,6 +61,6 @@ export class Event extends Model<EventAttributes, EventAttributes> implements Ev
   @BelongsTo(() => User)
   User?: User
 
-  @HasMany(() => RecurringEvent, { sourceKey: 'eventIdx' })
+  @HasMany(() => RecurringEvent, { sourceKey: 'idx' })
   RecurringEvents?: RecurringEvent[]
 }

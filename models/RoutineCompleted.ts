@@ -2,7 +2,7 @@ import { Model, Table, Column, DataType, Index, Sequelize, ForeignKey, BelongsTo
 import { Routine } from './Routine'
 
 export interface RoutineCompletedAttributes {
-  routinecompIdx?: number
+  idx?: number
   routineIdx: number
   completedAt?: Date
 }
@@ -12,9 +12,9 @@ export class RoutineCompleted
   extends Model<RoutineCompletedAttributes, RoutineCompletedAttributes>
   implements RoutineCompletedAttributes
 {
-  @Column({ field: 'routinecomp_idx', primaryKey: true, autoIncrement: true, type: DataType.BIGINT })
+  @Column({ primaryKey: true, autoIncrement: true, type: DataType.BIGINT })
   @Index({ name: 'PRIMARY', using: 'BTREE', order: 'ASC', unique: true })
-  routinecompIdx?: number
+  idx?: number
 
   @ForeignKey(() => Routine)
   @Column({ field: 'routine_idx', type: DataType.BIGINT })
