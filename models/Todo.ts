@@ -2,7 +2,7 @@ import { Model, Table, Column, DataType, Index, Sequelize, ForeignKey, BelongsTo
 import { User } from './User'
 
 export interface TodoAttributes {
-  idx: number
+  idx?: number
   userId: string
   title: string
   isDone?: number
@@ -14,9 +14,9 @@ export interface TodoAttributes {
 
 @Table({ tableName: 'todo', timestamps: false })
 export class Todo extends Model<TodoAttributes, TodoAttributes> implements TodoAttributes {
-  @Column({ primaryKey: true, type: DataType.BIGINT })
+  @Column({ primaryKey: true, autoIncrement: true, type: DataType.BIGINT })
   @Index({ name: 'PRIMARY', using: 'BTREE', order: 'ASC', unique: true })
-  idx!: number
+  idx?: number
 
   @ForeignKey(() => User)
   @Column({ field: 'user_id', type: DataType.STRING(45) })

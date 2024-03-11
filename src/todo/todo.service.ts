@@ -18,7 +18,7 @@ export class TodoService {
 
   async createTodo(createTodoDto: CreateTodoDto): Promise<Todo> {
     const { userId, title, isDone, appliedAt, sequence } = createTodoDto
-    return this.todoModel.create({
+    return await this.todoModel.create({
       userId,
       title,
       isDone,
