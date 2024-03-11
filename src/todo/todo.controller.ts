@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Param,
   ParseIntPipe,
   Post,
@@ -24,6 +25,13 @@ import { IUserReq } from 'src/user/interface/user-req.interface'
 @ApiTags('ToDo API')
 export class TodoController {
   constructor(private readonly todoService: TodoService) {}
+
+  @UseGuards(JwtAuthGuard)
+  @Get()
+  @ApiOperation({ summary: 'Get ToDo', description: '유저의 모든 ToDo get API' })
+  getTodoList(@Req() req: IUserReq): Promise<Todo[]> {
+    return this.todoService.getTodoList(req.user.id)
+  }
 
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(TransactionInterceptor)
