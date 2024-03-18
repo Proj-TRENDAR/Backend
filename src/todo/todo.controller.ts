@@ -18,8 +18,8 @@ import { JwtAuthGuard } from 'src/auth/authentication/jwt-auth.guard'
 import { TransactionInterceptor } from 'src/share/transaction/interceptor'
 import { CreateTodoDto } from 'src/todo/dto/create-todo-dto'
 import { UpdateTodoDto } from 'src/todo/dto/update-todo-dto'
-import { Todo } from 'models'
 import { IUserReq } from 'src/user/interface/user-req.interface'
+import { TodoResponseDto } from './dto/todo-response.dto'
 
 @Controller('todo')
 @ApiTags('ToDo API')
@@ -27,10 +27,16 @@ export class TodoController {
   constructor(private readonly todoService: TodoService) {}
 
   @UseGuards(JwtAuthGuard)
+  @UseInterceptors(TransactionInterceptor)
   @Get()
-  @ApiOperation({ summary: 'Get ToDo', description: '유저의 모든 ToDo get API' })
-  getTodoList(@Req() req: IUserReq): Promise<Todo[]> {
-    return this.todoService.getTodoList(req.user.id)
+  @ApiOperation({ summary: 'ToDo 가져오기', description: '유저의 모든 ToDo get API' })
+  @ApiOkResponse({
+    type: TodoResponseDto,
+    description: 'Successful response',
+  })
+  async getTodoList(@Req() req: IUserReq): Promise<TodoResponseDto[]> {
+    const todoList = await this.todoService.getTodoList(req.user.id)
+    return todoList.map(todo => new TodoResponseDto(todo))
   }
 
   @UseGuards(JwtAuthGuard)
@@ -41,21 +47,19 @@ export class TodoController {
     description: '성공 시(example)',
     schema: {
       example: {
-        createdAt: '2024-02-10T05:14:18.317Z',
-        updatedAt: '2024-02-10T05:14:18.317Z',
-        todoIdx: 1,
-        userId: '123',
+        idx: 1,
         title: 'test',
-        isDone: 1,
-        appliedAt: '2024-01-28T15:00:00.000Z',
+        isDone: true,
         sequence: 1,
+        appliedAt: '2024-03-13T04:42:00.000Z',
       },
     },
   })
   @UsePipes(ValidationPipe)
-  createTodo(@Body() createTodoDto: CreateTodoDto, @Req() req: IUserReq): Promise<Todo> {
+  async createTodo(@Body() createTodoDto: CreateTodoDto, @Req() req: IUserReq): Promise<TodoResponseDto> {
     createTodoDto.userId = req.user.id
-    return this.todoService.createTodo(createTodoDto)
+    const result = await this.todoService.createTodo(createTodoDto)
+    return new TodoResponseDto(result)
   }
 
   @UseGuards(JwtAuthGuard)
