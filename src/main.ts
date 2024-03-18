@@ -1,5 +1,5 @@
-import { NestFactory } from '@nestjs/core'
-import { ValidationPipe } from '@nestjs/common'
+import { NestFactory, Reflector } from '@nestjs/core'
+import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common'
 import { AppModule } from './app.module'
 import { ConfigService } from '@nestjs/config'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
@@ -31,6 +31,7 @@ async function bootstrap() {
       forbidNonWhitelisted: true, // dto에 없는 속성을 제거시켜주는 대신 error를 throw해주는 옵션
     })
   )
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)))
   await app.listen(port)
 }
 bootstrap()
