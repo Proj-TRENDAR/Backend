@@ -1,6 +1,6 @@
 import { convert, DateTimeFormatter, LocalDate, LocalDateTime, nativeJs } from '@js-joda/core'
-
-export class DateTimeUtil {
+// FIXME: 이거 왜 만들었찌??
+export class DateTime {
   private static DATE_FORMATTER = DateTimeFormatter.ofPattern('yyyy-MM-dd')
   private static DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern('yyyy-MM-dd HH:mm:ss')
 
