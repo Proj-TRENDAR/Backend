@@ -12,6 +12,7 @@ import { AuthenticationModule } from './auth/authentication/authentication.modul
 import { EventModule } from './event/event.module'
 import { TodoModule } from './todo/todo.module'
 import { RoutineModule } from './routine/routine.module'
+import { ExceptionModule } from './exception/exception.module'
 
 @Module({
   imports: [
@@ -65,6 +66,7 @@ import { RoutineModule } from './routine/routine.module'
     EventModule,
     TodoModule,
     RoutineModule,
+    ExceptionModule,
   ],
   controllers: [AppController],
   providers: [AppService],
