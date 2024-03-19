@@ -2,11 +2,14 @@ import { NestFactory, Reflector } from '@nestjs/core'
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common'
 import { AppModule } from './app.module'
 import { ConfigService } from '@nestjs/config'
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston'
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 import * as cookieParser from 'cookie-parser'
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule)
+  const app = await NestFactory.create(AppModule, {
+    bufferLogs: true, // 부트스트래핑 과정까지 nest-winston 로거 사용
+  })
   const configService = app.get(ConfigService)
   const port: number = configService.get('BACK_PORT')
   const config = new DocumentBuilder()
@@ -23,6 +26,7 @@ async function bootstrap() {
     credentials: true,
   }) // cors 활성화
   app.use(cookieParser())
+  app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER))
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true, // auto-transformation(request의 payload가 nest의 dto에 맞게 type를 변환 시켜주는 옵션)

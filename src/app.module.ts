@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { SequelizeModule } from '@nestjs/sequelize'
+import * as winston from 'winston'
+import { utilities, WinstonModule } from 'nest-winston'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { User, Todo, Social, Event, RecurringEvent, Routine, RoutineCompleted, RoutineDay } from 'models'
@@ -42,6 +44,20 @@ import { RoutineModule } from './routine/routine.module'
         timezone: '+09:00', // DB에서 가져올 때 시간 설정
       },
       logging: true,
+    }),
+    WinstonModule.forRoot({
+      transports: [
+        new winston.transports.Console({
+          level: process.env.NODE_ENV === 'production' ? 'info' : 'silly',
+          format: winston.format.combine(
+            winston.format.timestamp(), // 로그 남긴 시각 표시
+            utilities.format.nestLike('Trendar', {
+              // 로그 출처인 appName('Trendar') 설정
+              prettyPrint: true,
+            })
+          ),
+        }),
+      ],
     }),
     UserModule,
     SocialModule,

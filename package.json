@@ -36,14 +36,16 @@
     "cookie-parser": "^1.4.6",
     "cross-env": "^7.0.3",
     "mysql2": "^3.6.5",
+    "nest-winston": "^1.9.4",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
     "sequelize": "^6.34.0",
     "sequelize-cli": "^6.6.2",
-    "sequelize-typescript": "^2.1.5",
-    "sequelize-typescript-generator": "^11.0.6"
+    "sequelize-typescript": "^2.1.6",
+    "sequelize-typescript-generator": "^11.0.6",
+    "winston": "^3.12.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.3.0",
