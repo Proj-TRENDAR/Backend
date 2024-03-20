@@ -22,6 +22,12 @@ export class TodoService {
     })
   }
 
+  async getTodo(idx: number): Promise<Todo> {
+    return await this.todoModel.findOne({
+      where: { idx },
+    })
+  }
+
   async createTodo(createTodoDto: CreateTodoDto): Promise<Todo> {
     const { userId, title, isDone, appliedAt, sequence } = createTodoDto
     return await this.todoModel.create({
