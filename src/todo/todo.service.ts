@@ -41,6 +41,7 @@ export class TodoService {
 
   async updateTodo(idx: number, updateTodoDto: UpdateTodoDto) {
     const { title, isDone, appliedAt, sequence } = updateTodoDto
+    // TODO: sequence 겹치는지 확인해 줘야 해
     const updatedTodo = await this.todoModel.update(
       {
         title,
@@ -53,9 +54,10 @@ export class TodoService {
       }
     )
     if (updatedTodo[0]) {
-      return { success: true, message: '업데이트 성공' }
+      const todo = await this.getTodo(idx)
+      return { success: true, message: '업데이트 성공', data: todo }
     } else {
-      return { success: false, message: '업데이트 실패(변경 사항 없음)' }
+      return { success: false, message: '업데이트 실패(변경 사항 없음)', data: null }
     }
   }
 }
