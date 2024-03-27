@@ -3,6 +3,11 @@ import { Transform, Type } from 'class-transformer'
 import { IsBoolean, IsDate, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength } from 'class-validator'
 
 export class UpdateTodoDto {
+  @ApiPropertyOptional({ example: 'Todo Idx', description: 'Todo Idx' })
+  @IsNotEmpty()
+  @IsNumber()
+  idx!: number
+
   @ApiPropertyOptional({ example: 'todo 제목', description: '입력한 할 일' })
   @IsOptional()
   @IsString()
@@ -19,7 +24,6 @@ export class UpdateTodoDto {
   @Type(() => Date)
   @IsOptional()
   @IsDate()
-  @IsNotEmpty()
   appliedAt?: Date
 
   @ApiPropertyOptional({ example: '1~10', description: '우선 순위' })
