@@ -18,7 +18,6 @@ module.exports = {
     await queryInterface.sequelize.query(
       'ALTER TABLE `trendar`.`routine_day` CHANGE COLUMN `routineday_idx` `idx` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ;'
     )
-    await queryInterface.sequelize.query('')
     await queryInterface.sequelize.query('DROP TABLE `trendar`.`recurring_event`')
     await queryInterface.sequelize.query(
       'CREATE TABLE `trendar`.`recurring_event` (' +
