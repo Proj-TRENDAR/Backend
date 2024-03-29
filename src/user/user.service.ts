@@ -50,6 +50,13 @@ export class UserService {
     })
   }
 
+  async getInfoUsingMonth(id: string, date: Date): Promise<void> {
+    // const currentMonth = date.getMonth() + 1
+    // this.userModel.findAll({})
+    return
+  }
+
+  // 사용 X
   async create(createUserDto: CreateUserDto): Promise<User> {
     return this.userModel.create({
       id: createUserDto.id,
