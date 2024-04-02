@@ -6,6 +6,7 @@ module.exports = {
     await queryInterface.sequelize.query(
       'ALTER TABLE `trendar`.`todo` CHANGE COLUMN `todo_idx` `idx` BIGINT UNSIGNED NOT NULL ;'
     )
+    await queryInterface.sequelize.query('DROP TABLE `trendar`.`recurring_event`')
     await queryInterface.sequelize.query(
       'ALTER TABLE `trendar`.`event` CHANGE COLUMN `event_idx` `idx` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ;'
     )
@@ -18,7 +19,6 @@ module.exports = {
     await queryInterface.sequelize.query(
       'ALTER TABLE `trendar`.`routine_day` CHANGE COLUMN `routineday_idx` `idx` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT ;'
     )
-    await queryInterface.sequelize.query('DROP TABLE `trendar`.`recurring_event`')
     await queryInterface.sequelize.query(
       'CREATE TABLE `trendar`.`recurring_event` (' +
         '  `idx` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,' +
