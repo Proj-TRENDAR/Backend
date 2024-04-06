@@ -60,4 +60,12 @@ export class TodoService {
       return { success: false, message: '업데이트 실패(변경 사항 없음)', data: null }
     }
   }
+
+  async deleteTodo(idx: number) {
+    await this.todoModel.destroy({
+      where: {
+        idx,
+      },
+    })
+  }
 }

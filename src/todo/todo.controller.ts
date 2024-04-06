@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -74,5 +75,15 @@ export class TodoController {
   ): Promise<TodoResponseDto> {
     const result = await this.todoService.updateTodo(idx, updateTodo)
     return new TodoResponseDto(result.data)
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(TransactionInterceptor)
+  @Delete(':todoIdx')
+  @ApiOperation({ summary: 'ToDo 삭제', description: 'ToDo 삭제 API' })
+  @ApiOkResponse({ description: 'ToDo 삭제' })
+  @UsePipes(ValidationPipe)
+  async deleteTodo(@Param('todoIdx', ParseIntPipe) idx: number) {
+    await this.todoService.deleteTodo(idx)
   }
 }
