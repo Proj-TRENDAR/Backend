@@ -62,7 +62,7 @@ export class TodoService {
   }
 
   async deleteTodo(idx: number) {
-    await this.todoModel.destroy({
+    return await this.todoModel.destroy({
       where: {
         idx,
       },

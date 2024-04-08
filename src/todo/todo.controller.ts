@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -74,6 +75,9 @@ export class TodoController {
     @Body() updateTodo: UpdateTodoDto
   ): Promise<TodoResponseDto> {
     const result = await this.todoService.updateTodo(idx, updateTodo)
+    if (!result.success) {
+      throw new BadRequestException(result.message)
+    }
     return new TodoResponseDto(result.data)
   }
 
@@ -84,6 +88,9 @@ export class TodoController {
   @ApiOkResponse({ description: 'ToDo 삭제' })
   @UsePipes(ValidationPipe)
   async deleteTodo(@Param('todoIdx', ParseIntPipe) idx: number) {
-    await this.todoService.deleteTodo(idx)
+    const result = await this.todoService.deleteTodo(idx)
+    if (!result) {
+      throw new BadRequestException('삭제 중 오류 발생')
+    }
   }
 }
