@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/sequelize'
 import { Todo } from 'models'
 import { CreateTodoDto } from 'src/todo/dto/create-todo-dto'
 import { UpdateTodoDto } from 'src/todo/dto/update-todo-dto'
+import { Op } from 'sequelize'
 
 interface UpdateResponse {
   success: boolean
@@ -29,13 +30,27 @@ export class TodoService {
   }
 
   async createTodo(createTodoDto: CreateTodoDto): Promise<Todo> {
-    const { userId, title, isDone, appliedAt, sequence } = createTodoDto
+    const { userId, title, appliedAt } = createTodoDto
+    const startDate = new Date(appliedAt)
+    startDate.setHours(0, 0, 0, 0)
+    const endDate = new Date(appliedAt)
+    endDate.setHours(23, 59, 59, 999)
+
+    const lastSequenceTodoInfo = await this.todoModel.findOne({
+      raw: true,
+      where: {
+        appliedAt: {
+          [Op.between]: [startDate, endDate],
+        },
+      },
+      order: [['sequence', 'desc']],
+    })
+
     return await this.todoModel.create({
       userId,
       title,
-      isDone,
       appliedAt,
-      sequence,
+      sequence: lastSequenceTodoInfo ? lastSequenceTodoInfo.sequence + 1 : 1,
     })
   }
 
