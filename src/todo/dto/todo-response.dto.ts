@@ -7,9 +7,6 @@ export class TodoResponseDto {
   @Expose()
   idx: number
 
-  @Exclude()
-  userId: string
-
   @ApiProperty()
   @Expose()
   title: string
@@ -25,6 +22,9 @@ export class TodoResponseDto {
   @ApiProperty()
   @Expose()
   appliedAt: Date
+
+  @Exclude()
+  userId: string
 
   @Exclude()
   createdAt: Date
