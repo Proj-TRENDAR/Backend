@@ -11,7 +11,7 @@ export class CreateEventDto {
   @IsNotEmpty()
   @IsString()
   @MaxLength(45)
-  userId: string
+  userId!: string
 
   @ApiProperty({
     example: 'event title',
@@ -21,16 +21,16 @@ export class CreateEventDto {
   @IsNotEmpty()
   @IsString()
   @MaxLength(80)
-  title: string
+  title!: string
 
   @ApiProperty({
     example: 'true',
-    description: '하루종일 여부(true일 경우 startTime, endTime null)',
+    description: '하루종일 여부',
     required: true,
   })
   @IsNotEmpty()
   @IsNumber()
-  isAllDay: number
+  isAllDay!: number
 
   @ApiProperty({
     example: '2024-01-11 11:20:00',
@@ -48,17 +48,24 @@ export class CreateEventDto {
   })
   @Type(() => Date)
   @IsDate()
-  startTime: Date
+  startTime!: Date
 
   @ApiProperty({
     example: '2024-01-11 11:50:00',
-    description: '하루종일 여부(isAllDay)가 true일 경우 null',
+    description: '하루종일 여부(isAllDay)가 true일 경우 설정 날짜 기입(ex) 2024-01-11 00:00:00)',
   })
-  @IsOptional()
-  @Transform(({ value, obj }) => (obj.isAllDay === true ? null : value))
+  @IsNotEmpty()
+  @Transform(({ value, obj }) => {
+    if (obj.isAllDay) {
+      const date = new Date(value)
+      return new Date(date.setHours(0, 0, 0, 0))
+    } else {
+      return value
+    }
+  })
   @Type(() => Date)
   @IsDate()
-  endTime: Date | null
+  endTime!: Date
 
   @ApiProperty({
     example: '1',
@@ -67,7 +74,7 @@ export class CreateEventDto {
   })
   @IsNotEmpty()
   @IsNumber()
-  color: number
+  color!: number
 
   @ApiProperty({
     example: '서울시 광진구 광장동',
@@ -76,7 +83,7 @@ export class CreateEventDto {
   @IsOptional()
   @IsString()
   @MaxLength(200)
-  place: string | null
+  place?: string | null
 
   @ApiProperty({
     example: '땡땡이와 바뱍',
@@ -84,7 +91,7 @@ export class CreateEventDto {
   })
   @IsOptional()
   @IsString()
-  description: string | null
+  description?: string | null
 
   @ApiProperty({
     example: 'true',
@@ -93,7 +100,7 @@ export class CreateEventDto {
   })
   @IsNotEmpty()
   @IsNumber()
-  isRecurring: number
+  isRecurring!: number
 
   @ApiPropertyOptional({
     example: 'D',
