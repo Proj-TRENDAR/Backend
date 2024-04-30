@@ -15,8 +15,8 @@ import { Routine, RoutineCompleted } from 'models'
 import { JwtAuthGuard } from 'src/auth/authentication/jwt-auth.guard'
 import { RoutineService } from 'src/routine/routine.service'
 import { IUserReq } from 'src/user/interface/user-req.interface'
-import { CreateRoutineDto } from 'src/routine/dto/create-routine-dto'
-import { CreateRoutineCompletedDto } from 'src/routine/dto/create-routine-completed-dto'
+import { CreateRoutineDto } from 'src/routine/dto/create-routine.dto'
+import { CreateRoutineCompletedDto } from 'src/routine/dto/create-routine-completed.dto'
 import { TransactionInterceptor } from 'src/share/transaction/interceptor'
 
 @Controller('routine')

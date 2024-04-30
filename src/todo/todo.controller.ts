@@ -18,10 +18,10 @@ import { ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestj
 import { TodoService } from 'src/todo/todo.service'
 import { JwtAuthGuard } from 'src/auth/authentication/jwt-auth.guard'
 import { TransactionInterceptor } from 'src/share/transaction/interceptor'
-import { CreateTodoDto } from 'src/todo/dto/create-todo-dto'
-import { UpdateTodoDto } from 'src/todo/dto/update-todo-dto'
-import { IUserReq } from 'src/user/interface/user-req.interface'
+import { CreateTodoDto } from 'src/todo/dto/create-todo.dto'
+import { UpdateTodoDto } from 'src/todo/dto/update-todo.dto'
 import { TodoResponseDto } from './dto/todo-response.dto'
+import { IUserReq } from 'src/user/interface/user-req.interface'
 
 @Controller('todo')
 @ApiTags('ToDo API')

@@ -1,8 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/sequelize'
 import { Routine, RoutineCompleted, RoutineDay } from 'models'
-import { CreateRoutineDto } from 'src/routine/dto/create-routine-dto'
-import { CreateRoutineCompletedDto } from 'src/routine/dto/create-routine-completed-dto'
+import { CreateRoutineDto } from 'src/routine/dto/create-routine.dto'
+import { CreateRoutineCompletedDto } from 'src/routine/dto/create-routine-completed.dto'
 
 @Injectable()
 export class RoutineService {

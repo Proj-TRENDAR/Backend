@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/sequelize'
 import { Todo } from 'models'
-import { CreateTodoDto } from 'src/todo/dto/create-todo-dto'
-import { UpdateTodoDto } from 'src/todo/dto/update-todo-dto'
+import { CreateTodoDto } from 'src/todo/dto/create-todo.dto'
+import { UpdateTodoDto } from 'src/todo/dto/update-todo.dto'
 import { Op } from 'sequelize'
 
 interface UpdateResponse {
