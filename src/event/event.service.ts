@@ -15,12 +15,17 @@ export class EventService {
     @InjectModel(RecurringEvent)
     private recurringEventModel: typeof RecurringEvent
   ) {}
-  /*
-  return 1 : 첫번째 날짜가 더 늦다
 
-  return 0 : 날짜가 같다
-
-  return -1 : 첫번째 인자가 더 빠르다*/
+  /**
+   * Compare two dates.
+   *
+   * @param {Date} date1 First date
+   * @param {Date} date2 Second date
+   * @returns {number}
+   * - 1: The first date is later.
+   * - 0: The dates are equal.
+   * - -1: The first argument is earlier.
+   */
   private compareDate(date1: Date, date2: Date): number {
     const convertDate1 = new Date(date1).setHours(0, 0, 0, 0)
     const convertDate2 = new Date(date2).setHours(0, 0, 0, 0)
@@ -29,6 +34,13 @@ export class EventService {
     return 0
   }
 
+  /**
+   * Calculates the difference in days between two dates.
+   *
+   * @param {Date} date1 The first date
+   * @param {Date} date2 The second date
+   * @returns {number} The difference in days between the two dates
+   */
   private getDaysDiff(date1: Date, date2: Date): number {
     const time1 = date1.getTime()
     const time2 = date2.getTime()
@@ -36,9 +48,15 @@ export class EventService {
     return Math.ceil(timeDiff / (1000 * 3600 * 24))
   }
 
+  /**
+   * Calculates the week number of the month for the given date.
+   *
+   * @param {Date} date The date
+   * @returns {number} The week number of the month
+   */
   private getWeekly(date: Date) {
     const currentDate = date.getDate()
-    const firstDay = new Date(date.setDate(1)).getDay()
+    const firstDay = new Date(new Date(date).setDate(1)).getDay() // 1 -> 0로 교체 시 월요일 시작
     return Math.ceil((currentDate + firstDay) / 7)
   }
 
@@ -135,6 +153,7 @@ export class EventService {
         return a.isAllDay ? -1 : 1 // isAllDay true가 우선
       })
     })
+
     return result
   }
   async getMonthlyEvent(userId: string, year: number, month: number): Promise<Event[][]> {
