@@ -5,11 +5,6 @@ import { CreateTodoDto } from 'src/todo/dto/create-todo.dto'
 import { UpdateTodoDto } from 'src/todo/dto/update-todo.dto'
 import { Op } from 'sequelize'
 
-interface UpdateResponse {
-  success: boolean
-  message: string
-}
-
 @Injectable()
 export class TodoService {
   constructor(
