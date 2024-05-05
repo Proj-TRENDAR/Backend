@@ -21,6 +21,7 @@ import { CreateEventDto } from 'src/event/dto/create-event.dto'
 import { UpdateEventDto } from 'src/event/dto/update-event.dto'
 import { JwtAuthGuard } from 'src/auth/authentication/jwt-auth.guard'
 import { IUserReq } from 'src/user/interface/user-req.interface'
+import { EventResponseDto } from './dto/event-response.dto'
 
 @Controller('event')
 @ApiTags('Event API')
@@ -30,12 +31,13 @@ export class EventController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(TransactionInterceptor)
   @Get()
-  getEventUsingMonth(
+  async getEventUsingMonth(
     @Req() req: IUserReq,
-    @Query('year') year: string,
-    @Query('month') month: string
-  ): Promise<Event[]> {
-    return this.eventService.getEventUsingMonth(req.user.id, year, month)
+    @Query('year') year: number,
+    @Query('month') month: number
+  ): Promise<EventResponseDto[][]> {
+    const event = await this.eventService.getMonthlyEvent(req.user.id, year, month)
+    return event.map(row => row.map(item => new EventResponseDto(item)))
   }
 
   @UseGuards(JwtAuthGuard)

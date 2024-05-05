@@ -137,7 +137,32 @@ export class EventService {
     })
     return result
   }
+  async getMonthlyEvent(userId: string, year: number, month: number): Promise<Event[][]> {
+    const weeklyDate = []
+    const firstDayOfMonth = new Date(year, month - 1, 1)
+    const lastDayOfMonth = new Date(year, month, 0)
+    const currentDate = new Date(firstDayOfMonth)
+    const lastWeekNum = this.getWeekly(lastDayOfMonth)
 
+    while (currentDate <= lastDayOfMonth) {
+      if (this.getWeekly(currentDate) < lastWeekNum && currentDate.getMonth() + 1 === month) {
+        weeklyDate.push(currentDate.getDate())
+      }
+      currentDate.setDate(currentDate.getDate() + 7)
+      // 마지막 주에서 월이 넘어간 경우
+      if (currentDate.getMonth() !== month - 1) {
+        weeklyDate.push(lastDayOfMonth.getDate())
+      }
+    }
+
+    const result = []
+    for (const date of weeklyDate) {
+      const weeklyEvent = await this.getWeeklyEvent(userId, year, month, date)
+      result.push(...weeklyEvent)
+    }
+
+    return result
+  }
   async createEvent(createEventDto: CreateEventDto): Promise<Event> {
     const { userId, title, isAllDay, startTime, endTime, color, place, description, isRecurring } = createEventDto
     this.eventModel.create({
