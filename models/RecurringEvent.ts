@@ -7,6 +7,7 @@ export interface RecurringEventAttributes {
   recurringType?: string
   separationCount?: number
   maxNumOfOccurrances?: number
+  endTime?: Date
   dayOfWeek?: number
   dayOfMonth?: number
   weekOfMonth?: number
@@ -40,6 +41,9 @@ export class RecurringEvent
 
   @Column({ field: 'max_num_of_occurrances', allowNull: true, type: DataType.INTEGER })
   maxNumOfOccurrances?: number
+
+  @Column({ field: 'end_time', allowNull: true, type: DataType.DATE })
+  endTime?: Date
 
   @Column({ field: 'day_of_week', allowNull: true, type: DataType.INTEGER })
   dayOfWeek?: number
