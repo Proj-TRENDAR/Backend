@@ -3,31 +3,31 @@ import { ApiProperty } from '@nestjs/swagger'
 import { EventAttributes } from 'models/Event'
 
 export class EventResponseDto {
-  @ApiProperty()
+  @ApiProperty({ example: 1, description: 'Event idx' })
   @Expose()
-  idx!: number
+  idx: number
 
-  @ApiProperty()
+  @ApiProperty({ example: '연휴', description: 'event 제목' })
   @Expose()
-  title!: string
+  title: string
 
-  @ApiProperty()
+  @ApiProperty({ example: true, description: '하루 종일 여부' })
   @Expose()
-  isAllDay!: number
+  isAllDay: number
 
-  @ApiProperty()
+  @ApiProperty({ example: 1, description: '1~7(temp) 색상' })
   @Expose()
-  color!: number
+  color: number
 
-  @ApiProperty()
+  @ApiProperty({ example: 3, description: '몇일에 걸쳐있는지(없으면 null)' })
   @Expose()
-  being?: number | null
+  being: number | null
 
-  @ApiProperty()
+  @ApiProperty({ example: '2024-05-04 00:00:00Z', description: '시작 시간' })
   @Expose()
   startTime: Date
 
-  @ApiProperty()
+  @ApiProperty({ example: '2024-05-06 00:00:00Z', description: '종료 시간' })
   @Expose()
   endTime: Date
 

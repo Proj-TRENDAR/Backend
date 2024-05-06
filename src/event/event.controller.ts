@@ -13,7 +13,15 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common'
-import { ApiTags, ApiOperation, ApiCreatedResponse, ApiOkResponse, ApiNotFoundResponse } from '@nestjs/swagger'
+import {
+  ApiTags,
+  ApiOperation,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiNotFoundResponse,
+  ApiBearerAuth,
+  getSchemaPath,
+} from '@nestjs/swagger'
 import { TransactionInterceptor } from 'src/share/transaction/interceptor'
 import { Event } from 'models'
 import { EventService } from 'src/event/event.service'
@@ -31,6 +39,15 @@ export class EventController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(TransactionInterceptor)
   @Get()
+  @ApiBearerAuth()
+  @ApiOperation({ summary: '일정 조회', description: '일정 조회 API' })
+  @ApiOkResponse({
+    type: EventResponseDto,
+    description: '일정 조회 성공',
+    schema: {
+      $ref: getSchemaPath(EventResponseDto),
+    },
+  })
   async getEventUsingMonth(
     @Req() req: IUserReq,
     @Query('year') year: number,
@@ -43,6 +60,7 @@ export class EventController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(TransactionInterceptor)
   @Post()
+  @ApiBearerAuth()
   @ApiOperation({ summary: '일정 생성', description: '일정 생성 API' })
   @ApiCreatedResponse({
     description: '성공 시(example)',
@@ -71,6 +89,7 @@ export class EventController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(TransactionInterceptor)
   @Put(':eventIdx')
+  @ApiBearerAuth()
   @ApiOperation({ summary: '일정 수정', description: '일정 수정 API' })
   @ApiOkResponse({ description: '일정 수정 성공' })
   @ApiNotFoundResponse({ description: '일정 수정 실패' })

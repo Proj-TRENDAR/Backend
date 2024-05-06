@@ -14,7 +14,15 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common'
-import { ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger'
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger'
 import { TodoService } from 'src/todo/todo.service'
 import { JwtAuthGuard } from 'src/auth/authentication/jwt-auth.guard'
 import { TransactionInterceptor } from 'src/share/transaction/interceptor'
@@ -31,6 +39,7 @@ export class TodoController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(TransactionInterceptor)
   @Get()
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'ToDo 가져오기', description: '유저의 모든 ToDo get API' })
   @ApiOkResponse({
     type: TodoResponseDto,
@@ -44,17 +53,13 @@ export class TodoController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(TransactionInterceptor)
   @Post()
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'ToDo 생성', description: 'ToDo 생성 API' })
   @ApiCreatedResponse({
-    description: '성공 시(example)',
+    type: TodoResponseDto,
+    description: 'ToDo 생성 성공',
     schema: {
-      example: {
-        idx: 1,
-        title: 'test',
-        isDone: true,
-        sequence: 1,
-        appliedAt: '2024-03-13T04:42:00.000Z',
-      },
+      $ref: getSchemaPath(TodoResponseDto),
     },
   })
   @UsePipes(ValidationPipe)
@@ -67,8 +72,15 @@ export class TodoController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(TransactionInterceptor)
   @Put(':todoIdx')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'ToDo 수정', description: 'ToDo 수정 API' })
-  @ApiOkResponse({ description: 'ToDo 수정' })
+  @ApiOkResponse({
+    type: TodoResponseDto,
+    description: 'ToDo 수정 성공',
+    schema: {
+      $ref: getSchemaPath(TodoResponseDto),
+    },
+  })
   @UsePipes(ValidationPipe)
   async updateTodo(
     @Param('todoIdx', ParseIntPipe) idx: number,
@@ -84,8 +96,10 @@ export class TodoController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(TransactionInterceptor)
   @Delete(':todoIdx')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'ToDo 삭제', description: 'ToDo 삭제 API' })
-  @ApiOkResponse({ description: 'ToDo 삭제' })
+  @ApiOkResponse({ description: 'ToDo 삭제 성공' })
+  @ApiBadRequestResponse({ description: 'ToDo 삭제 실패' })
   @UsePipes(ValidationPipe)
   async deleteTodo(@Param('todoIdx', ParseIntPipe) idx: number) {
     const result = await this.todoService.deleteTodo(idx)
