@@ -19,9 +19,9 @@ export class EventResponseDto {
   @Expose()
   color: number
 
-  @ApiProperty({ example: 3, description: '몇일에 걸쳐있는지(없으면 null)' })
+  @ApiProperty({ example: 3, description: '몇일에 걸쳐있는지(없으면 null), 생성 및 수정시 undefined' })
   @Expose()
-  being: number | null
+  being?: number | null
 
   @ApiProperty({ example: '2024-05-04 00:00:00Z', description: '시작 시간' })
   @Expose()

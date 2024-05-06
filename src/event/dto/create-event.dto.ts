@@ -34,7 +34,7 @@ export class CreateEventDto {
 
   @ApiProperty({
     example: '2024-01-11 11:20:00',
-    description: '하루종일 여부(isAllDay)가 true일 경우 설정 날짜 기입(ex) 2024-01-11 00:00:00)',
+    description: '하루종일 여부(isAllDay)가 true일 경우 설정 날짜 기입<br/>(ex) 2024-01-11 00:00:00)',
     required: true,
   })
   @IsNotEmpty()
@@ -52,7 +52,7 @@ export class CreateEventDto {
 
   @ApiProperty({
     example: '2024-01-11 11:50:00',
-    description: '하루종일 여부(isAllDay)가 true일 경우 설정 날짜 기입(ex) 2024-01-11 00:00:00)',
+    description: '하루종일 여부(isAllDay)가 true일 경우 설정 날짜 기입<br/>(ex) 2024-01-11 00:00:00)',
   })
   @IsNotEmpty()
   @Transform(({ value, obj }) => {
@@ -104,7 +104,7 @@ export class CreateEventDto {
 
   @ApiPropertyOptional({
     example: 'D',
-    description: '반복 타입\nD(일) | W(주) | M(월) | Y(연)',
+    description: '반복 타입<br/>D(일) | W(주) | M(월) | Y(연)',
   })
   @IsOptional()
   @IsString()
@@ -112,7 +112,7 @@ export class CreateEventDto {
 
   @ApiPropertyOptional({
     example: '0',
-    description: '간격 주기 설정\n(ex) 반복 타입이 주간일 경우, 1 : 격주)',
+    description: '간격 주기 설정<br/>(ex) 반복 타입이 주간일 경우, 1 : 격주)',
   })
   @IsOptional()
   @IsNumber()
@@ -120,16 +120,25 @@ export class CreateEventDto {
 
   @ApiPropertyOptional({
     example: '1',
-    description: '최대 반복 횟수',
+    description: '(isRecurring이 true일 경우) 최대 반복 횟수',
   })
   @IsOptional()
   @IsNumber()
   maxNumOfOccurrances?: number
 
   @ApiPropertyOptional({
+    example: '2024-01-19 11:50:00',
+    description: '(isRecurring이 true일 경우) 반복 종료 시간',
+  })
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  recurringEndTime: Date
+
+  @ApiPropertyOptional({
     example: '0',
     description:
-      '주간 특정 요일 설정(여러 요일일 경우 row 각각 생성)\n(0 = 일요일, 1 = 월요일, 2 = 화요일, 3 = 수요일, 4 = 목요일, 5 = 금요일, 6 = 토요일)',
+      '주간 특정 요일 설정(여러 요일일 경우 row 각각 생성)<br/>(0 = 일요일, 1 = 월요일, 2 = 화요일, 3 = 수요일, 4 = 목요일, 5 = 금요일, 6 = 토요일)',
   })
   @IsOptional()
   @IsNumber()
@@ -137,7 +146,7 @@ export class CreateEventDto {
 
   @ApiPropertyOptional({
     example: '3',
-    description: '월간 특정 일 설정\n(1~31)',
+    description: '월간 특정 일 설정(1~31)',
   })
   @IsOptional()
   @IsNumber()
