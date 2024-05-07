@@ -54,7 +54,7 @@ export class EventService {
    * @param {Date} date The date
    * @returns {number} The week number of the month
    */
-  private getWeekly(date: Date) {
+  private getWeekly(date: Date): number {
     const currentDate = date.getDate()
     const firstDay = new Date(new Date(date).setDate(1)).getDay() // 1 -> 0로 교체 시 월요일 시작
     return Math.ceil((currentDate + firstDay) / 7)
@@ -184,7 +184,7 @@ export class EventService {
   }
   async createEvent(createEventDto: CreateEventDto): Promise<Event> {
     const { userId, title, isAllDay, startTime, endTime, color, place, description, isRecurring } = createEventDto
-    this.eventModel.create({
+    const createdEvent = await this.eventModel.create({
       userId,
       title,
       isAllDay,
@@ -195,20 +195,11 @@ export class EventService {
       description,
       isRecurring,
     })
+    // FIXME: recurring event 수정해야해 일, 월, 화 이렇게 넣을때 이런식으로 넣으면 안됌.
     if (isRecurring) {
-      const { recurringType, separationCount, maxNumOfOccurrances, dayOfWeek, dayOfMonth, weekOfMonth, monthOfYear } =
-        createEventDto
-      this.recurringEventModel.create({
-        recurringType,
-        separationCount,
-        maxNumOfOccurrances,
-        dayOfWeek,
-        dayOfMonth,
-        weekOfMonth,
-        monthOfYear,
-      })
+      await this.createRecurringEvent(createdEvent.idx, createEventDto)
     }
-    return // TODO: 무엇을 return 할지 고민...
+    return createdEvent
   }
 
   // TODO: recurring event 추가해야 함 + update dto 수정

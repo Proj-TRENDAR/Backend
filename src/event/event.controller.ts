@@ -63,27 +63,16 @@ export class EventController {
   @ApiBearerAuth()
   @ApiOperation({ summary: '일정 생성', description: '일정 생성 API' })
   @ApiCreatedResponse({
-    description: '성공 시(example)',
+    type: EventResponseDto,
+    description: '일정 생성 성공',
     schema: {
-      example: {
-        createdAt: '2024-01-22T11:45:55.564Z',
-        updatedAt: '2024-01-22T11:45:55.564Z',
-        eventIdx: 1,
-        title: 'test',
-        userId: '123',
-        isAllDay: 0,
-        startTime: '2024-01-11T02:20:00.000Z',
-        endTime: '2024-01-11T02:25:00.000Z',
-        color: 1,
-        description: '테스트 중!',
-        isRecurring: 0,
-      },
+      $ref: getSchemaPath(EventResponseDto),
     },
   })
   @UsePipes(ValidationPipe)
-  createEvent(@Body() createEventDto: CreateEventDto, @Req() req: IUserReq): Promise<Event> {
+  async createEvent(@Body() createEventDto: CreateEventDto, @Req() req: IUserReq): Promise<EventResponseDto> {
     createEventDto.userId = req.user.id
-    return this.eventService.createEvent(createEventDto)
+    return new EventResponseDto(await this.eventService.createEvent(createEventDto))
   }
 
   @UseGuards(JwtAuthGuard)
