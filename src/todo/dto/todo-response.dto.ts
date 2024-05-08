@@ -1,9 +1,9 @@
-import { Exclude, Expose } from 'class-transformer'
-import { TodoAttributes } from 'models/Todo'
+import { Exclude, Expose, plainToClass } from 'class-transformer'
+import { TodoResponse } from 'models/Todo'
 import { ApiProperty } from '@nestjs/swagger'
 
 export class TodoResponseDto {
-  @ApiProperty({ example: '1', description: 'ToDo idx' })
+  @ApiProperty({ example: 1, description: 'ToDo idx' })
   @Expose()
   idx: number
 
@@ -11,11 +11,11 @@ export class TodoResponseDto {
   @Expose()
   title: string
 
-  @ApiProperty({ example: 'false', description: '완료 여부' })
+  @ApiProperty({ example: false, description: '완료 여부' })
   @Expose()
   isDone: number
 
-  @ApiProperty({ example: '1', description: '순서' })
+  @ApiProperty({ example: 1, description: '순서' })
   @Expose()
   sequence: number
 
@@ -32,12 +32,7 @@ export class TodoResponseDto {
   @Exclude()
   updatedAt: Date
 
-  constructor(data: TodoAttributes) {
-    this.idx = data.idx
-    this.title = data.title
-    this.isDone = data.isDone
-    this.sequence = data.sequence
-    this.appliedAt = data.appliedAt
-    Object.seal(this)
+  constructor(todo: TodoResponse) {
+    Object.assign(this, plainToClass(TodoResponseDto, todo, { excludeExtraneousValues: true }))
   }
 }

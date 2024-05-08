@@ -4,6 +4,7 @@ import { Todo } from 'models'
 import { CreateTodoDto } from 'src/todo/dto/create-todo.dto'
 import { UpdateTodoDto } from 'src/todo/dto/update-todo.dto'
 import { Op } from 'sequelize'
+import { TodoResponseDto } from './dto/todo-response.dto'
 
 @Injectable()
 export class TodoService {
@@ -12,10 +13,11 @@ export class TodoService {
     private todoModel: typeof Todo
   ) {}
 
-  async getTodoList(userId: string): Promise<Todo[]> {
-    return await this.todoModel.findAll({
+  async getTodoList(userId: string): Promise<TodoResponseDto[]> {
+    const todo = await this.todoModel.findAll({
       where: { userId },
     })
+    return todo.map(item => new TodoResponseDto(item))
   }
 
   async getTodo(idx: number): Promise<Todo> {

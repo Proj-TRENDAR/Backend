@@ -46,8 +46,7 @@ export class TodoController {
     description: 'Successful response',
   })
   async getTodoList(@Req() req: IUserReq): Promise<TodoResponseDto[]> {
-    const todoList = await this.todoService.getTodoList(req.user.id)
-    return todoList.map(todo => new TodoResponseDto(todo))
+    return await this.todoService.getTodoList(req.user.id)
   }
 
   @UseGuards(JwtAuthGuard)
