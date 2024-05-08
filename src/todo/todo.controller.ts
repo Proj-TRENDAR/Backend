@@ -64,8 +64,7 @@ export class TodoController {
   @UsePipes(ValidationPipe)
   async createTodo(@Body() createTodoDto: CreateTodoDto, @Req() req: IUserReq): Promise<TodoResponseDto> {
     createTodoDto.userId = req.user.id
-    const result = await this.todoService.createTodo(createTodoDto)
-    return new TodoResponseDto(result)
+    return await this.todoService.createTodo(createTodoDto)
   }
 
   @UseGuards(JwtAuthGuard)

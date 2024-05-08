@@ -26,7 +26,7 @@ export class TodoService {
     })
   }
 
-  async createTodo(createTodoDto: CreateTodoDto): Promise<Todo> {
+  async createTodo(createTodoDto: CreateTodoDto): Promise<TodoResponseDto> {
     const { userId, title, appliedAt } = createTodoDto
     const startDate = new Date(appliedAt)
     startDate.setHours(0, 0, 0, 0)
@@ -43,12 +43,13 @@ export class TodoService {
       order: [['sequence', 'desc']],
     })
 
-    return await this.todoModel.create({
+    const createdTodo = await this.todoModel.create({
       userId,
       title,
       appliedAt,
       sequence: lastSequenceTodoInfo ? lastSequenceTodoInfo.sequence + 1 : 1,
     })
+    return new TodoResponseDto(createdTodo)
   }
 
   async updateTodo(idx: number, updateTodoDto: UpdateTodoDto) {
