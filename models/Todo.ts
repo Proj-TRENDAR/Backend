@@ -12,8 +12,6 @@ export interface TodoAttributes {
   sequence?: number
 }
 
-export interface TodoResponse extends Pick<TodoAttributes, 'idx' | 'title' | 'isDone' | 'sequence' | 'appliedAt'> {}
-
 @Table({ tableName: 'todo', timestamps: false })
 export class Todo extends Model<TodoAttributes, TodoAttributes> implements TodoAttributes {
   @Column({ primaryKey: true, autoIncrement: true, type: DataType.BIGINT })

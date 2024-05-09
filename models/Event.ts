@@ -17,10 +17,6 @@ export interface EventAttributes {
   isRecurring?: number
 }
 
-export interface EventResponse extends Pick<EventAttributes, 'idx' | 'isAllDay' | 'color' | 'startTime' | 'endTime'> {
-  being?: number
-}
-
 @Table({ tableName: 'event', timestamps: false })
 export class Event extends Model<EventAttributes, EventAttributes> implements EventAttributes {
   @Column({ primaryKey: true, autoIncrement: true, type: DataType.BIGINT })

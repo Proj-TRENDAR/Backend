@@ -1,6 +1,6 @@
 import { Expose, plainToClass } from 'class-transformer'
 import { ApiProperty } from '@nestjs/swagger'
-import { EventResponse } from 'models/Event'
+import { EventResponse } from 'models/Event.response'
 
 export class EventResponseDto {
   @ApiProperty({ example: 1, description: 'Event idx' })

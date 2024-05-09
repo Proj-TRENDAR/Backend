@@ -1,5 +1,5 @@
 import { Exclude, Expose, plainToClass } from 'class-transformer'
-import { TodoResponse } from 'models/Todo'
+import { TodoResponse } from 'models/Todo.response'
 import { ApiProperty } from '@nestjs/swagger'
 
 export class TodoResponseDto {

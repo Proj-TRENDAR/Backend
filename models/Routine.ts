@@ -1,4 +1,4 @@
-import { Model, Table, Column, DataType, Index, Sequelize, ForeignKey, BelongsTo, HasMany } from 'sequelize-typescript'
+import { Model, Table, Column, DataType, Index, ForeignKey, BelongsTo, HasMany } from 'sequelize-typescript'
 import { User } from './User'
 import { RoutineCompleted } from './RoutineCompleted'
 import { RoutineDay } from './RoutineDay'
