@@ -156,7 +156,7 @@ export class EventService {
 
     return result
   }
-  async getMonthlyEvent(userId: string, year: number, month: number): Promise<Event[][]> {
+  async getMonthlyEvent(userId: string, year: number, month: number): Promise<EventResponseDto[][]> {
     const weeklyDate = []
     const firstDayOfMonth = new Date(year, month - 1, 1)
     const lastDayOfMonth = new Date(year, month, 0)
@@ -174,13 +174,12 @@ export class EventService {
       }
     }
 
-    const result = []
-    for (const date of weeklyDate) {
-      const weeklyEvent = await this.getWeeklyEvent(userId, year, month, date)
-      result.push(...weeklyEvent)
-    }
-
-    return result
+    return await Promise.all(
+      weeklyDate.map(async date => {
+        const weeklyEvent = await this.getWeeklyEvent(userId, year, month, date)
+        return weeklyEvent.flatMap(row => row.map(item => new EventResponseDto(item)))
+      })
+    )
   }
   async createEvent(createEventDto: CreateEventDto): Promise<Event> {
     const { userId, title, isAllDay, startTime, endTime, color, place, description, isRecurring } = createEventDto

@@ -1,6 +1,6 @@
-import { Expose } from 'class-transformer'
+import { Expose, plainToClass } from 'class-transformer'
 import { ApiProperty } from '@nestjs/swagger'
-import { EventAttributes } from 'models/Event'
+import { EventResponse } from 'models/Event'
 
 export class EventResponseDto {
   @ApiProperty({ example: 1, description: 'Event idx' })
@@ -31,14 +31,7 @@ export class EventResponseDto {
   @Expose()
   endTime: Date
 
-  constructor(data: EventAttributes & { being?: number | null }) {
-    this.idx = data.idx
-    this.title = data.title
-    this.isAllDay = data.isAllDay
-    this.color = data.color
-    this.being = data.being
-    this.startTime = data.startTime
-    this.endTime = data.endTime
-    Object.seal(this)
+  constructor(event: EventResponse) {
+    Object.assign(this, plainToClass(EventResponseDto, event, { excludeExtraneousValues: true }))
   }
 }
