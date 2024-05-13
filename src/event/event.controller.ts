@@ -53,8 +53,7 @@ export class EventController {
     @Query('year') year: number,
     @Query('month') month: number
   ): Promise<EventResponseDto[][]> {
-    const event = await this.eventService.getMonthlyEvent(req.user.id, year, month)
-    return event.map(row => row.map(item => new EventResponseDto(item)))
+    return await this.eventService.getMonthlyEvent(req.user.id, year, month)
   }
 
   @UseGuards(JwtAuthGuard)
@@ -72,7 +71,7 @@ export class EventController {
   @UsePipes(ValidationPipe)
   async createEvent(@Body() createEventDto: CreateEventDto, @Req() req: IUserReq): Promise<EventResponseDto> {
     createEventDto.userId = req.user.id
-    return new EventResponseDto(await this.eventService.createEvent(createEventDto))
+    return await this.eventService.createEvent(createEventDto)
   }
 
   @UseGuards(JwtAuthGuard)

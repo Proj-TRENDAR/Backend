@@ -182,6 +182,7 @@ export class EventService {
     )
   }
   async createEvent(createEventDto: CreateEventDto): Promise<Event> {
+  async createEvent(createEventDto: CreateEventDto): Promise<EventResponseDto> {
     const { userId, title, isAllDay, startTime, endTime, color, place, description, isRecurring } = createEventDto
     const createdEvent = await this.eventModel.create({
       userId,
@@ -194,11 +195,11 @@ export class EventService {
       description,
       isRecurring,
     })
-    // FIXME: recurring event 수정해야해 일, 월, 화 이렇게 넣을때 이런식으로 넣으면 안됌.
+
     if (isRecurring) {
       await this.createRecurringEvent(createdEvent.idx, createEventDto)
     }
-    return createdEvent
+    return new EventResponseDto(createdEvent)
   }
 
   // TODO: recurring event 추가해야 함 + update dto 수정
@@ -226,5 +227,29 @@ export class EventService {
     } else {
       throw new HttpException({ success: false, message: '일정 수정 실패' }, HttpStatus.BAD_REQUEST)
     }
+  }
+
+  async createRecurringEvent(eventIdx: number, createEventDto: CreateEventDto): Promise<RecurringEvent> {
+    const {
+      recurringType,
+      separationCount,
+      maxNumOfOccurrances,
+      recurringEndTime,
+      dayOfWeek,
+      dayOfMonth,
+      weekOfMonth,
+      monthOfYear,
+    } = createEventDto
+    return await this.recurringEventModel.create({
+      eventIdx,
+      recurringType,
+      separationCount,
+      maxNumOfOccurrances,
+      endTime: recurringEndTime,
+      dayOfWeek: JSON.stringify(dayOfWeek),
+      dayOfMonth: JSON.stringify(dayOfMonth),
+      weekOfMonth,
+      monthOfYear: JSON.stringify(monthOfYear),
+    })
   }
 }
