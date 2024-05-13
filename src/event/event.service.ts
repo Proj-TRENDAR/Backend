@@ -181,7 +181,6 @@ export class EventService {
       })
     )
   }
-  async createEvent(createEventDto: CreateEventDto): Promise<Event> {
   async createEvent(createEventDto: CreateEventDto): Promise<EventResponseDto> {
     const { userId, title, isAllDay, startTime, endTime, color, place, description, isRecurring } = createEventDto
     const createdEvent = await this.eventModel.create({
@@ -250,6 +249,14 @@ export class EventService {
       dayOfMonth: JSON.stringify(dayOfMonth),
       weekOfMonth,
       monthOfYear: JSON.stringify(monthOfYear),
+    })
+  }
+
+  async deleteRecurringEvent(eventIdx: number) {
+    await this.recurringEventModel.destroy({
+      where: {
+        eventIdx,
+      },
     })
   }
 }
