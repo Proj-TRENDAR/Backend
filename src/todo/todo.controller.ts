@@ -30,6 +30,8 @@ import { CreateTodoDto } from 'src/todo/dto/create-todo.dto'
 import { UpdateTodoDto } from 'src/todo/dto/update-todo.dto'
 import { TodoResponseDto } from './dto/todo-response.dto'
 import { IUserReq } from 'src/user/interface/user-req.interface'
+import { TransactionParam } from '../share/transaction/param'
+import { Transaction } from 'sequelize'
 
 @Controller('todo')
 @ApiTags('ToDo API')
@@ -37,7 +39,6 @@ export class TodoController {
   constructor(private readonly todoService: TodoService) {}
 
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(TransactionInterceptor)
   @Get()
   @ApiBearerAuth()
   @ApiOperation({ summary: 'ToDo 가져오기', description: '유저의 모든 ToDo get API' })
@@ -62,9 +63,13 @@ export class TodoController {
     },
   })
   @UsePipes(ValidationPipe)
-  async createTodo(@Body() createTodoDto: CreateTodoDto, @Req() req: IUserReq): Promise<TodoResponseDto> {
+  async createTodo(
+    @Body() createTodoDto: CreateTodoDto,
+    @Req() req: IUserReq,
+    @TransactionParam() transaction: Transaction
+  ): Promise<TodoResponseDto> {
     createTodoDto.userId = req.user.id
-    return await this.todoService.createTodo(createTodoDto)
+    return await this.todoService.createTodo(createTodoDto, transaction)
   }
 
   @UseGuards(JwtAuthGuard)
@@ -82,9 +87,10 @@ export class TodoController {
   @UsePipes(ValidationPipe)
   async updateTodo(
     @Param('todoIdx', ParseIntPipe) idx: number,
-    @Body() updateTodo: UpdateTodoDto
+    @Body() updateTodo: UpdateTodoDto,
+    @TransactionParam() transaction: Transaction
   ): Promise<TodoResponseDto> {
-    const result = await this.todoService.updateTodo(idx, updateTodo)
+    const result = await this.todoService.updateTodo(idx, updateTodo, transaction)
     if (!result.success) {
       throw new BadRequestException(result.message)
     }
@@ -99,8 +105,8 @@ export class TodoController {
   @ApiOkResponse({ description: 'ToDo 삭제 성공' })
   @ApiBadRequestResponse({ description: 'ToDo 삭제 실패' })
   @UsePipes(ValidationPipe)
-  async deleteTodo(@Param('todoIdx', ParseIntPipe) idx: number) {
-    const result = await this.todoService.deleteTodo(idx)
+  async deleteTodo(@Param('todoIdx', ParseIntPipe) idx: number, @TransactionParam() transaction: Transaction) {
+    const result = await this.todoService.deleteTodo(idx, transaction)
     if (!result) {
       throw new BadRequestException('삭제 중 오류 발생')
     }

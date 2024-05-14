@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/sequelize'
-import { Op } from 'sequelize'
+import { Op, Transaction } from 'sequelize'
 import { Todo } from 'models'
 import { CreateTodoDto } from 'src/todo/dto/create-todo.dto'
 import { UpdateTodoDto } from 'src/todo/dto/update-todo.dto'
@@ -26,7 +26,7 @@ export class TodoService {
     })
   }
 
-  async createTodo(createTodoDto: CreateTodoDto): Promise<TodoResponseDto> {
+  async createTodo(createTodoDto: CreateTodoDto, transaction: Transaction): Promise<TodoResponseDto> {
     const { userId, title, appliedAt } = createTodoDto
     const startDate = new Date(appliedAt)
     startDate.setHours(0, 0, 0, 0)
@@ -41,18 +41,22 @@ export class TodoService {
         },
       },
       order: [['sequence', 'desc']],
+      transaction,
     })
 
-    const createdTodo = await this.todoModel.create({
-      userId,
-      title,
-      appliedAt,
-      sequence: lastSequenceTodoInfo ? lastSequenceTodoInfo.sequence + 1 : 1,
-    })
+    const createdTodo = await this.todoModel.create(
+      {
+        userId,
+        title,
+        appliedAt,
+        sequence: lastSequenceTodoInfo ? lastSequenceTodoInfo.sequence + 1 : 1,
+      },
+      { transaction }
+    )
     return new TodoResponseDto(createdTodo)
   }
 
-  async updateTodo(idx: number, updateTodoDto: UpdateTodoDto) {
+  async updateTodo(idx: number, updateTodoDto: UpdateTodoDto, transaction: Transaction) {
     const { title, isDone, appliedAt, sequence } = updateTodoDto
     // TODO: sequence 겹치는지 확인해 줘야 해
     const updatedTodo = await this.todoModel.update(
@@ -64,6 +68,7 @@ export class TodoService {
       },
       {
         where: { idx },
+        transaction,
       }
     )
     if (updatedTodo[0]) {
@@ -74,11 +79,12 @@ export class TodoService {
     }
   }
 
-  async deleteTodo(idx: number) {
+  async deleteTodo(idx: number, transaction: Transaction) {
     return await this.todoModel.destroy({
       where: {
         idx,
       },
+      transaction,
     })
   }
 }

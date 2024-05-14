@@ -5,7 +5,7 @@ import { CreateEventDto } from 'src/event/dto/create-event.dto'
 import { UpdateEventDto } from 'src/event/dto/update-event.dto'
 import { EventResponseDto } from './dto/event-response.dto'
 import { Event, RecurringEvent } from 'models'
-import sequelize from 'sequelize'
+import sequelize, { Transaction } from 'sequelize'
 
 @Injectable()
 export class EventService {
@@ -181,28 +181,31 @@ export class EventService {
       })
     )
   }
-  async createEvent(createEventDto: CreateEventDto): Promise<EventResponseDto> {
+  async createEvent(createEventDto: CreateEventDto, transaction: Transaction): Promise<EventResponseDto> {
     const { userId, title, isAllDay, startTime, endTime, color, place, description, isRecurring } = createEventDto
-    const createdEvent = await this.eventModel.create({
-      userId,
-      title,
-      isAllDay,
-      startTime,
-      endTime,
-      color,
-      place,
-      description,
-      isRecurring,
-    })
+    const createdEvent = await this.eventModel.create(
+      {
+        userId,
+        title,
+        isAllDay,
+        startTime,
+        endTime,
+        color,
+        place,
+        description,
+        isRecurring,
+      },
+      { transaction }
+    )
 
     if (isRecurring) {
-      await this.createRecurringEvent(createdEvent.idx, createEventDto)
+      await this.createRecurringEvent(createdEvent.idx, createEventDto, transaction)
     }
     return new EventResponseDto(createdEvent)
   }
 
   // TODO: recurring event 추가해야 함 + update dto 수정
-  async updateEvent(idx: number, updateEventDto: UpdateEventDto) {
+  async updateEvent(idx: number, updateEventDto: UpdateEventDto, transaction: Transaction) {
     const { title, isAllDay, startTime, endTime, color, place, description, isRecurring } = updateEventDto
     const updatedEvent = await this.eventModel.update(
       {
@@ -219,6 +222,7 @@ export class EventService {
         where: {
           idx,
         },
+        transaction,
       }
     )
     if (updatedEvent[0]) {
@@ -228,7 +232,11 @@ export class EventService {
     }
   }
 
-  async createRecurringEvent(eventIdx: number, createEventDto: CreateEventDto): Promise<RecurringEvent> {
+  async createRecurringEvent(
+    eventIdx: number,
+    createEventDto: CreateEventDto,
+    transaction: Transaction
+  ): Promise<RecurringEvent> {
     const {
       recurringType,
       separationCount,
@@ -239,24 +247,28 @@ export class EventService {
       weekOfMonth,
       monthOfYear,
     } = createEventDto
-    return await this.recurringEventModel.create({
-      eventIdx,
-      recurringType,
-      separationCount,
-      maxNumOfOccurrances,
-      endTime: recurringEndTime,
-      dayOfWeek: JSON.stringify(dayOfWeek),
-      dayOfMonth: JSON.stringify(dayOfMonth),
-      weekOfMonth,
-      monthOfYear: JSON.stringify(monthOfYear),
-    })
+    return await this.recurringEventModel.create(
+      {
+        eventIdx,
+        recurringType,
+        separationCount,
+        maxNumOfOccurrances,
+        endTime: recurringEndTime,
+        dayOfWeek: JSON.stringify(dayOfWeek),
+        dayOfMonth: JSON.stringify(dayOfMonth),
+        weekOfMonth,
+        monthOfYear: JSON.stringify(monthOfYear),
+      },
+      { transaction }
+    )
   }
 
-  async deleteRecurringEvent(eventIdx: number) {
+  async deleteRecurringEvent(eventIdx: number, transaction: Transaction) {
     await this.recurringEventModel.destroy({
       where: {
         eventIdx,
       },
+      transaction,
     })
   }
 }
