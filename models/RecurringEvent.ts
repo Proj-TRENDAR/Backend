@@ -8,10 +8,10 @@ export interface RecurringEventAttributes {
   separationCount?: number
   maxNumOfOccurrances?: number
   endTime?: Date
-  dayOfWeek?: number
-  dayOfMonth?: number
+  dayOfWeek?: string
+  dayOfMonth?: string
   weekOfMonth?: number
-  monthOfYear?: number
+  monthOfYear?: string
 }
 
 @Table({ tableName: 'recurring_event', timestamps: false })
@@ -45,17 +45,17 @@ export class RecurringEvent
   @Column({ field: 'end_time', allowNull: true, type: DataType.DATE })
   endTime?: Date
 
-  @Column({ field: 'day_of_week', allowNull: true, type: DataType.INTEGER })
-  dayOfWeek?: number
+  @Column({ field: 'day_of_week', allowNull: true, type: DataType.STRING })
+  dayOfWeek?: string
 
-  @Column({ field: 'day_of_month', allowNull: true, type: DataType.INTEGER })
-  dayOfMonth?: number
+  @Column({ field: 'day_of_month', allowNull: true, type: DataType.STRING })
+  dayOfMonth?: string
 
   @Column({ field: 'week_of_month', allowNull: true, type: DataType.INTEGER })
   weekOfMonth?: number
 
-  @Column({ field: 'month_of_year', allowNull: true, type: DataType.INTEGER })
-  monthOfYear?: number
+  @Column({ field: 'month_of_year', allowNull: true, type: DataType.STRING })
+  monthOfYear?: string
 
   @BelongsTo(() => Event)
   Event?: Event
