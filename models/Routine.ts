@@ -10,12 +10,12 @@ export interface RoutineAttributes {
   color?: number
   description?: string
   weeklyCondition?: number
-  numOfAchievements?: number
   startTime: Date
   endTime?: Date
   sequence?: number
   createdAt?: Date
   updatedAt?: Date
+  deletedAt?: Date
 }
 
 @Table({ tableName: 'routine', timestamps: false })
@@ -41,9 +41,6 @@ export class Routine extends Model<RoutineAttributes, RoutineAttributes> impleme
   @Column({ field: 'weekly_condition', type: DataType.INTEGER, defaultValue: '1' })
   weeklyCondition?: number
 
-  @Column({ field: 'num_of_achievements', allowNull: true, type: DataType.INTEGER })
-  numOfAchievements?: number
-
   @Column({ field: 'start_time', type: DataType.DATE })
   startTime!: Date
 
@@ -58,6 +55,9 @@ export class Routine extends Model<RoutineAttributes, RoutineAttributes> impleme
 
   @Column({ field: 'updated_at', type: DataType.DATE, defaultValue: DataType.NOW })
   updatedAt?: Date
+
+  @Column({ field: 'deleted_at', allowNull: true, type: DataType.DATE })
+  deletedAt?: Date
 
   @BelongsTo(() => User)
   User?: User

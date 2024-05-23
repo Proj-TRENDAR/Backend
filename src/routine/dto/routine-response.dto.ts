@@ -43,9 +43,9 @@ export class RoutineResponseDto {
   @Expose()
   completed: Date[]
 
-  // @ApiProperty({ example: '2024-06-09 02:12:00', description: '루틴 삭제 날짜' })
-  // @Expose()
-  // deletedAt: Date | null
+  @ApiProperty({ example: '2024-06-09 02:12:00', description: '루틴 삭제 날짜' })
+  @Expose()
+  deletedAt: Date | null
 
   constructor(routine: RoutineResponse) {
     Object.assign(this, plainToClass(RoutineResponseDto, routine, { excludeExtraneousValues: true }))
