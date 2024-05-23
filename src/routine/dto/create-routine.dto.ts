@@ -83,11 +83,11 @@ export class CreateRoutineDto {
   // @IsDate()
   // endTime: Date | null
 
-  @ApiProperty({
-    example: '1',
-    description: '루틴 순서(TODO: 루틴 순서 적용 로직 필요)',
-  })
-  @IsOptional()
-  @IsNumber()
-  sequence: number | null
+  // @ApiProperty({
+  //   example: '1',
+  //   description: '루틴 순서(TODO: 루틴 순서 적용 로직 필요)',
+  // })
+  // @IsOptional()
+  // @IsNumber()
+  // sequence: number | null
 }

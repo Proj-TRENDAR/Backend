@@ -22,6 +22,13 @@ export class RoutineService {
 
   async getAllRoutine(userId: string): Promise<Routine[]> {
     return await this.routineModel.findAll({
+  private async lastSequenceRoutine(): Promise<Pick<Routine, 'sequence'> | null> {
+    return await this.routineModel.findOne({
+      attributes: ['sequence'],
+      order: [['sequence', 'DESC']],
+    })
+  }
+
       where: { userId },
       include: [
         {
@@ -49,7 +56,8 @@ export class RoutineService {
   }
 
   async createRoutine(createRoutineDto: CreateRoutineDto, transaction: Transaction): Promise<RoutineResponseDto> {
-    const { userId, title, color, description, weeklyCondition, days, startTime, sequence } = createRoutineDto
+    const { userId, title, color, description, weeklyCondition, days, startTime } = createRoutineDto
+    const lastRoutine = await this.lastSequenceRoutine()
     const createdRoutine = await this.routineModel.create(
       {
         userId,
@@ -58,11 +66,10 @@ export class RoutineService {
         description,
         weeklyCondition,
         startTime,
-        sequence,
+        sequence: lastRoutine ? lastRoutine.sequence + 1 : 1,
       },
       { transaction }
     )
-
     for (const day of days) {
       await this.routineDayService.createRoutineDay(createdRoutine.idx, day, transaction)
     }
