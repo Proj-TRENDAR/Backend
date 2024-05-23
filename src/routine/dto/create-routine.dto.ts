@@ -6,7 +6,6 @@ export class CreateRoutineDto {
   @ApiProperty({
     example: 'userID',
     description: '로그인한 ID',
-    required: true,
   })
   // @IsNotEmpty()
   // @IsString()
@@ -15,7 +14,7 @@ export class CreateRoutineDto {
   userId: string
 
   @ApiProperty({
-    example: 'routine title',
+    example: '개발 공부',
     description: '루틴 제목',
     required: true,
   })
@@ -35,7 +34,7 @@ export class CreateRoutineDto {
 
   @ApiProperty({
     example: 'Study NestJS',
-    description: '루틴 메모',
+    description: '루틴 설명 or 계획',
   })
   @IsOptional()
   @IsString()
@@ -43,20 +42,19 @@ export class CreateRoutineDto {
 
   @ApiProperty({
     example: '1~7',
-    description: '주간 목표 횟수',
-    required: true,
+    description: '주간 목표 횟수<br/>(null일 경우 days 선택)',
   })
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
-  weeklyCondition: number
+  weeklyCondition: number | null
 
   @ApiProperty({
-    example: '[3, 5]',
-    description: '0 = 일요일, 1 = 월요일, 2 = 화요일, 3 = 수요일, 4 = 목요일, 5 = 금요일, 6 = 토요일',
-    required: true,
+    example: [3, 5],
+    description:
+      '0 = 일요일, 1 = 월요일, 2 = 화요일, 3 = 수요일, 4 = 목요일, 5 = 금요일, 6 = 토요일<br/>(null일 경우 weeklyCondition 선택)',
   })
   @IsArray()
-  days: number[]
+  days: number[] | null
 
   // @ApiProperty({
   //   example: '10',
