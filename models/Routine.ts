@@ -1,4 +1,4 @@
-import { Model, Table, Column, DataType, Index, ForeignKey, BelongsTo, HasMany } from 'sequelize-typescript'
+import { Model, Table, Column, DataType, Index, Sequelize, ForeignKey, BelongsTo, HasMany } from 'sequelize-typescript'
 import { User } from './User'
 import { RoutineCompleted } from './RoutineCompleted'
 import { RoutineDay } from './RoutineDay'
@@ -15,6 +15,7 @@ export interface RoutineAttributes {
   endTime?: Date
   sequence?: number
   createdAt?: Date
+  updatedAt?: Date
 }
 
 @Table({ tableName: 'routine', timestamps: false })
@@ -54,6 +55,9 @@ export class Routine extends Model<RoutineAttributes, RoutineAttributes> impleme
 
   @Column({ field: 'created_at', type: DataType.DATE, defaultValue: DataType.NOW })
   createdAt?: Date
+
+  @Column({ field: 'updated_at', type: DataType.DATE, defaultValue: DataType.NOW })
+  updatedAt?: Date
 
   @BelongsTo(() => User)
   User?: User
