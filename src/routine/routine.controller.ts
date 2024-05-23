@@ -39,8 +39,8 @@ export class RoutineController {
   @UseGuards(JwtAuthGuard)
   @Get()
   @ApiBearerAuth()
-  getRoutine(@Req() req: IUserReq): Promise<Routine[]> {
-    return this.routineService.getAllRoutine(req.user.id)
+  getRoutine(@Req() req: IUserReq, @TransactionParam() transaction: Transaction): Promise<RoutineResponseDto[]> {
+    return this.routineService.getAllRoutine(req.user.id, transaction)
   }
 
   @UseGuards(JwtAuthGuard)

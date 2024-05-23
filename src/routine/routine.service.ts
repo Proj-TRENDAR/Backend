@@ -20,8 +20,6 @@ export class RoutineService {
     private routineCompletedService: RoutineCompletedService
   ) {}
 
-  async getAllRoutine(userId: string): Promise<Routine[]> {
-    return await this.routineModel.findAll({
   private async lastSequenceRoutine(): Promise<Pick<Routine, 'sequence'> | null> {
     return await this.routineModel.findOne({
       attributes: ['sequence'],
@@ -29,16 +27,26 @@ export class RoutineService {
     })
   }
 
+  async getAllRoutine(userId: string, transaction: Transaction): Promise<RoutineResponseDto[]> {
+    const routine = await this.routineModel.findAll({
       where: { userId },
-      include: [
-        {
-          model: this.routineCompletedModel,
-        },
-        {
-          model: this.routineDayModel,
-        },
-      ],
+      order: ['sequence'],
+      transaction,
     })
+
+    return await Promise.all(
+      routine.map(async item => {
+        const routineDays = await this.routineDayService.getRoutineDay(item.idx, transaction)
+        const completedRoutine = await this.routineCompletedService.getRoutineCompleted(item.idx, transaction)
+
+        return new RoutineResponseDto(
+          Object.assign(item, {
+            days: routineDays.length ? routineDays : null,
+            completed: completedRoutine.length ? completedRoutine : null,
+          })
+        )
+      })
+    )
   }
 
   async getRoutineUsingIdx(idx: number): Promise<Routine> {
