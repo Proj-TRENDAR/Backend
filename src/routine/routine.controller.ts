@@ -21,7 +21,7 @@ import {
   getSchemaPath,
 } from '@nestjs/swagger'
 import { Transaction } from 'sequelize'
-import { Routine, RoutineCompleted } from 'models'
+import { RoutineCompleted } from 'models'
 import { JwtAuthGuard } from 'src/auth/authentication/jwt-auth.guard'
 import { RoutineService } from 'src/routine/routine.service'
 import { IUserReq } from 'src/user/interface/user-req.interface'
@@ -39,6 +39,14 @@ export class RoutineController {
   @UseGuards(JwtAuthGuard)
   @Get()
   @ApiBearerAuth()
+  @ApiOperation({ summary: '전체 루틴 조회', description: '전체 루틴 조회 API' })
+  @ApiOkResponse({
+    type: RoutineResponseDto,
+    description: '전체 루틴 조회 성공',
+    schema: {
+      $ref: getSchemaPath(RoutineResponseDto),
+    },
+  })
   getRoutine(@Req() req: IUserReq, @TransactionParam() transaction: Transaction): Promise<RoutineResponseDto[]> {
     return this.routineService.getAllRoutine(req.user.id, transaction)
   }
