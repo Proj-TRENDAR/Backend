@@ -35,4 +35,14 @@ export class RoutineCompletedService {
     )
     return new RoutineCompletedResponseDto(completedRoutine)
   }
+
+  async deleteRoutineCompleted(idx: number, transaction: Transaction): Promise<boolean> {
+    const result = await this.routineCompletedModel.destroy({
+      where: {
+        idx,
+      },
+      transaction,
+    })
+    return result > 0
+  }
 }

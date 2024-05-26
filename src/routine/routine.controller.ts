@@ -3,6 +3,9 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
+  NotFoundException,
   Post,
   Req,
   UseGuards,
@@ -12,8 +15,8 @@ import {
 } from '@nestjs/common'
 import {
   ApiBearerAuth,
-  ApiBody,
   ApiCreatedResponse,
+  ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -98,24 +101,21 @@ export class RoutineController {
     return await this.routineCompletedService.createRoutineCompleted(createRoutineCompleted, transaction)
   }
 
-  // @UseGuards(JwtAuthGuard)
-  // @UseInterceptors(TransactionInterceptor)
-  // @Delete('/completed')
-  // @ApiBearerAuth()
-  // @ApiOperation({ summary: '수행한 루틴 삭제', description: '특정 날짜에서 수행한 루틴 삭제(체크 해제) API' })
-  // @ApiBody({
-  //   schema: {
-  //     example: {
-  //       idx: 1,
-  //     },
-  //   },
-  //   description: '수행한 루틴 인덱스',
-  //   required: true,
-  //   type: Number,
-  // })
-  // @ApiOkResponse({ description: '수행한 루틴 삭제 완료' })
-  // @ApiNotFoundResponse({ description: '수행한 루틴 삭제 실패' })
-  // deleteRoutineCompleted(@Body('idx') idx: number) {
-  //   return this.routineService.deleteRoutineCompleted(idx)
-  // }
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(TransactionInterceptor)
+  @Delete('/completed')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: '수행한 루틴 삭제',
+    description: '(특정 날짜에서 수행한 루틴 체크 해제시) 수행한 루틴 삭제 API',
+  })
+  @ApiNoContentResponse({ description: '수행한 루틴 삭제 완료' })
+  @ApiNotFoundResponse({ description: '수행한 루틴 삭제 실패' })
+  async deleteRoutineCompleted(@Body('idx') idx: number, @TransactionParam() transaction: Transaction): Promise<void> {
+    const result = await this.routineCompletedService.deleteRoutineCompleted(idx, transaction)
+    if (!result) {
+      throw new NotFoundException('Routine completed not found.')
+    }
+  }
 }

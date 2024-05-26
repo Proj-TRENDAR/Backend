@@ -88,17 +88,4 @@ export class RoutineService {
       })
     )
   }
-
-  // async deleteRoutineCompleted(idx) {
-  //   const result = await this.routineCompletedModel.destroy({
-  //     where: {
-  //       idx,
-  //     },
-  //   })
-  //   if (result) {
-  //     return { success: true, message: '수행한 루틴 삭제 성공' }
-  //   } else {
-  //     throw new HttpException({ success: false, message: '수행한 루틴 삭제 실패' }, HttpStatus.BAD_REQUEST)
-  //   }
-  // }
 }
