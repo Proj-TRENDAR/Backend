@@ -18,4 +18,19 @@ export class RoutineCompletedService {
     })
     return completedRoutine.map(item => item.completedAt)
   }
+
+  async createRoutineCompleted(
+    createRoutineCompletedDto: CreateRoutineCompletedDto,
+    transaction: Transaction
+  ): Promise<RoutineCompletedResponseDto> {
+    const { routineIdx, completedAt } = createRoutineCompletedDto
+    const completedRoutine = await this.routineCompletedModel.create(
+      {
+        routineIdx,
+        completedAt,
+      },
+      { transaction }
+    )
+    return new RoutineCompletedResponseDto(completedRoutine)
+  }
 }

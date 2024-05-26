@@ -30,6 +30,8 @@ import { RoutineResponseDto } from 'src/routine/dto/routine-response.dto'
 import { CreateRoutineCompletedDto } from 'src/routine/dto/create-routine-completed.dto'
 import { TransactionInterceptor } from 'src/share/transaction/interceptor'
 import { TransactionParam } from 'src/share/transaction/param'
+import { RoutineCompletedResponseDto } from './dto/routine-completed-response.dto'
+import { RoutineCompletedService } from './routine-completed/routine-completed.service'
 
 @Controller('routine')
 @ApiTags('Routine API')
@@ -78,19 +80,19 @@ export class RoutineController {
   @Post('/completed')
   @ApiBearerAuth()
   @UsePipes(ValidationPipe)
-  @ApiOperation({ summary: '수행한 루틴 생성', description: '특정 날짜에서 수행한 루틴 생성(체크) API' })
+  @ApiOperation({ summary: '수행한 루틴 등록', description: '(특정 날짜에서 수행한 루틴 체크시) 수행한 루틴 등록 API' })
   @ApiCreatedResponse({
-    description: '성공 시(example)',
+    type: RoutineCompletedResponseDto,
+    description: '수행한 루틴 등록 성공',
     schema: {
-      example: {
-        routinecompIdx: 2,
-        routineIdx: 1,
-        completedAt: '2024-03-03T01:12:00.000Z',
-      },
+      $ref: getSchemaPath(RoutineCompletedResponseDto),
     },
   })
-  createRoutineCompleted(@Body() createRoutineCompleted: CreateRoutineCompletedDto): Promise<RoutineCompleted> {
-    return this.routineService.createRoutineCompleted(createRoutineCompleted)
+  async createRoutineCompleted(
+    @Body() createRoutineCompleted: CreateRoutineCompletedDto,
+    @TransactionParam() transaction: Transaction
+  ): Promise<RoutineCompletedResponseDto> {
+    return await this.routineCompletedService.createRoutineCompleted(createRoutineCompleted, transaction)
   }
 
   @UseGuards(JwtAuthGuard)
