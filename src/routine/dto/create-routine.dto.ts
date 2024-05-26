@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { Type } from 'class-transformer'
-import { IsArray, IsDate, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength } from 'class-validator'
+import { IsArray, IsDate, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, ValidateNested } from 'class-validator'
 
 export class CreateRoutineDto {
   @ApiProperty({
@@ -54,6 +54,9 @@ export class CreateRoutineDto {
       '0 = 일요일, 1 = 월요일, 2 = 화요일, 3 = 수요일, 4 = 목요일, 5 = 금요일, 6 = 토요일<br/>(null일 경우 weeklyCondition 선택)',
   })
   @IsArray()
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => Number)
   days: number[] | null
 
   // @ApiProperty({

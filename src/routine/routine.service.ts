@@ -78,8 +78,9 @@ export class RoutineService {
       },
       { transaction }
     )
-    for (const day of days) {
-      await this.routineDayService.createRoutineDay(createdRoutine.idx, day, transaction)
+
+    if (days) {
+      await Promise.all(days.map(day => this.routineDayService.createRoutineDay(createdRoutine.idx, day, transaction)))
     }
 
     const routineDays = await this.routineDayService.getRoutineDay(createdRoutine.idx, transaction)
