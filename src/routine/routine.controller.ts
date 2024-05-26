@@ -36,7 +36,10 @@ import { RoutineCompletedService } from './routine-completed/routine-completed.s
 @Controller('routine')
 @ApiTags('Routine API')
 export class RoutineController {
-  constructor(private readonly routineService: RoutineService) {}
+  constructor(
+    private readonly routineService: RoutineService,
+    private readonly routineCompletedService: RoutineCompletedService
+  ) {}
 
   @UseGuards(JwtAuthGuard)
   @Get()
@@ -49,8 +52,8 @@ export class RoutineController {
       $ref: getSchemaPath(RoutineResponseDto),
     },
   })
-  getRoutine(@Req() req: IUserReq, @TransactionParam() transaction: Transaction): Promise<RoutineResponseDto[]> {
-    return this.routineService.getAllRoutine(req.user.id, transaction)
+  async getRoutine(@Req() req: IUserReq, @TransactionParam() transaction: Transaction): Promise<RoutineResponseDto[]> {
+    return await this.routineService.getAllRoutine(req.user.id, transaction)
   }
 
   @UseGuards(JwtAuthGuard)
@@ -66,13 +69,13 @@ export class RoutineController {
     },
   })
   @UsePipes(ValidationPipe)
-  createRoutine(
+  async createRoutine(
     @Body() createRoutineDto: CreateRoutineDto,
     @Req() req: IUserReq,
     @TransactionParam() transaction: Transaction
   ): Promise<RoutineResponseDto> {
     createRoutineDto.userId = req.user.id
-    return this.routineService.createRoutine(createRoutineDto, transaction)
+    return await this.routineService.createRoutine(createRoutineDto, transaction)
   }
 
   @UseGuards(JwtAuthGuard)
@@ -95,24 +98,24 @@ export class RoutineController {
     return await this.routineCompletedService.createRoutineCompleted(createRoutineCompleted, transaction)
   }
 
-  @UseGuards(JwtAuthGuard)
-  @UseInterceptors(TransactionInterceptor)
-  @Delete('/completed')
-  @ApiBearerAuth()
-  @ApiOperation({ summary: '수행한 루틴 삭제', description: '특정 날짜에서 수행한 루틴 삭제(체크 해제) API' })
-  @ApiBody({
-    schema: {
-      example: {
-        idx: 1,
-      },
-    },
-    description: '수행한 루틴 인덱스',
-    required: true,
-    type: Number,
-  })
-  @ApiOkResponse({ description: '수행한 루틴 삭제 완료' })
-  @ApiNotFoundResponse({ description: '수행한 루틴 삭제 실패' })
-  deleteRoutineCompleted(@Body('idx') idx: number) {
-    return this.routineService.deleteRoutineCompleted(idx)
-  }
+  // @UseGuards(JwtAuthGuard)
+  // @UseInterceptors(TransactionInterceptor)
+  // @Delete('/completed')
+  // @ApiBearerAuth()
+  // @ApiOperation({ summary: '수행한 루틴 삭제', description: '특정 날짜에서 수행한 루틴 삭제(체크 해제) API' })
+  // @ApiBody({
+  //   schema: {
+  //     example: {
+  //       idx: 1,
+  //     },
+  //   },
+  //   description: '수행한 루틴 인덱스',
+  //   required: true,
+  //   type: Number,
+  // })
+  // @ApiOkResponse({ description: '수행한 루틴 삭제 완료' })
+  // @ApiNotFoundResponse({ description: '수행한 루틴 삭제 실패' })
+  // deleteRoutineCompleted(@Body('idx') idx: number) {
+  //   return this.routineService.deleteRoutineCompleted(idx)
+  // }
 }

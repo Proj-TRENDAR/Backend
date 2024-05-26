@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/sequelize'
 import { RoutineCompleted } from 'models'
 import { Transaction } from 'sequelize'
+import { CreateRoutineCompletedDto } from '../dto/create-routine-completed.dto'
+import { RoutineCompletedResponseDto } from '../dto/routine-completed-response.dto'
 
 @Injectable()
 export class RoutineCompletedService {
@@ -10,7 +12,7 @@ export class RoutineCompletedService {
     private routineCompletedModel: typeof RoutineCompleted
   ) {}
 
-  async getRoutineCompleted(routineIdx: number, transaction: Transaction): Promise<Date[]> {
+  async getAllRoutineCompleted(routineIdx: number, transaction: Transaction): Promise<Date[]> {
     const completedRoutine = await this.routineCompletedModel.findAll({
       attributes: ['completedAt'],
       where: { routineIdx },

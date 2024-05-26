@@ -12,10 +12,10 @@ export class RoutineService {
   constructor(
     @InjectModel(Routine)
     private routineModel: typeof Routine,
-    @InjectModel(RoutineCompleted)
-    private routineCompletedModel: typeof RoutineCompleted,
-    @InjectModel(RoutineDay)
-    private routineDayModel: typeof RoutineDay,
+    // @InjectModel(RoutineCompleted)
+    // private routineCompletedModel: typeof RoutineCompleted,
+    // @InjectModel(RoutineDay)
+    // private routineDayModel: typeof RoutineDay,
     private routineDayService: RoutineDayService,
     private routineCompletedService: RoutineCompletedService
   ) {}
@@ -37,7 +37,7 @@ export class RoutineService {
     return await Promise.all(
       routine.map(async item => {
         const routineDays = await this.routineDayService.getRoutineDay(item.idx, transaction)
-        const completedRoutine = await this.routineCompletedService.getRoutineCompleted(item.idx, transaction)
+        const completedRoutine = await this.routineCompletedService.getAllRoutineCompleted(item.idx, transaction)
 
         return new RoutineResponseDto(
           Object.assign(item, {
@@ -49,19 +49,19 @@ export class RoutineService {
     )
   }
 
-  async getRoutineUsingIdx(idx: number): Promise<Routine> {
-    return await this.routineModel.findOne({
-      where: { idx },
-      include: [
-        {
-          model: this.routineCompletedModel,
-        },
-        {
-          model: this.routineDayModel,
-        },
-      ],
-    })
-  }
+  // async getRoutineUsingIdx(idx: number): Promise<Routine> {
+  //   return await this.routineModel.findOne({
+  //     where: { idx },
+  //     include: [
+  //       {
+  //         model: this.routineCompletedModel,
+  //       },
+  //       {
+  //         model: this.routineDayModel,
+  //       },
+  //     ],
+  //   })
+  // }
 
   async createRoutine(createRoutineDto: CreateRoutineDto, transaction: Transaction): Promise<RoutineResponseDto> {
     const { userId, title, color, description, weeklyCondition, days, startTime } = createRoutineDto
@@ -84,7 +84,7 @@ export class RoutineService {
     }
 
     const routineDays = await this.routineDayService.getRoutineDay(createdRoutine.idx, transaction)
-    const completedRoutine = await this.routineCompletedService.getRoutineCompleted(createdRoutine.idx, transaction)
+    const completedRoutine = await this.routineCompletedService.getAllRoutineCompleted(createdRoutine.idx, transaction)
     return new RoutineResponseDto(
       Object.assign(createdRoutine, {
         days: routineDays.length ? routineDays : null,
