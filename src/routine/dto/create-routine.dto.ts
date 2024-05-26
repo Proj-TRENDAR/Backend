@@ -59,14 +59,6 @@ export class CreateRoutineDto {
   @Type(() => Number)
   days: number[] | null
 
-  // @ApiProperty({
-  //   example: '10',
-  //   description: '달성 갯수',
-  // })
-  // @IsOptional()
-  // @IsNumber()
-  // numOfAchievements: number | null
-
   @ApiProperty({
     example: '2024-01-11 11:20:00',
     description: '시작 날짜 받기? or 만든 날짜부터?',

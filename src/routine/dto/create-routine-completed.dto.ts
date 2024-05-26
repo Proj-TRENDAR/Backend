@@ -4,7 +4,7 @@ import { IsDate, IsNotEmpty, IsNumber } from 'class-validator'
 
 export class CreateRoutineCompletedDto {
   @ApiProperty({
-    example: 'routine idx',
+    example: 1,
     description: '루틴 인덱스',
     required: true,
   })
@@ -13,7 +13,7 @@ export class CreateRoutineCompletedDto {
   routineIdx: number
 
   @ApiProperty({
-    example: '2024-01-11 11:20:00',
+    example: '2024-06-09 02:12:00',
     description: '수행 완료 시간',
     required: true,
   })
