@@ -88,4 +88,14 @@ export class RoutineService {
       })
     )
   }
+
+  async deleteRoutine(idx: number, transaction: Transaction): Promise<boolean> {
+    const result = await this.routineModel.destroy({
+      where: {
+        idx,
+      },
+      transaction,
+    })
+    return result > 0
+  }
 }

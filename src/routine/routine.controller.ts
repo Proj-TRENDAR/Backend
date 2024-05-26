@@ -6,6 +6,7 @@ import {
   HttpCode,
   HttpStatus,
   NotFoundException,
+  Param,
   Post,
   Req,
   UseGuards,
@@ -83,6 +84,22 @@ export class RoutineController {
 
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(TransactionInterceptor)
+  @Delete(':idx')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiBearerAuth()
+  @UsePipes(ValidationPipe)
+  @ApiOperation({ summary: '루틴 삭제', description: '루틴 삭제 API(hard delete)' })
+  @ApiNoContentResponse({ description: '루틴 삭제 완료' })
+  @ApiNotFoundResponse({ description: '루틴 삭제 실패' })
+  async deleteRoutine(@Param('idx') idx: number, @TransactionParam() transaction: Transaction) {
+    const result = await this.routineService.deleteRoutine(idx, transaction)
+    if (!result) {
+      throw new NotFoundException('Routine not found.')
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(TransactionInterceptor)
   @Post('/completed')
   @ApiBearerAuth()
   @UsePipes(ValidationPipe)
@@ -106,6 +123,7 @@ export class RoutineController {
   @Delete('/completed')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiBearerAuth()
+  @UsePipes(ValidationPipe)
   @ApiOperation({
     summary: '수행한 루틴 삭제',
     description: '(특정 날짜에서 수행한 루틴 체크 해제시) 수행한 루틴 삭제 API',
