@@ -1,10 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { Transaction } from 'sequelize'
 import { InjectModel } from '@nestjs/sequelize'
-import { Routine, RoutineCompleted, RoutineDay } from 'models'
+import { Routine } from 'models'
 import { CreateRoutineDto } from 'src/routine/dto/create-routine.dto'
 import { RoutineResponseDto } from 'src/routine/dto/routine-response.dto'
-import { CreateRoutineCompletedDto } from 'src/routine/dto/create-routine-completed.dto'
 import { RoutineDayService } from 'src/routine/routine-day/routine-day.service'
 import { RoutineCompletedService } from 'src/routine/routine-completed/routine-completed.service'
 @Injectable()
@@ -12,10 +11,7 @@ export class RoutineService {
   constructor(
     @InjectModel(Routine)
     private routineModel: typeof Routine,
-    // @InjectModel(RoutineCompleted)
-    // private routineCompletedModel: typeof RoutineCompleted,
-    // @InjectModel(RoutineDay)
-    // private routineDayModel: typeof RoutineDay,
+
     private routineDayService: RoutineDayService,
     private routineCompletedService: RoutineCompletedService
   ) {}
