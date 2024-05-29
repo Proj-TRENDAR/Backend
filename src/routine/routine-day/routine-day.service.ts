@@ -28,4 +28,13 @@ export class RoutineDayService {
       { transaction }
     )
   }
+
+  async deleteRoutineDay(routineIdx: number, transaction: Transaction) {
+    return await this.routineDayModel.destroy({
+      where: {
+        routineIdx,
+      },
+      transaction,
+    })
+  }
 }

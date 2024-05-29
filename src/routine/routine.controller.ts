@@ -8,6 +8,7 @@ import {
   NotFoundException,
   Param,
   Post,
+  Put,
   Req,
   UseGuards,
   UseInterceptors,
@@ -25,17 +26,17 @@ import {
   getSchemaPath,
 } from '@nestjs/swagger'
 import { Transaction } from 'sequelize'
-import { RoutineCompleted } from 'models'
 import { JwtAuthGuard } from 'src/auth/authentication/jwt-auth.guard'
 import { RoutineService } from 'src/routine/routine.service'
+import { RoutineCompletedService } from 'src/routine/routine-completed/routine-completed.service'
 import { IUserReq } from 'src/user/interface/user-req.interface'
 import { CreateRoutineDto } from 'src/routine/dto/create-routine.dto'
+import { UpdateRoutineDto } from 'src/routine/dto/update-routine.dto'
 import { RoutineResponseDto } from 'src/routine/dto/routine-response.dto'
 import { CreateRoutineCompletedDto } from 'src/routine/dto/create-routine-completed.dto'
+import { RoutineCompletedResponseDto } from 'src/routine/dto/routine-completed-response.dto'
 import { TransactionInterceptor } from 'src/share/transaction/interceptor'
 import { TransactionParam } from 'src/share/transaction/param'
-import { RoutineCompletedResponseDto } from './dto/routine-completed-response.dto'
-import { RoutineCompletedService } from './routine-completed/routine-completed.service'
 
 @Controller('routine')
 @ApiTags('Routine API')
@@ -80,6 +81,20 @@ export class RoutineController {
   ): Promise<RoutineResponseDto> {
     createRoutineDto.userId = req.user.id
     return await this.routineService.createRoutine(createRoutineDto, transaction)
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(TransactionInterceptor)
+  @Put(':idx')
+  @ApiBearerAuth()
+  @UsePipes(ValidationPipe)
+  @ApiOperation({ summary: '루틴 수정', description: '루틴 수정 API' })
+  async updateRoutine(
+    @Param('idx') idx: number,
+    @Body() updateRoutineDto: UpdateRoutineDto,
+    @TransactionParam() transaction: Transaction
+  ): Promise<RoutineResponseDto> {
+    return await this.routineService.updateRoutine(idx, updateRoutineDto, transaction)
   }
 
   @UseGuards(JwtAuthGuard)

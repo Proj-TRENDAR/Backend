@@ -3,6 +3,7 @@ import { Transaction } from 'sequelize'
 import { InjectModel } from '@nestjs/sequelize'
 import { Routine } from 'models'
 import { CreateRoutineDto } from 'src/routine/dto/create-routine.dto'
+import { UpdateRoutineDto } from 'src/routine/dto/update-routine.dto'
 import { RoutineResponseDto } from 'src/routine/dto/routine-response.dto'
 import { RoutineDayService } from 'src/routine/routine-day/routine-day.service'
 import { RoutineCompletedService } from 'src/routine/routine-completed/routine-completed.service'
@@ -21,6 +22,22 @@ export class RoutineService {
       attributes: ['sequence'],
       order: [['sequence', 'DESC']],
     })
+  }
+
+  private async getRoutine(idx: number, transaction: Transaction) {
+    const routine = await this.routineModel.findOne({
+      where: { idx },
+      transaction,
+    })
+    const routineDays = await this.routineDayService.getRoutineDay(routine.idx, transaction)
+    const completedRoutine = await this.routineCompletedService.getAllRoutineCompleted(routine.idx, transaction)
+
+    return new RoutineResponseDto(
+      Object.assign(routine, {
+        days: routineDays.length ? routineDays : null,
+        completed: completedRoutine.length ? completedRoutine : null,
+      })
+    )
   }
 
   async getAllRoutine(userId: string, transaction: Transaction): Promise<RoutineResponseDto[]> {
@@ -44,20 +61,6 @@ export class RoutineService {
       })
     )
   }
-
-  // async getRoutineUsingIdx(idx: number): Promise<Routine> {
-  //   return await this.routineModel.findOne({
-  //     where: { idx },
-  //     include: [
-  //       {
-  //         model: this.routineCompletedModel,
-  //       },
-  //       {
-  //         model: this.routineDayModel,
-  //       },
-  //     ],
-  //   })
-  // }
 
   async createRoutine(createRoutineDto: CreateRoutineDto, transaction: Transaction): Promise<RoutineResponseDto> {
     const { userId, title, color, description, weeklyCondition, days, startTime } = createRoutineDto
@@ -87,6 +90,33 @@ export class RoutineService {
         completed: completedRoutine.length ? completedRoutine : null,
       })
     )
+  }
+
+  async updateRoutine(
+    idx: number,
+    updateRoutineDto: UpdateRoutineDto,
+    transaction: Transaction
+  ): Promise<RoutineResponseDto> {
+    const { title, color, description, weeklyCondition, days, startTime, endTime } = updateRoutineDto
+    const getDay = await this.routineDayService.getRoutineDay(idx, transaction)
+    let updateCheck = false
+    if (JSON.stringify(days) !== JSON.stringify(getDay)) {
+      await this.routineDayService.deleteRoutineDay(idx, transaction)
+      await Promise.all(days.map(day => this.routineDayService.createRoutineDay(idx, day, transaction)))
+      updateCheck = true
+    }
+
+    const result = await this.routineModel.update(
+      { title, color, description, weeklyCondition, startTime, endTime },
+      {
+        where: { idx },
+        transaction,
+      }
+    )
+    if (!updateCheck && !result[0]) {
+      return null
+    }
+    return await this.getRoutine(idx, transaction)
   }
 
   async deleteRoutine(idx: number, transaction: Transaction): Promise<boolean> {
