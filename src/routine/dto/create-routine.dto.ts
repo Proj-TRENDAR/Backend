@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Type } from 'class-transformer'
+import { Transform, Type } from 'class-transformer'
 import { IsArray, IsDate, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength } from 'class-validator'
 
 export class CreateRoutineDto {
@@ -56,6 +56,7 @@ export class CreateRoutineDto {
   @IsOptional()
   @IsArray()
   @Type(() => Number)
+  @Transform(({ value }) => (Array.isArray(value) ? value.sort((a, b) => a - b) : value))
   days: number[] | null
 
   @ApiProperty({
