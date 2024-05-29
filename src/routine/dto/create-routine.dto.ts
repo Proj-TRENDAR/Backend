@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { Type } from 'class-transformer'
-import { IsArray, IsDate, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength, ValidateNested } from 'class-validator'
+import { IsArray, IsDate, IsNotEmpty, IsNumber, IsOptional, IsString, MaxLength } from 'class-validator'
 
 export class CreateRoutineDto {
   @ApiProperty({
@@ -53,15 +53,14 @@ export class CreateRoutineDto {
     description:
       '0 = 일요일, 1 = 월요일, 2 = 화요일, 3 = 수요일, 4 = 목요일, 5 = 금요일, 6 = 토요일<br/>(null일 경우 weeklyCondition 선택)',
   })
-  @IsArray()
   @IsOptional()
-  @ValidateNested({ each: true })
+  @IsArray()
   @Type(() => Number)
   days: number[] | null
 
   @ApiProperty({
     example: '2024-01-11 11:20:00',
-    description: '시작 날짜 받기? or 만든 날짜부터?',
+    description: '루틴 시작 날짜',
     required: true,
   })
   @IsNotEmpty()
@@ -69,20 +68,12 @@ export class CreateRoutineDto {
   @IsDate()
   startTime: Date
 
-  // @ApiProperty({
-  //   example: '2024-01-11 11:20:00',
-  //   description: '루틴 삭제 시 값 입력 됨',
-  // })
-  // @IsOptional()
-  // @Type(() => Date)
-  // @IsDate()
-  // endTime: Date | null
-
-  // @ApiProperty({
-  //   example: '1',
-  //   description: '루틴 순서(TODO: 루틴 순서 적용 로직 필요)',
-  // })
-  // @IsOptional()
-  // @IsNumber()
-  // sequence: number | null
+  @ApiProperty({
+    example: '2024-03-10 23:59:59',
+    description: '루틴 종료 날짜',
+  })
+  @IsOptional()
+  @Type(() => Date)
+  @IsDate()
+  endTime: Date | null
 }
