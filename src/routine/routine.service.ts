@@ -82,14 +82,7 @@ export class RoutineService {
       await Promise.all(days.map(day => this.routineDayService.createRoutineDay(createdRoutine.idx, day, transaction)))
     }
 
-    const routineDays = await this.routineDayService.getRoutineDay(createdRoutine.idx, transaction)
-    const completedRoutine = await this.routineCompletedService.getAllRoutineCompleted(createdRoutine.idx, transaction)
-    return new RoutineResponseDto(
-      Object.assign(createdRoutine, {
-        days: routineDays.length ? routineDays : null,
-        completed: completedRoutine.length ? completedRoutine : null,
-      })
-    )
+    return await this.getRoutine(createdRoutine.idx, transaction)
   }
 
   async updateRoutine(
