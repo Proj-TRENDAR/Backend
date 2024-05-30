@@ -99,15 +99,44 @@ export class RoutineController {
 
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(TransactionInterceptor)
-  @Delete(':idx')
+  @Put('restore/:idx')
+  // @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiBearerAuth()
+  @UsePipes(ValidationPipe)
+  @ApiOperation({ summary: '루틴 종료 해제', description: '루틴 종료 해제 API(restore)' })
+  // @ApiNoContentResponse({ description: '루틴 종료 해제 완료' })
+  // @ApiNotFoundResponse({ description: '루틴 종료 해제 실패' })
+  async restoreRoutine(@Param('idx') idx: number, @TransactionParam() transaction: Transaction) {
+    await this.routineService.restoreRoutine(idx, transaction)
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(TransactionInterceptor)
+  @Delete('soft/:idx')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiBearerAuth()
+  @UsePipes(ValidationPipe)
+  @ApiOperation({ summary: '루틴 종료', description: '루틴 종료 API(sort delete)' })
+  @ApiNoContentResponse({ description: '루틴 종료 완료' })
+  @ApiNotFoundResponse({ description: '루틴 종료 실패' })
+  async softDeleteRoutine(@Param('idx') idx: number, @TransactionParam() transaction: Transaction) {
+    const result = await this.routineService.softDeleteRoutine(idx, transaction)
+    if (!result) {
+      throw new NotFoundException('Routine not found.')
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(TransactionInterceptor)
+  @Delete('hard/:idx')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiBearerAuth()
   @UsePipes(ValidationPipe)
   @ApiOperation({ summary: '루틴 삭제', description: '루틴 삭제 API(hard delete)' })
   @ApiNoContentResponse({ description: '루틴 삭제 완료' })
   @ApiNotFoundResponse({ description: '루틴 삭제 실패' })
-  async deleteRoutine(@Param('idx') idx: number, @TransactionParam() transaction: Transaction) {
-    const result = await this.routineService.deleteRoutine(idx, transaction)
+  async hardDeleteRoutine(@Param('idx') idx: number, @TransactionParam() transaction: Transaction) {
+    const result = await this.routineService.hardDeleteRoutine(idx, transaction)
     if (!result) {
       throw new NotFoundException('Routine not found.')
     }

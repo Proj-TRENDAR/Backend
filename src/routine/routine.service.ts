@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 import { Transaction } from 'sequelize'
 import { InjectModel } from '@nestjs/sequelize'
 import { Routine } from 'models'
@@ -112,8 +112,28 @@ export class RoutineService {
     return await this.getRoutine(idx, transaction)
   }
 
-  async deleteRoutine(idx: number, transaction: Transaction): Promise<boolean> {
+  async restoreRoutine(idx: number, transaction: Transaction) {
+    await this.routineModel.restore({
+      where: {
+        idx,
+      },
+      transaction,
+    })
+  }
+
+  async softDeleteRoutine(idx: number, transaction: Transaction) {
     const result = await this.routineModel.destroy({
+      where: {
+        idx,
+      },
+      transaction,
+    })
+    return result > 0
+  }
+
+  async hardDeleteRoutine(idx: number, transaction: Transaction): Promise<boolean> {
+    const result = await this.routineModel.destroy({
+      force: true,
       where: {
         idx,
       },

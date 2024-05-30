@@ -1,4 +1,4 @@
-import { Model, Table, Column, DataType, Index, Sequelize, ForeignKey, BelongsTo, HasMany } from 'sequelize-typescript'
+import { Model, Table, Column, DataType, Index, ForeignKey, BelongsTo, HasMany } from 'sequelize-typescript'
 import { User } from './User'
 import { RoutineCompleted } from './RoutineCompleted'
 import { RoutineDay } from './RoutineDay'
@@ -18,7 +18,7 @@ export interface RoutineAttributes {
   deletedAt?: Date
 }
 
-@Table({ tableName: 'routine', timestamps: false })
+@Table({ tableName: 'routine', timestamps: true, paranoid: true })
 export class Routine extends Model<RoutineAttributes, RoutineAttributes> implements RoutineAttributes {
   @Column({ primaryKey: true, autoIncrement: true, type: DataType.BIGINT })
   @Index({ name: 'PRIMARY', using: 'BTREE', order: 'ASC', unique: true })
@@ -53,7 +53,7 @@ export class Routine extends Model<RoutineAttributes, RoutineAttributes> impleme
   @Column({ field: 'created_at', type: DataType.DATE, defaultValue: DataType.NOW })
   createdAt?: Date
 
-  @Column({ field: 'updated_at', type: DataType.DATE, defaultValue: DataType.NOW })
+  @Column({ field: 'updated_at', type: DataType.DATE })
   updatedAt?: Date
 
   @Column({ field: 'deleted_at', allowNull: true, type: DataType.DATE })
