@@ -15,7 +15,7 @@ export interface UserAttributes {
   themaColor?: number
 }
 
-@Table({ tableName: 'user', timestamps: false })
+@Table({ tableName: 'user', timestamps: true })
 export class User extends Model<UserAttributes, UserAttributes> implements UserAttributes {
   @Column({ primaryKey: true, type: DataType.STRING(45) })
   @Index({ name: 'PRIMARY', using: 'BTREE', order: 'ASC', unique: true })
@@ -33,7 +33,7 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
   @Column({ field: 'created_at', allowNull: true, type: DataType.DATE, defaultValue: DataType.NOW })
   createdAt?: Date
 
-  @Column({ field: 'updated_at', allowNull: true, type: DataType.DATE, defaultValue: DataType.NOW })
+  @Column({ field: 'updated_at', allowNull: true, type: DataType.DATE })
   updatedAt?: Date
 
   @Column({ field: 'refresh_token', allowNull: true, type: DataType.STRING(250) })

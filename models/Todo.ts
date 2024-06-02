@@ -12,7 +12,7 @@ export interface TodoAttributes {
   sequence?: number
 }
 
-@Table({ tableName: 'todo', timestamps: false })
+@Table({ tableName: 'todo', timestamps: true })
 export class Todo extends Model<TodoAttributes, TodoAttributes> implements TodoAttributes {
   @Column({ primaryKey: true, autoIncrement: true, type: DataType.BIGINT })
   @Index({ name: 'PRIMARY', using: 'BTREE', order: 'ASC', unique: true })
@@ -35,7 +35,7 @@ export class Todo extends Model<TodoAttributes, TodoAttributes> implements TodoA
   @Column({ field: 'created_at', type: DataType.DATE, defaultValue: DataType.NOW })
   createdAt?: Date
 
-  @Column({ field: 'updated_at', type: DataType.DATE, defaultValue: DataType.NOW })
+  @Column({ field: 'updated_at', allowNull: true, type: DataType.DATE })
   updatedAt?: Date
 
   @Column({ allowNull: true, type: DataType.INTEGER })

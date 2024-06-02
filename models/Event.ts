@@ -17,7 +17,7 @@ export interface EventAttributes {
   isRecurring?: number
 }
 
-@Table({ tableName: 'event', timestamps: false })
+@Table({ tableName: 'event', timestamps: true })
 export class Event extends Model<EventAttributes, EventAttributes> implements EventAttributes {
   @Column({ primaryKey: true, autoIncrement: true, type: DataType.BIGINT })
   @Index({ name: 'PRIMARY', using: 'BTREE', order: 'ASC', unique: true })
@@ -52,7 +52,7 @@ export class Event extends Model<EventAttributes, EventAttributes> implements Ev
   @Column({ field: 'created_at', type: DataType.DATE, defaultValue: DataType.NOW })
   createdAt?: Date
 
-  @Column({ field: 'updated_at', type: DataType.DATE, defaultValue: DataType.NOW })
+  @Column({ field: 'updated_at', allowNull: true, type: DataType.DATE })
   updatedAt?: Date
 
   @Column({ field: 'is_recurring', type: DataType.TINYINT, defaultValue: '0' })

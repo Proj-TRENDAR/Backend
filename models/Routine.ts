@@ -53,7 +53,7 @@ export class Routine extends Model<RoutineAttributes, RoutineAttributes> impleme
   @Column({ field: 'created_at', type: DataType.DATE, defaultValue: DataType.NOW })
   createdAt?: Date
 
-  @Column({ field: 'updated_at', type: DataType.DATE })
+  @Column({ field: 'updated_at', allowNull: true, type: DataType.DATE })
   updatedAt?: Date
 
   @Column({ field: 'deleted_at', allowNull: true, type: DataType.DATE })
