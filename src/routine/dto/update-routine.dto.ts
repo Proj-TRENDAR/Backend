@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
 import { IsArray, IsDate, IsNumber, IsOptional, IsString, MaxLength } from 'class-validator'
 import { Transform, Type } from 'class-transformer'
+import { IsEndTimeValid } from '../../common/end-time-validator'
 
 export class UpdateRoutineDto {
   @ApiPropertyOptional({ example: '아침 운동', description: 'Routine 제목' })
@@ -51,5 +52,6 @@ export class UpdateRoutineDto {
   @IsOptional()
   @Type(() => Date)
   @IsDate()
+  @IsEndTimeValid()
   endTime?: Date | null
 }
