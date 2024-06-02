@@ -23,6 +23,7 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiTags,
+  ApiUnauthorizedResponse,
   getSchemaPath,
 } from '@nestjs/swagger'
 import { Transaction } from 'sequelize'
@@ -41,6 +42,7 @@ import { TransactionParam } from 'src/share/transaction/param'
 @Controller('routine')
 @ApiTags('Routine API')
 @ApiBearerAuth('accessToken')
+@ApiUnauthorizedResponse({ description: '인증 실패' })
 export class RoutineController {
   constructor(
     private readonly routineService: RoutineService,
@@ -87,6 +89,8 @@ export class RoutineController {
   @Put(':idx')
   @UsePipes(ValidationPipe)
   @ApiOperation({ summary: '루틴 수정', description: '루틴 수정 API' })
+  @ApiOkResponse({ description: '루틴 수정 성공' })
+  @ApiNotFoundResponse({ description: '존재하지 않는 루틴' })
   async updateRoutine(
     @Param('idx') idx: number,
     @Body() updateRoutineDto: UpdateRoutineDto,
