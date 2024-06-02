@@ -15,11 +15,25 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('TRENDAR')
     .setDescription('TRENDAR API 문서입니다.')
-    .setVersion('1.0')
+    .setVersion('0.0.1')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'JWT',
+        in: 'header',
+      },
+      'accessToken'
+    )
     .build()
   const document = SwaggerModule.createDocument(app, config)
 
-  SwaggerModule.setup('api', app, document)
+  SwaggerModule.setup('api', app, document, {
+    swaggerOptions: {
+      persistAuthorization: true, //웹 페이지를 새로고침을 해도 Token 값 유지
+    },
+  })
 
   app.enableCors({
     origin: ['http://localhost'], //url을 넣어도 됨.

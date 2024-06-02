@@ -40,6 +40,7 @@ import { TransactionParam } from 'src/share/transaction/param'
 
 @Controller('routine')
 @ApiTags('Routine API')
+@ApiBearerAuth('accessToken')
 export class RoutineController {
   constructor(
     private readonly routineService: RoutineService,
@@ -48,7 +49,6 @@ export class RoutineController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  @ApiBearerAuth()
   @ApiOperation({ summary: '전체 루틴 조회', description: '전체 루틴 조회 API' })
   @ApiOkResponse({
     type: RoutineResponseDto,
@@ -64,7 +64,6 @@ export class RoutineController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(TransactionInterceptor)
   @Post()
-  @ApiBearerAuth()
   @ApiOperation({ summary: '루틴 생성', description: '루틴 생성 API' })
   @ApiCreatedResponse({
     type: RoutineResponseDto,
@@ -86,7 +85,6 @@ export class RoutineController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(TransactionInterceptor)
   @Put(':idx')
-  @ApiBearerAuth()
   @UsePipes(ValidationPipe)
   @ApiOperation({ summary: '루틴 수정', description: '루틴 수정 API' })
   async updateRoutine(
@@ -101,7 +99,6 @@ export class RoutineController {
   @UseInterceptors(TransactionInterceptor)
   @Put('restore/:idx')
   // @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiBearerAuth()
   @UsePipes(ValidationPipe)
   @ApiOperation({ summary: '루틴 종료 해제', description: '루틴 종료 해제 API(restore)' })
   // @ApiNoContentResponse({ description: '루틴 종료 해제 완료' })
@@ -114,7 +111,6 @@ export class RoutineController {
   @UseInterceptors(TransactionInterceptor)
   @Delete('soft/:idx')
   @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiBearerAuth()
   @UsePipes(ValidationPipe)
   @ApiOperation({ summary: '루틴 종료', description: '루틴 종료 API(sort delete)' })
   @ApiNoContentResponse({ description: '루틴 종료 완료' })
@@ -130,7 +126,6 @@ export class RoutineController {
   @UseInterceptors(TransactionInterceptor)
   @Delete('hard/:idx')
   @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiBearerAuth()
   @UsePipes(ValidationPipe)
   @ApiOperation({ summary: '루틴 삭제', description: '루틴 삭제 API(hard delete)' })
   @ApiNoContentResponse({ description: '루틴 삭제 완료' })
@@ -145,7 +140,6 @@ export class RoutineController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(TransactionInterceptor)
   @Post('/completed')
-  @ApiBearerAuth()
   @UsePipes(ValidationPipe)
   @ApiOperation({ summary: '수행한 루틴 등록', description: '(특정 날짜에서 수행한 루틴 체크시) 수행한 루틴 등록 API' })
   @ApiCreatedResponse({
@@ -166,7 +160,6 @@ export class RoutineController {
   @UseInterceptors(TransactionInterceptor)
   @Delete('/completed')
   @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiBearerAuth()
   @UsePipes(ValidationPipe)
   @ApiOperation({
     summary: '수행한 루틴 삭제',

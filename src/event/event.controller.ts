@@ -35,12 +35,12 @@ import { Transaction } from 'sequelize'
 
 @Controller('event')
 @ApiTags('Event API')
+@ApiBearerAuth('accessToken')
 export class EventController {
   constructor(private readonly eventService: EventService) {}
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  @ApiBearerAuth()
   @ApiOperation({ summary: '일정 조회', description: '일정 조회 API' })
   @ApiOkResponse({
     type: EventResponseDto,
@@ -60,7 +60,6 @@ export class EventController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(TransactionInterceptor)
   @Post()
-  @ApiBearerAuth()
   @ApiOperation({ summary: '일정 생성', description: '일정 생성 API' })
   @ApiCreatedResponse({
     type: EventResponseDto,
@@ -82,7 +81,6 @@ export class EventController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(TransactionInterceptor)
   @Put(':eventIdx')
-  @ApiBearerAuth()
   @ApiOperation({ summary: '일정 수정', description: '일정 수정 API' })
   @ApiOkResponse({ description: '일정 수정 성공' })
   @ApiNotFoundResponse({ description: '일정 수정 실패' })

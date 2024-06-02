@@ -35,12 +35,12 @@ import { Transaction } from 'sequelize'
 
 @Controller('todo')
 @ApiTags('ToDo API')
+@ApiBearerAuth('accessToken')
 export class TodoController {
   constructor(private readonly todoService: TodoService) {}
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'ToDo 가져오기', description: '유저의 모든 ToDo get API' })
   @ApiOkResponse({
     type: TodoResponseDto,
@@ -53,7 +53,6 @@ export class TodoController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(TransactionInterceptor)
   @Post()
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'ToDo 생성', description: 'ToDo 생성 API' })
   @ApiCreatedResponse({
     type: TodoResponseDto,
@@ -75,7 +74,6 @@ export class TodoController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(TransactionInterceptor)
   @Put(':todoIdx')
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'ToDo 수정', description: 'ToDo 수정 API' })
   @ApiOkResponse({
     type: TodoResponseDto,
@@ -100,7 +98,6 @@ export class TodoController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(TransactionInterceptor)
   @Delete(':todoIdx')
-  @ApiBearerAuth()
   @ApiOperation({ summary: 'ToDo 삭제', description: 'ToDo 삭제 API' })
   @ApiOkResponse({ description: 'ToDo 삭제 성공' })
   @ApiBadRequestResponse({ description: 'ToDo 삭제 실패' })
