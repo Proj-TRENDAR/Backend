@@ -127,7 +127,7 @@ export class RoutineController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @UsePipes(ValidationPipe)
   @ApiOperation({ summary: '루틴 삭제', description: '루틴 삭제 API(hard delete)' })
-  @ApiNoContentResponse({ description: '루틴 삭제 완료' })
+  @ApiNoContentResponse({ description: '루틴 삭제 성공' })
   @ApiNotFoundResponse({ description: '루틴 삭제 실패' })
   async hardDeleteRoutine(@Param('idx') idx: number, @TransactionParam() transaction: Transaction): Promise<void> {
     await this.routineService.hardDeleteRoutine(idx, transaction)
@@ -161,7 +161,7 @@ export class RoutineController {
     summary: '수행한 루틴 삭제',
     description: '(특정 날짜에서 수행한 루틴 체크 해제시) 수행한 루틴 삭제 API',
   })
-  @ApiNoContentResponse({ description: '수행한 루틴 삭제 완료' })
+  @ApiNoContentResponse({ description: '수행한 루틴 삭제 성공' })
   @ApiNotFoundResponse({ description: '수행한 루틴 삭제 실패' })
   async deleteRoutineCompleted(@Body('idx') idx: number, @TransactionParam() transaction: Transaction): Promise<void> {
     const result = await this.routineCompletedService.deleteRoutineCompleted(idx, transaction)
