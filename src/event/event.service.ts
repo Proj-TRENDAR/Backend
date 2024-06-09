@@ -60,8 +60,190 @@ export class EventService {
     return Math.ceil((currentDate + firstDay) / 7)
   }
 
+  private calculateBeing(event: EventResponseDto, startOfWeek: Date, endOfWeek: Date) {
+    let tempStartDate = new Date(event.startTime)
+    let tempEndDate = new Date(event.endTime)
+    // 날짜 차이가 있다면 being 계산
+    if (this.compareDate(event.endTime, event.startTime)) {
+      // startTime과 weeklyDate[0] 비교해서 start가 더 빠르면 앞에 자름
+      if (this.compareDate(event.startTime, startOfWeek) === -1) {
+        console.log('start Time이 빨라')
+        tempStartDate = startOfWeek
+      }
+      // endTime과 weeklyDate[6] 비교해서 end가 더 느리면 자름
+      if (this.compareDate(event.endTime, endOfWeek) === 1) {
+        tempEndDate = endOfWeek
+        console.log('endTime이 느려', event.endTime, endOfWeek)
+      }
+      // 날짜 계산
+      event.being = this.getDaysDiff(tempStartDate, tempEndDate) + 1
+    }
+    return { eventResult: event, tempStartDate }
+  }
+
+  private checkDateInRange(event, recurringEvent, startOfWeek: Date, endOfWeek: Date) {
+    const start = new Date(event.startTime)
+    const end = new Date(event.endTime)
+    const recurringEnd = new Date(recurringEvent.endTime)
+    const result = []
+
+    const daysOfWeek = recurringEvent.dayOfWeek?.length
+      ? JSON.parse(recurringEvent.dayOfWeek).map(day => parseInt(day))
+      : null
+    // throw new Error(`Invalid recurring`)
+    const daysOfMonth = recurringEvent.dayOfMonth
+      ? JSON.parse(recurringEvent.dayOfMonth).map(day => parseInt(day))
+      : null
+    const monthsOfYear = recurringEvent.monthOfYear
+      ? JSON.parse(recurringEvent.monthOfYear).map(month => parseInt(month))
+      : null
+    while (start <= recurringEnd) {
+      const interval = recurringEvent.separationCount + 1
+      switch (recurringEvent.recurringType) {
+        case 'D':
+          if (startOfWeek <= start && start <= endOfWeek) {
+            const eventForm = {
+              idx: event.idx,
+              title: event.title,
+              isAllDay: !!event.isAllDay,
+              color: event.color,
+              being: null,
+              startTime: new Date(start),
+              endTime: new Date(end),
+              isRecurringData: true,
+            }
+            result.push(eventForm)
+          }
+          start.setDate(start.getDate() + interval)
+          end.setDate(end.getDate() + interval)
+          break
+        case 'W':
+          for (const day of daysOfWeek) {
+            const currentDay = new Date(start)
+            currentDay.setDate(currentDay.getDate() - currentDay.getDay()) // 일요일로 변경
+            currentDay.setDate(currentDay.getDate() + ((day - currentDay.getDay() + 7) % 7))
+            if (currentDay >= startOfWeek && currentDay <= endOfWeek && currentDay <= recurringEnd) {
+              const eventForm = {
+                idx: event.idx,
+                title: event.title,
+                isAllDay: !!event.isAllDay,
+                color: event.color,
+                being: null,
+                startTime: new Date(currentDay),
+                endTime: new Date(currentDay.getTime() + (end.getTime() - start.getTime())),
+                isRecurringData: true,
+              }
+              result.push(eventForm)
+            }
+          }
+          // 다음 주로 이동
+          start.setDate(start.getDate() + 7 * interval)
+          end.setDate(end.getDate() + 7 * interval)
+          break
+        case 'M':
+          if (daysOfMonth) {
+            for (const day of daysOfMonth) {
+              const currentMonthDay = new Date(start.getFullYear(), start.getMonth(), day)
+              if (currentMonthDay >= startOfWeek && currentMonthDay <= endOfWeek && currentMonthDay <= recurringEnd) {
+                const eventForm = {
+                  idx: event.idx,
+                  title: event.title,
+                  isAllDay: !!event.isAllDay,
+                  color: event.color,
+                  being: null,
+                  startTime: new Date(currentMonthDay),
+                  endTime: new Date(currentMonthDay.getTime() + (end.getTime() - start.getTime())),
+                  isRecurringData: true,
+                }
+                result.push(eventForm)
+              }
+            }
+          } else if (daysOfWeek && recurringEvent.weekOfMonth !== null) {
+            const weekOfMonth = recurringEvent.weekOfMonth
+            for (const day of daysOfWeek) {
+              const firstDayOfMonth = new Date(start.getFullYear(), start.getMonth(), 1)
+              const firstDayOfWeek = firstDayOfMonth.getDay()
+              const currentMonthWeekDay = new Date(firstDayOfMonth)
+              currentMonthWeekDay.setDate(currentMonthWeekDay.getDate() + ((day - firstDayOfWeek + 7) % 7))
+              currentMonthWeekDay.setDate(currentMonthWeekDay.getDate() + (weekOfMonth - 1) * 7)
+              if (
+                currentMonthWeekDay >= startOfWeek &&
+                currentMonthWeekDay <= endOfWeek &&
+                currentMonthWeekDay <= recurringEnd
+              ) {
+                const eventForm = {
+                  idx: event.idx,
+                  title: event.title,
+                  isAllDay: !!event.isAllDay,
+                  color: event.color,
+                  being: null,
+                  startTime: new Date(currentMonthWeekDay),
+                  endTime: new Date(currentMonthWeekDay.getTime() + (end.getTime() - start.getTime())),
+                  isRecurringData: true,
+                }
+                result.push(eventForm)
+              }
+            }
+          }
+          start.setMonth(start.getMonth() + interval)
+          end.setMonth(end.getMonth() + interval)
+          break
+        case 'Y':
+          if (monthsOfYear) {
+            for (const month of monthsOfYear) {
+              if (daysOfMonth) {
+                for (const day of daysOfMonth) {
+                  const currentYearDay = new Date(start.getFullYear(), month - 1, day)
+                  if (currentYearDay >= startOfWeek && currentYearDay <= endOfWeek && currentYearDay <= recurringEnd) {
+                    const eventForm = {
+                      idx: event.idx,
+                      title: event.title,
+                      isAllDay: !!event.isAllDay,
+                      color: event.color,
+                      being: null,
+                      startTime: new Date(currentYearDay),
+                      endTime: new Date(currentYearDay.getTime() + (end.getTime() - start.getTime())),
+                      isRecurringData: true,
+                    }
+                    result.push(eventForm)
+                  }
+                }
+              }
+            }
+          }
+          start.setFullYear(start.getFullYear() + interval)
+          end.setFullYear(end.getFullYear() + interval)
+          break
+      }
+    }
+    return result
+  }
+
+  private async checkRecurringEvent(userId, weeklyDate: Date[]) {
+    const result = []
+    const startDate = weeklyDate[0]
+    const endDate = new Date(weeklyDate[6].getTime() + 24 * 60 * 60 * 1000)
+    const userRecurringEvents = await this.eventModel.findAll({
+      where: {
+        userId: userId,
+        isRecurring: true,
+      },
+    })
+
+    for await (const event of userRecurringEvents) {
+      const recurringEvent = await this.recurringEventModel.findOne({
+        where: {
+          eventIdx: event.idx,
+        },
+      })
+      // TODO: separationCount가 직관성이 떨어지는 것 같음..
+      const rangeResult = this.checkDateInRange(event, recurringEvent, startDate, endDate)
+      result.push(...rangeResult)
+    }
+    return result
+  }
+
   async getWeeklyEvent(userId: string, year: number, month: number, date: number): Promise<EventResponseDto[][]> {
-    // TODO: recurring은 나중에 해주자
     const result = Array.from(Array(7), () => [])
     // 파라미터로 일~토 date 뽑기
     const dateTime = new Date(year, month - 1, date)
@@ -78,6 +260,7 @@ export class EventService {
     const weeklyEvent = await this.eventModel.findAll({
       where: {
         userId: userId,
+        isRecurring: false,
         [sequelize.Op.or]: [
           {
             startTime: {
@@ -91,21 +274,21 @@ export class EventService {
           },
           {
             [sequelize.Op.and]: [
-              { startTime: { [sequelize.Op.lt]: weeklyDate[0] } },
-              { endTime: { [sequelize.Op.gte]: new Date(weeklyDate[6].getTime() + 24 * 60 * 60 * 1000) } },
+              { startTime: { [sequelize.Op.lt]: weeklyDate[0] } }, // startTime < weeklyDate[0]
+              { endTime: { [sequelize.Op.gte]: new Date(weeklyDate[6].getTime() + 24 * 60 * 60 * 1000) } }, // endTime >= weeklyDate[6] + 1
             ],
           },
         ],
       },
-      include: [
-        {
-          model: RecurringEvent,
-        },
-      ],
+    })
+    const recurringData = await this.checkRecurringEvent(userId, weeklyDate)
+    recurringData.map(item => {
+      const { eventResult, tempStartDate } = this.calculateBeing(item, weeklyDate[0], weeklyDate[6])
+      result[tempStartDate.getDay()].push(eventResult)
     })
 
     weeklyEvent.map(item => {
-      const event = {
+      const eventForm = {
         idx: item.idx,
         title: item.title,
         isAllDay: !!item.isAllDay,
@@ -113,24 +296,11 @@ export class EventService {
         being: null,
         startTime: item.startTime,
         endTime: item.endTime,
+        isRecurringData: false,
       }
-      let tempStartDate = item.startTime
-      let tempEndDate = item.endTime
-      // 날짜 차이가 있다면 being 계산
-      if (this.compareDate(item.endTime, item.startTime)) {
-        // startTime과 weeklyDate[0] 비교해서 start가 더 빠르면 앞에 자름
-        if (this.compareDate(item.startTime, weeklyDate[0]) === -1) {
-          tempStartDate = weeklyDate[0]
-        }
-        // endTime과 weeklyDate[6] 비교해서 end가 더 느리면 자름
-        if (this.compareDate(item.endTime, weeklyDate[6]) === 1) {
-          tempEndDate = weeklyDate[6]
-        }
-        // 날짜 계산
-        event.being = this.getDaysDiff(tempStartDate, tempEndDate) + 1
-      }
+      const { eventResult, tempStartDate } = this.calculateBeing(eventForm, weeklyDate[0], weeklyDate[6])
       // startTime의 요일에 따라서 배열에 넣어주기
-      result[tempStartDate.getDay()].push(event)
+      result[tempStartDate.getDay()].push(eventResult)
     })
 
     result.map(arr => {
@@ -201,7 +371,13 @@ export class EventService {
     if (isRecurring) {
       await this.createRecurringEvent(createdEvent.idx, createEventDto, transaction)
     }
-    return new EventResponseDto(createdEvent)
+
+    const eventResponse = {
+      ...createdEvent.get({ plain: true }), // Sequelize 인스턴스를 plain 객체로 변환
+      isAllDay: Boolean(createdEvent.isAllDay),
+      isRecurringData: false,
+    }
+    return new EventResponseDto(eventResponse)
   }
 
   // TODO: recurring event 추가해야 함 + update dto 수정

@@ -23,7 +23,6 @@ import {
   getSchemaPath,
 } from '@nestjs/swagger'
 import { TransactionInterceptor } from 'src/share/transaction/interceptor'
-import { Event } from 'models'
 import { EventService } from 'src/event/event.service'
 import { CreateEventDto } from 'src/event/dto/create-event.dto'
 import { UpdateEventDto } from 'src/event/dto/update-event.dto'

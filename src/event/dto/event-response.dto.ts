@@ -1,4 +1,4 @@
-import { Expose, plainToClass } from 'class-transformer'
+import { Expose, plainToClass, Transform } from 'class-transformer'
 import { ApiProperty } from '@nestjs/swagger'
 import { EventResponse } from 'models/Event.response'
 
@@ -13,7 +13,7 @@ export class EventResponseDto {
 
   @ApiProperty({ example: true, description: '하루 종일 여부' })
   @Expose()
-  isAllDay: number
+  isAllDay: boolean
 
   @ApiProperty({ example: 1, description: '1~7(temp) 색상' })
   @Expose()
@@ -30,6 +30,10 @@ export class EventResponseDto {
   @ApiProperty({ example: '2024-05-06 00:00:00Z', description: '종료 시간' })
   @Expose()
   endTime: Date
+
+  @ApiProperty({ example: true, description: '반복설정으로 만든 데이터 유무' })
+  @Expose()
+  isRecurringData: boolean
 
   constructor(event: EventResponse) {
     Object.assign(this, plainToClass(EventResponseDto, event, { excludeExtraneousValues: true }))
