@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger'
 import { Transform, Type } from 'class-transformer'
-import { IsDate, IsNumber, IsOptional, IsString, MaxLength } from 'class-validator'
+import { IsArray, IsDate, IsIn, IsNumber, IsOptional, IsString, MaxLength } from 'class-validator'
 
 export class UpdateEventDto {
   @ApiPropertyOptional({ description: '일정 제목' })
@@ -48,7 +48,7 @@ export class UpdateEventDto {
   @IsDate()
   endTime: Date | null
 
-  @ApiPropertyOptional({ example: '1', description: '1~7(미정)' })
+  @ApiPropertyOptional({ example: 1, description: '1~7(미정)' })
   @IsOptional()
   @IsNumber()
   color: number
@@ -75,10 +75,11 @@ export class UpdateEventDto {
   })
   @IsOptional()
   @IsString()
+  @IsIn(['D', 'W', 'M', 'Y'], { message: '반복 타입은 D, W, M, Y 중 하나여야 합니다.' })
   recurringType?: string
 
   @ApiPropertyOptional({
-    example: '0',
+    example: 0,
     description: '간격 주기 설정<br/>(ex) 반복 타입이 주간일 경우, 1 : 격주)',
   })
   @IsOptional()
@@ -86,7 +87,7 @@ export class UpdateEventDto {
   separationCount?: number
 
   @ApiPropertyOptional({
-    example: '1',
+    example: 1,
     description: '(isRecurring이 true일 경우) 최대 반복 횟수',
   })
   @IsOptional()
@@ -103,35 +104,38 @@ export class UpdateEventDto {
   recurringEndTime: Date
 
   @ApiPropertyOptional({
-    example: '0',
+    example: [0, 2, 4, 5],
     description:
       '주간 특정 요일 설정(여러 요일일 경우 row 각각 생성)<br/>(0 = 일요일, 1 = 월요일, 2 = 화요일, 3 = 수요일, 4 = 목요일, 5 = 금요일, 6 = 토요일)',
   })
   @IsOptional()
-  @IsNumber()
-  dayOfWeek?: number
+  @Type(() => Number)
+  @IsArray()
+  dayOfWeek?: number[]
 
   @ApiPropertyOptional({
-    example: '3',
-    description: '월간 특정 일 설정(1~31)',
+    example: [1, 15],
+    description: '월간 특정 일 설정(1~31)<br/>없을시 null',
   })
   @IsOptional()
-  @IsNumber()
-  dayOfMonth?: number
+  @Type(() => Number)
+  @IsArray()
+  dayOfMonth?: number[]
 
   @ApiPropertyOptional({
-    example: '1',
-    description: '월간 특정 주 설정(1~5)',
+    example: 1,
+    description: '월간 특정 주 설정(1~5 | null)',
   })
   @IsOptional()
   @IsNumber()
   weekOfMonth?: number
 
   @ApiPropertyOptional({
-    example: '2',
-    description: '연간 특정 월 설정(1~12)',
+    example: [2, 5, 8],
+    description: '연간 특정 월 설정(1~12)<br/>없을시 null',
   })
   @IsOptional()
-  @IsNumber()
-  monthOfYear?: number
+  @Type(() => Number)
+  @IsArray()
+  monthOfYear?: number[]
 }
