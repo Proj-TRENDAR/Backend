@@ -404,44 +404,4 @@ export class EventService {
       throw new HttpException({ success: false, message: '일정 수정 실패' }, HttpStatus.BAD_REQUEST)
     }
   }
-
-  async createRecurringEvent(
-    eventIdx: number,
-    createEventDto: CreateEventDto,
-    transaction: Transaction
-  ): Promise<RecurringEvent> {
-    const {
-      recurringType,
-      separationCount,
-      maxNumOfOccurrances,
-      recurringEndTime,
-      dayOfWeek,
-      dayOfMonth,
-      weekOfMonth,
-      monthOfYear,
-    } = createEventDto
-    return await this.recurringEventModel.create(
-      {
-        eventIdx,
-        recurringType,
-        separationCount,
-        maxNumOfOccurrances,
-        endTime: recurringEndTime,
-        dayOfWeek: JSON.stringify(dayOfWeek),
-        dayOfMonth: JSON.stringify(dayOfMonth),
-        weekOfMonth,
-        monthOfYear: JSON.stringify(monthOfYear),
-      },
-      { transaction }
-    )
-  }
-
-  async deleteRecurringEvent(eventIdx: number, transaction: Transaction) {
-    await this.recurringEventModel.destroy({
-      where: {
-        eventIdx,
-      },
-      transaction,
-    })
-  }
 }
