@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/sequelize'
 import { RecurringEvent } from 'models'
-import { CreateEventDto } from 'src/event/dto/create-event.dto'
 import { Transaction } from 'sequelize'
+import { CreateEventDto } from 'src/event/dto/create-event.dto'
+import { UpdateEventDto } from 'src/event/dto/update-event.dto'
 
 @Injectable()
 export class EventRecurringService {
@@ -37,10 +38,10 @@ export class EventRecurringService {
         separationCount,
         maxNumOfOccurrances,
         endTime: recurringEndTime,
-        dayOfWeek: JSON.stringify(dayOfWeek),
-        dayOfMonth: JSON.stringify(dayOfMonth),
+        dayOfWeek: dayOfWeek ? JSON.stringify(dayOfWeek) : null,
+        dayOfMonth: dayOfMonth ? JSON.stringify(dayOfMonth) : null,
         weekOfMonth,
-        monthOfYear: JSON.stringify(monthOfYear),
+        monthOfYear: monthOfYear ? JSON.stringify(monthOfYear) : null,
       },
       { transaction }
     )

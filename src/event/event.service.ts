@@ -372,7 +372,7 @@ export class EventService {
     const eventResponse = {
       ...createdEvent.get({ plain: true }), // Sequelize 인스턴스를 plain 객체로 변환
       isAllDay: Boolean(createdEvent.isAllDay),
-      isRecurringData: false,
+      isRecurringData: !!isRecurring,
     }
     return new EventResponseDto(eventResponse)
   }
