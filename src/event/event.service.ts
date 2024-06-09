@@ -1,19 +1,19 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
+import sequelize, { Transaction } from 'sequelize'
 import { InjectModel } from '@nestjs/sequelize'
-
+import { Event } from 'models'
 import { CreateEventDto } from 'src/event/dto/create-event.dto'
 import { UpdateEventDto } from 'src/event/dto/update-event.dto'
-import { EventResponseDto } from './dto/event-response.dto'
-import { Event, RecurringEvent } from 'models'
-import sequelize, { Transaction } from 'sequelize'
+import { EventResponseDto } from 'src/event/dto/event-response.dto'
+import { EventRecurringService } from './event-recurring/event-recurring.service'
 
 @Injectable()
 export class EventService {
   constructor(
     @InjectModel(Event)
     private eventModel: typeof Event,
-    @InjectModel(RecurringEvent)
-    private recurringEventModel: typeof RecurringEvent
+
+    private eventRecurringService: EventRecurringService
   ) {}
 
   /**
@@ -231,11 +231,7 @@ export class EventService {
     })
 
     for await (const event of userRecurringEvents) {
-      const recurringEvent = await this.recurringEventModel.findOne({
-        where: {
-          eventIdx: event.idx,
-        },
-      })
+      const recurringEvent = await this.eventRecurringService.getEventRecurring(event.idx)
       // TODO: separationCount가 직관성이 떨어지는 것 같음..
       const rangeResult = this.checkDateInRange(event, recurringEvent, startDate, endDate)
       result.push(...rangeResult)
@@ -351,6 +347,7 @@ export class EventService {
       })
     )
   }
+
   async createEvent(createEventDto: CreateEventDto, transaction: Transaction): Promise<EventResponseDto> {
     const { userId, title, isAllDay, startTime, endTime, color, place, description, isRecurring } = createEventDto
     const createdEvent = await this.eventModel.create(
@@ -369,7 +366,7 @@ export class EventService {
     )
 
     if (isRecurring) {
-      await this.createRecurringEvent(createdEvent.idx, createEventDto, transaction)
+      await this.eventRecurringService.createEventRecurring(createdEvent.idx, createEventDto, transaction)
     }
 
     const eventResponse = {
