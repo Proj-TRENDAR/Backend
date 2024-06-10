@@ -46,4 +46,13 @@ export class EventRecurringService {
       { transaction }
     )
   }
+
+  async deleteEventRecurring(eventIdx: number, transaction: Transaction) {
+    return await this.eventRecurringModel.destroy({
+      where: {
+        eventIdx,
+      },
+      transaction,
+    })
+  }
 }
