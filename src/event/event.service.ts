@@ -112,6 +112,8 @@ export class EventService {
               startTime: new Date(start),
               endTime: new Date(end),
               isRecurringData: true,
+              originStartTime: new Date(event.startTime),
+              originEndTime: new Date(event.endTime),
             }
             result.push(eventForm)
           }
@@ -133,6 +135,8 @@ export class EventService {
                 startTime: new Date(currentDay),
                 endTime: new Date(currentDay.getTime() + (end.getTime() - start.getTime())),
                 isRecurringData: true,
+                originStartTime: new Date(event.startTime),
+                originEndTime: new Date(event.endTime),
               }
               result.push(eventForm)
             }
@@ -155,6 +159,8 @@ export class EventService {
                   startTime: new Date(currentMonthDay),
                   endTime: new Date(currentMonthDay.getTime() + (end.getTime() - start.getTime())),
                   isRecurringData: true,
+                  originStartTime: new Date(event.startTime),
+                  originEndTime: new Date(event.endTime),
                 }
                 result.push(eventForm)
               }
@@ -181,6 +187,8 @@ export class EventService {
                   startTime: new Date(currentMonthWeekDay),
                   endTime: new Date(currentMonthWeekDay.getTime() + (end.getTime() - start.getTime())),
                   isRecurringData: true,
+                  originStartTime: new Date(event.startTime),
+                  originEndTime: new Date(event.endTime),
                 }
                 result.push(eventForm)
               }
@@ -205,6 +213,8 @@ export class EventService {
                       startTime: new Date(currentYearDay),
                       endTime: new Date(currentYearDay.getTime() + (end.getTime() - start.getTime())),
                       isRecurringData: true,
+                      originStartTime: new Date(event.startTime),
+                      originEndTime: new Date(event.endTime),
                     }
                     result.push(eventForm)
                   }

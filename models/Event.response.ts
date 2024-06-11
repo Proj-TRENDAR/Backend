@@ -4,4 +4,6 @@ export interface EventResponse extends Pick<EventAttributes, 'idx' | 'color' | '
   isAllDay: boolean
   being?: number
   isRecurringData: boolean
+  originStartTime?: Date
+  originEndTime?: Date
 }
