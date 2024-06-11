@@ -6,6 +6,7 @@ import { CreateEventDto } from 'src/event/dto/create-event.dto'
 import { UpdateEventDto } from 'src/event/dto/update-event.dto'
 import { EventResponseDto } from 'src/event/dto/event-response.dto'
 import { EventRecurringService } from './event-recurring/event-recurring.service'
+import { EventNotFoundException } from './event.errors'
 
 @Injectable()
 export class EventService {
@@ -348,6 +349,20 @@ export class EventService {
     )
   }
 
+  private async getEvent(idx: number, transaction: Transaction) {
+    const event = await this.eventModel.findOne({
+      where: { idx },
+      transaction,
+    })
+    if (!event) throw new EventNotFoundException()
+
+    return new EventResponseDto({
+      ...event.get({ plain: true }), // Sequelize 인스턴스를 plain 객체로 변환
+      isAllDay: Boolean(event.isAllDay),
+      isRecurringData: !!event.isRecurring,
+    })
+  }
+
   async createEvent(createEventDto: CreateEventDto, transaction: Transaction): Promise<EventResponseDto> {
     const { userId, title, isAllDay, startTime, endTime, color, place, description, isRecurring } = createEventDto
     const createdEvent = await this.eventModel.create(
@@ -368,13 +383,7 @@ export class EventService {
     if (isRecurring) {
       await this.eventRecurringService.createEventRecurring(createdEvent.idx, createEventDto, transaction)
     }
-
-    const eventResponse = {
-      ...createdEvent.get({ plain: true }), // Sequelize 인스턴스를 plain 객체로 변환
-      isAllDay: Boolean(createdEvent.isAllDay),
-      isRecurringData: !!isRecurring,
-    }
-    return new EventResponseDto(eventResponse)
+    return await this.getEvent(createdEvent.idx, transaction)
   }
 
   async updateEvent(idx: number, updateEventDto: UpdateEventDto, transaction: Transaction) {
