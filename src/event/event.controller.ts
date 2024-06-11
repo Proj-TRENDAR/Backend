@@ -82,12 +82,12 @@ export class EventController {
   @Put(':eventIdx')
   @ApiOperation({ summary: '일정 수정', description: '일정 수정 API' })
   @ApiOkResponse({ description: '일정 수정 성공' })
-  @ApiNotFoundResponse({ description: '일정 수정 실패' })
+  @ApiNotFoundResponse({ description: '존재하지 않는 일정' })
   async updateEvent(
     @Param('eventIdx', ParseIntPipe) idx: number,
     @Body() updateData: UpdateEventDto,
     @TransactionParam() transaction: Transaction
-  ) {
+  ): Promise<EventResponseDto> {
     return await this.eventService.updateEvent(idx, updateData, transaction)
   }
 }

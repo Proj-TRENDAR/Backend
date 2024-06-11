@@ -377,10 +377,9 @@ export class EventService {
     return new EventResponseDto(eventResponse)
   }
 
-  // TODO: recurring event 추가해야 함 + update dto 수정
   async updateEvent(idx: number, updateEventDto: UpdateEventDto, transaction: Transaction) {
     const { title, isAllDay, startTime, endTime, color, place, description, isRecurring } = updateEventDto
-    const updatedEvent = await this.eventModel.update(
+    await this.eventModel.update(
       {
         title,
         isAllDay,
@@ -398,10 +397,12 @@ export class EventService {
         transaction,
       }
     )
-    if (updatedEvent[0]) {
-      return { success: true, message: '일정 수정 성공' }
+
+    if (isRecurring) {
+      await this.eventRecurringService.updateEventRecurring(idx, updateEventDto, transaction)
     } else {
-      throw new HttpException({ success: false, message: '일정 수정 실패' }, HttpStatus.BAD_REQUEST)
+      await this.eventRecurringService.deleteEventRecurring(idx, transaction)
     }
+    return await this.getEvent(idx, transaction)
   }
 }
