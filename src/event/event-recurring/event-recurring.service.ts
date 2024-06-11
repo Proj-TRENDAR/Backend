@@ -47,6 +47,33 @@ export class EventRecurringService {
     )
   }
 
+  async updateEventRecurring(eventIdx: number, updateEventDto: UpdateEventDto, transaction: Transaction) {
+    const {
+      recurringType,
+      separationCount,
+      maxNumOfOccurrances,
+      recurringEndTime,
+      dayOfWeek,
+      dayOfMonth,
+      weekOfMonth,
+      monthOfYear,
+    } = updateEventDto
+    return await this.eventRecurringModel.upsert(
+      {
+        eventIdx,
+        recurringType,
+        separationCount,
+        maxNumOfOccurrances,
+        endTime: recurringEndTime,
+        dayOfWeek: dayOfWeek ? JSON.stringify(dayOfWeek) : null,
+        dayOfMonth: dayOfMonth ? JSON.stringify(dayOfMonth) : null,
+        weekOfMonth,
+        monthOfYear: monthOfYear ? JSON.stringify(monthOfYear) : null,
+      },
+      { transaction }
+    )
+  }
+
   async deleteEventRecurring(eventIdx: number, transaction: Transaction) {
     return await this.eventRecurringModel.destroy({
       where: {
