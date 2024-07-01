@@ -12,10 +12,10 @@ export interface UserAttributes {
   createdAt?: Date
   updatedAt?: Date
   refreshToken?: string
-  themaColor?: number
+  themeColor?: number
 }
 
-@Table({ tableName: 'user', timestamps: true })
+@Table({ tableName: 'user', timestamps: false })
 export class User extends Model<UserAttributes, UserAttributes> implements UserAttributes {
   @Column({ primaryKey: true, type: DataType.STRING(45) })
   @Index({ name: 'PRIMARY', using: 'BTREE', order: 'ASC', unique: true })
@@ -39,8 +39,8 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
   @Column({ field: 'refresh_token', allowNull: true, type: DataType.STRING(250) })
   refreshToken?: string
 
-  @Column({ field: 'thema_color', type: DataType.INTEGER, defaultValue: '1' })
-  themaColor?: number
+  @Column({ field: 'theme_color', type: DataType.INTEGER, defaultValue: '1' })
+  themeColor?: number
 
   @HasMany(() => Social, { sourceKey: 'id' })
   Socials?: Social[]
