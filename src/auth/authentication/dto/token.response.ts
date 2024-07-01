@@ -13,10 +13,14 @@ export class TokenResponse {
   @ApiProperty({ example: '테스터', description: '유저 이름' })
   userName: string
 
-  constructor(accessToken: string, refreshToken: string, id: string, userName: string) {
+  @ApiProperty({ example: 1, description: '테마 컬러' })
+  themeColor: number
+
+  constructor(accessToken: string, refreshToken: string, id: string, userName: string, themeColor: number) {
     this.accessToken = accessToken
     this.refreshToken = refreshToken
     this.id = id
     this.userName = userName
+    this.themeColor = themeColor
   }
 }

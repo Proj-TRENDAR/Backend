@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios'
-import { Injectable, Query, UnauthorizedException } from '@nestjs/common'
+import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { Request, Response } from 'express'
 
@@ -46,7 +46,7 @@ export class AuthenticationService {
         secure: true,
         maxAge: 14 * 24 * 60 * 60 * 1000,
       })
-      return { accessToken, refreshToken, id: user.id, userName: user.name }
+      return { accessToken, refreshToken, id: user.id, userName: user.name, themeColor: user.themeColor }
     }
   }
 
