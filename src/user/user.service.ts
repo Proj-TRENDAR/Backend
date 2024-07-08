@@ -1,8 +1,10 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/sequelize'
 
-import { CreateUserDto } from './dto/create-user.dto'
+import { CreateUserDto } from 'src/user/dto/create-user.dto'
+import { UserResponseDto } from 'src/user/dto/user-response.dto'
 import { User, Social } from 'models'
+import { Transaction } from 'sequelize'
 
 // Injectable을 이용하여 다른 컴포넌트에서도 이 service를 이용할 수 있게 함
 @Injectable()
@@ -13,6 +15,14 @@ export class UserService {
     @InjectModel(Social)
     private socialModel: typeof Social
   ) {}
+
+  private async getUser(id: string, transaction: Transaction): Promise<UserResponseDto> {
+    const user = await this.userModel.findOne({
+      where: { id },
+      transaction,
+    })
+    return new UserResponseDto(user)
+  }
 
   async findAll(): Promise<User[]> {
     return this.userModel.findAll()
@@ -95,5 +105,16 @@ export class UserService {
   async remove(id: string): Promise<void> {
     const user = await this.findSpecificUserUsingId(id)
     await user.destroy()
+  }
+
+  async changeTheme(id: string, themeColor: number, transaction: Transaction) {
+    await this.userModel.update(
+      { themeColor },
+      {
+        where: { id },
+        transaction,
+      }
+    )
+    return await this.getUser(id, transaction)
   }
 }

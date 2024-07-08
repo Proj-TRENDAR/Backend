@@ -1,9 +1,26 @@
-import { Body, Controller, Delete, Get, Param, Post, UsePipes, ValidationPipe, UseInterceptors } from '@nestjs/common'
-import { ApiTags, ApiOperation, ApiCreatedResponse } from '@nestjs/swagger'
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UsePipes,
+  ValidationPipe,
+  UseInterceptors,
+  UseGuards,
+  Req,
+} from '@nestjs/common'
+import { ApiTags, ApiOperation, ApiCreatedResponse, ApiBearerAuth, ApiUnauthorizedResponse } from '@nestjs/swagger'
 import { TransactionInterceptor } from 'src/share/transaction/interceptor'
 import { User } from 'models'
 import { CreateUserDto } from 'src/user/dto/create-user.dto'
+import { UserResponseDto } from 'src/user/dto/user-response.dto'
 import { UserService } from 'src/user/user.service'
+import { JwtAuthGuard } from 'src/auth/authentication/jwt-auth.guard'
+import { IUserReq } from 'src/user/interface/user-req.interface'
+import { TransactionParam } from 'src/share/transaction/param'
+import { Transaction } from 'sequelize'
 
 @Controller('user')
 @ApiTags('User API')
@@ -57,5 +74,19 @@ export class UserController {
   @ApiOperation({ summary: '유저 삭제', description: '유저 삭제 API' })
   remove(@Param('id') id: string): Promise<void> {
     return this.userService.remove(id)
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(TransactionInterceptor)
+  @Post('theme')
+  @ApiBearerAuth('accessToken')
+  @ApiUnauthorizedResponse({ description: '인증 실패' })
+  @ApiOperation({ summary: '유저 테마 변경', description: '유저 테마 변경 API' })
+  async changeTheme(
+    @Body() { themeColor },
+    @Req() req: IUserReq,
+    @TransactionParam() transaction: Transaction
+  ): Promise<UserResponseDto> {
+    return await this.userService.changeTheme(req.user.id, themeColor, transaction)
   }
 }
