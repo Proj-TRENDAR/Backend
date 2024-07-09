@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Put,
   Param,
   Post,
   UsePipes,
@@ -78,7 +79,7 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(TransactionInterceptor)
-  @Post('theme')
+  @Put('theme')
   @ApiBearerAuth('accessToken')
   @ApiUnauthorizedResponse({ description: '인증 실패' })
   @ApiOperation({ summary: '유저 테마 변경', description: '유저 테마 변경 API' })
