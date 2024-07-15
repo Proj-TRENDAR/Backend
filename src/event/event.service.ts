@@ -7,6 +7,7 @@ import { UpdateEventDto } from 'src/event/dto/update-event.dto'
 import { EventResponseDto } from 'src/event/dto/event-response.dto'
 import { EventRecurringService } from './event-recurring/event-recurring.service'
 import { EventNotFoundException } from './event.errors'
+import { differenceInCalendarDays } from 'date-fns'
 
 @Injectable()
 export class EventService {
@@ -43,10 +44,7 @@ export class EventService {
    * @returns {number} The difference in days between the two dates
    */
   private getDaysDiff(date1: Date, date2: Date): number {
-    const time1 = date1.getTime()
-    const time2 = date2.getTime()
-    const timeDiff = Math.abs(time2 - time1)
-    return Math.ceil(timeDiff / (1000 * 3600 * 24))
+    return differenceInCalendarDays(date2, date1)
   }
 
   /**
