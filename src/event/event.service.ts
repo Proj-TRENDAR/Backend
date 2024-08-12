@@ -64,12 +64,12 @@ export class EventService {
     let tempEndDate = new Date(event.endTime)
     // 날짜 차이가 있다면 being 계산
     if (this.compareDate(event.endTime, event.startTime)) {
-      // startTime과 weeklyDate[0] 비교해서 start가 더 빠르면 앞에 자름
+      // startTime과 startOfWeek 비교해서 start가 더 빠르면 앞에 자름
       if (this.compareDate(event.startTime, startOfWeek) === -1) {
         console.log('start Time이 빨라')
         tempStartDate = startOfWeek
       }
-      // endTime과 weeklyDate[6] 비교해서 end가 더 느리면 자름
+      // endTime과 endOfWeek 비교해서 end가 더 느리면 자름
       if (this.compareDate(event.endTime, endOfWeek) === 1) {
         tempEndDate = endOfWeek
         console.log('endTime이 느려', event.endTime, endOfWeek)
@@ -81,15 +81,42 @@ export class EventService {
   }
 
   private checkDateInRange(event, recurringEvent, startOfWeek: Date, endOfWeek: Date) {
-    const start = new Date(event.startTime)
-    const end = new Date(event.endTime)
-    const recurringEnd = new Date(recurringEvent.endTime)
+    const start = new Date(event.startTime) // 이벤트 시작
+    const end = new Date(event.endTime) // 이벤트 끝
     const result = []
+    const originStartTime = convertToKST(event.startTime)
+    const originEndTime = convertToKST(event.endTime)
+    if (!recurringEvent) {
+      // 현재 주(startOfWeek와 endOfWeek) 내에 이벤트가 속하는지 확인
+      if (end < startOfWeek || start > endOfWeek) {
+        // 이벤트가 현재 주에 속하지 않으면 추가하지 않음
+        return
+      }
 
+      // 주 내에서 이벤트의 실제 시작 및 종료 시간을 조정
+      const eventStart = start < startOfWeek ? startOfWeek : start // 이벤트 시작 시간이 주의 시작보다 이전이라면 주의 시작으로 조정
+      const eventEnd = end > endOfWeek ? endOfWeek : end // 이벤트 종료 시간이 주의 끝보다 이후라면 주의 끝으로 조정
+
+      result.push({
+        idx: event.idx,
+        title: event.title,
+        isAllDay: !!event.isAllDay,
+        color: event.color,
+        being: null,
+        startTime: convertToKST(eventStart),
+        endTime: convertToKST(eventEnd),
+        isRecurringData: false,
+        originStartTime,
+        originEndTime,
+      })
+
+      return result
+    }
+
+    const recurringEnd = new Date(recurringEvent.endTime)
     const daysOfWeek = recurringEvent.dayOfWeek?.length
       ? JSON.parse(recurringEvent.dayOfWeek).map(day => parseInt(day))
       : null
-    // throw new Error(`Invalid recurring`)
     const daysOfMonth = recurringEvent.dayOfMonth
       ? JSON.parse(recurringEvent.dayOfMonth).map(day => parseInt(day))
       : null
@@ -230,8 +257,6 @@ export class EventService {
 
   private async checkRecurringEvent(userId, weeklyDate: Date[]) {
     const result = []
-    const startDate = weeklyDate[0]
-    const endDate = new Date(weeklyDate[6].getTime() + 24 * 60 * 60 * 1000)
     const userRecurringEvents = await this.eventModel.findAll({
       where: {
         userId: userId,
@@ -252,16 +277,8 @@ export class EventService {
     const result = Array.from(Array(7), () => [])
     // 파라미터로 일~토 date 뽑기
     const dateTime = new Date(year, month - 1, date)
-    const dayOfWeek = dateTime.getDay()
-    const sunday = new Date(dateTime)
-    sunday.setDate(dateTime.getDate() - dayOfWeek)
-    const weeklyDate: Date[] = [new Date(sunday)] // FIXME: 나중에 필요없으면 일, 토만 빼기
-    for (let i = 1; i < 7; i++) {
-      const nextDay = new Date(sunday)
-      nextDay.setDate(sunday.getDate() + i)
-      weeklyDate.push(nextDay)
-    }
-    const lastTimeOfWeek = new Date(weeklyDate[6].getTime() + 24 * 60 * 60 * 1000 - 1000)
+    const startOfTheWeek = startOfWeek(dateTime, { weekStartsOn: 0 })
+    const endOfTheWeek = endOfWeek(dateTime, { weekStartsOn: 0 })
     const weeklyEvent = await this.eventModel.findAll({
       where: {
         userId: userId,
@@ -269,45 +286,37 @@ export class EventService {
         [sequelize.Op.or]: [
           {
             startTime: {
-              [sequelize.Op.between]: [weeklyDate[0], lastTimeOfWeek],
+              [sequelize.Op.between]: [startOfTheWeek, endOfTheWeek],
             },
           },
           {
             endTime: {
-              [sequelize.Op.between]: [weeklyDate[0], lastTimeOfWeek],
+              [sequelize.Op.between]: [startOfTheWeek, endOfTheWeek],
             },
           },
           {
             [sequelize.Op.and]: [
-              { startTime: { [sequelize.Op.lt]: weeklyDate[0] } }, // startTime < weeklyDate[0]
-              { endTime: { [sequelize.Op.gte]: new Date(weeklyDate[6].getTime() + 24 * 60 * 60 * 1000) } }, // endTime >= weeklyDate[6] + 1
+              { startTime: { [sequelize.Op.lt]: startOfTheWeek } }, // startTime < startOfTheWeek
+              { endTime: { [sequelize.Op.gt]: endOfTheWeek } }, // endTime > endOfTheWeek
             ],
           },
         ],
       },
     })
-    const recurringData = await this.checkRecurringEvent(userId, weeklyDate)
+    const recurringData = await this.checkRecurringEvent(userId, startOfTheWeek, endOfTheWeek)
     recurringData.map(item => {
-      const { eventResult, tempStartDate } = this.calculateBeing(item, weeklyDate[0], weeklyDate[6])
+      const { eventResult, tempStartDate } = this.calculateBeing(item, startOfTheWeek, endOfTheWeek)
       result[tempStartDate.getDay()].push(eventResult)
     })
 
-    weeklyEvent.map(item => {
-      const eventForm = {
-        idx: item.idx,
-        title: item.title,
-        isAllDay: !!item.isAllDay,
-        color: item.color,
-        being: null,
-        startTime: item.startTime,
-        endTime: item.endTime,
-        isRecurringData: false,
-      }
-      const { eventResult, tempStartDate } = this.calculateBeing(eventForm, weeklyDate[0], weeklyDate[6])
-      // startTime의 요일에 따라서 배열에 넣어주기
-      result[tempStartDate.getDay()].push(eventResult)
+    weeklyEvent.forEach(item => {
+      const event = this.checkDateInRange(item, null, startOfTheWeek, endOfTheWeek)
+      event.forEach(eventItem => {
+        const { eventResult, tempStartDate } = this.calculateBeing(eventItem, startOfTheWeek, endOfTheWeek)
+        // startTime의 요일에 따라서 배열에 넣어주기
+        result[tempStartDate.getDay()].push(eventResult)
+      })
     })
-
     result.map(arr => {
       arr.sort((a, b) => {
         // isAllDay가 true인 경우 startTime으로 정렬
