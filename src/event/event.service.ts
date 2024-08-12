@@ -7,8 +7,7 @@ import { UpdateEventDto } from 'src/event/dto/update-event.dto'
 import { EventResponseDto } from 'src/event/dto/event-response.dto'
 import { EventRecurringService } from './event-recurring/event-recurring.service'
 import { EventNotFoundException } from './event.errors'
-import { startOfWeek, endOfWeek } from 'date-fns'
-import { differenceInCalendarDays } from 'date-fns'
+import { startOfWeek, endOfWeek, differenceInCalendarDays } from 'date-fns'
 import { convertToKST } from 'src/common/date-time'
 
 @Injectable()

@@ -35,6 +35,8 @@
     "class-validator": "^0.14.0",
     "cookie-parser": "^1.4.6",
     "cross-env": "^7.0.3",
+    "date-fns": "^3.6.0",
+    "date-fns-tz": "^3.0.0",
     "mysql2": "^3.6.5",
     "nest-winston": "^1.9.4",
     "passport": "^0.7.0",
