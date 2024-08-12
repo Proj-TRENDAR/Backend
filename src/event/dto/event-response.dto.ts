@@ -35,17 +35,15 @@ export class EventResponseDto {
   @Expose()
   isRecurringData: boolean
 
-  @ApiProperty({ example: true, description: 'isRecurringData가 true일 경우, 원본 시작 시간' })
+  @ApiProperty({ example: true, description: '원본 시작 시간' })
   @Expose()
-  @Transform(({ obj }) => (obj.isRecurringData ? obj.originStartTime : null))
   originStartTime?: Date | null
 
-  @ApiProperty({ example: true, description: 'isRecurringData가 true일 경우, 원본 종료 시간' })
+  @ApiProperty({ example: true, description: '원본 종료 시간' })
   @Expose()
-  @Transform(({ obj }) => (obj.isRecurringData ? obj.originStartTime : null))
   originEndTime?: Date | null
 
   constructor(event: EventResponse) {
-    Object.assign(this, plainToClass(EventResponseDto, event, { excludeExtraneousValues: true }))
+    Object.assign(this as any, plainToClass(EventResponseDto, event, { excludeExtraneousValues: true }))
   }
 }

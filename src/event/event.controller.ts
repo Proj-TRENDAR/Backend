@@ -26,10 +26,10 @@ import { TransactionInterceptor } from 'src/share/transaction/interceptor'
 import { EventService } from 'src/event/event.service'
 import { CreateEventDto } from 'src/event/dto/create-event.dto'
 import { UpdateEventDto } from 'src/event/dto/update-event.dto'
+import { EventResponseDto } from 'src/event/dto/event-response.dto'
 import { JwtAuthGuard } from 'src/auth/authentication/jwt-auth.guard'
 import { IUserReq } from 'src/user/interface/user-req.interface'
-import { EventResponseDto } from './dto/event-response.dto'
-import { TransactionParam } from '../share/transaction/param'
+import { TransactionParam } from 'src/share/transaction/param'
 import { Transaction } from 'sequelize'
 
 @Controller('event')

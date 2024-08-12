@@ -7,7 +7,9 @@ import { UpdateEventDto } from 'src/event/dto/update-event.dto'
 import { EventResponseDto } from 'src/event/dto/event-response.dto'
 import { EventRecurringService } from './event-recurring/event-recurring.service'
 import { EventNotFoundException } from './event.errors'
+import { startOfWeek, endOfWeek } from 'date-fns'
 import { differenceInCalendarDays } from 'date-fns'
+import { convertToKST } from 'src/common/date-time'
 
 @Injectable()
 export class EventService {
@@ -76,6 +78,8 @@ export class EventService {
       }
       // 날짜 계산
       event.being = this.getDaysDiff(tempStartDate, tempEndDate) + 1
+    } else if (event.isAllDay) {
+      event.being = 1
     }
     return { eventResult: event, tempStartDate }
   }
@@ -255,7 +259,7 @@ export class EventService {
     return result
   }
 
-  private async checkRecurringEvent(userId, weeklyDate: Date[]) {
+  private async checkRecurringEvent(userId, startDate: Date, endDate: Date) {
     const result = []
     const userRecurringEvents = await this.eventModel.findAll({
       where: {
