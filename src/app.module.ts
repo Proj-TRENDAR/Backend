@@ -43,6 +43,9 @@ import { ExceptionModule } from './exception/exception.module'
       timezone: 'Asia/Seoul',
       dialectOptions: {
         timezone: '+09:00', // DB에서 가져올 때 시간 설정
+        charset: 'utf8mb4',
+        dateStrings: true,
+        typeCast: true,
       },
       logging: true,
     }),
