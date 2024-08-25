@@ -39,7 +39,7 @@ export class User extends Model<UserAttributes, UserAttributes> implements UserA
   @Column({ field: 'refresh_token', allowNull: true, type: DataType.STRING(250) })
   refreshToken?: string
 
-  @Column({ field: 'theme_color', type: DataType.INTEGER, defaultValue: '1' })
+  @Column({ field: 'theme_color', type: DataType.INTEGER, defaultValue: '0' })
   themeColor?: number
 
   @HasMany(() => Social, { sourceKey: 'id' })
