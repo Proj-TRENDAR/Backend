@@ -91,8 +91,8 @@ export class EventService {
     const originEndTime = convertToKST(event.endTime)
     if (!recurringEvent) {
       // 현재 주(startOfWeek와 endOfWeek) 내에 이벤트가 속하는지 확인
-      if (end < startOfWeek || start > endOfWeek) {
-        // 이벤트가 현재 주에 속하지 않으면 추가하지 않음
+      if (end < startOfWeek || start > endOfWeek || recurringEvent.endTime < startOfWeek) {
+        // 이벤트가 현재 주에 속하지 않으면 추가하지 않음 || 반복 Event 종료 시간이 주 시작 전이면 추가하지 않음
         return
       }
 
