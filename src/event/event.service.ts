@@ -130,7 +130,7 @@ export class EventService {
       const interval = recurringEvent.separationCount + 1
       switch (recurringEvent.recurringType) {
         case 'D':
-          if (startOfWeek <= start && start <= endOfWeek) {
+          if ((startOfWeek <= start && start <= endOfWeek) || startOfWeek <= end) {
             const eventForm = {
               idx: event.idx,
               title: event.title,
