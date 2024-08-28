@@ -137,11 +137,11 @@ export class EventService {
               isAllDay: !!event.isAllDay,
               color: event.color,
               being: null,
-              startTime: new Date(start),
-              endTime: new Date(end),
+              startTime: convertToKST(new Date(start)),
+              endTime: convertToKST(new Date(end)),
               isRecurringData: true,
-              originStartTime: new Date(event.startTime),
-              originEndTime: new Date(event.endTime),
+              originStartTime: convertToKST(new Date(event.startTime)),
+              originEndTime: convertToKST(new Date(event.endTime)),
             }
             result.push(eventForm)
           }
@@ -160,11 +160,11 @@ export class EventService {
                 isAllDay: !!event.isAllDay,
                 color: event.color,
                 being: null,
-                startTime: new Date(currentDay),
-                endTime: new Date(currentDay.getTime() + (end.getTime() - start.getTime())),
+                startTime: convertToKST(new Date(currentDay)),
+                endTime: convertToKST(new Date(currentDay.getTime() + (end.getTime() - start.getTime()))),
                 isRecurringData: true,
-                originStartTime: new Date(event.startTime),
-                originEndTime: new Date(event.endTime),
+                originStartTime: convertToKST(new Date(event.startTime)),
+                originEndTime: convertToKST(new Date(event.endTime)),
               }
               result.push(eventForm)
             }
@@ -184,11 +184,11 @@ export class EventService {
                   isAllDay: !!event.isAllDay,
                   color: event.color,
                   being: null,
-                  startTime: new Date(currentMonthDay),
-                  endTime: new Date(currentMonthDay.getTime() + (end.getTime() - start.getTime())),
+                  startTime: convertToKST(new Date(currentMonthDay)),
+                  endTime: convertToKST(new Date(currentMonthDay.getTime() + (end.getTime() - start.getTime()))),
                   isRecurringData: true,
-                  originStartTime: new Date(event.startTime),
-                  originEndTime: new Date(event.endTime),
+                  originStartTime: convertToKST(new Date(event.startTime)),
+                  originEndTime: convertToKST(new Date(event.endTime)),
                 }
                 result.push(eventForm)
               }
@@ -212,11 +212,11 @@ export class EventService {
                   isAllDay: !!event.isAllDay,
                   color: event.color,
                   being: null,
-                  startTime: new Date(currentMonthWeekDay),
-                  endTime: new Date(currentMonthWeekDay.getTime() + (end.getTime() - start.getTime())),
+                  startTime: convertToKST(new Date(currentMonthWeekDay)),
+                  endTime: convertToKST(new Date(currentMonthWeekDay.getTime() + (end.getTime() - start.getTime()))),
                   isRecurringData: true,
-                  originStartTime: new Date(event.startTime),
-                  originEndTime: new Date(event.endTime),
+                  originStartTime: convertToKST(new Date(event.startTime)),
+                  originEndTime: convertToKST(new Date(event.endTime)),
                 }
                 result.push(eventForm)
               }
@@ -238,11 +238,11 @@ export class EventService {
                       isAllDay: !!event.isAllDay,
                       color: event.color,
                       being: null,
-                      startTime: new Date(currentYearDay),
-                      endTime: new Date(currentYearDay.getTime() + (end.getTime() - start.getTime())),
+                      startTime: convertToKST(new Date(currentYearDay)),
+                      endTime: convertToKST(new Date(currentYearDay.getTime() + (end.getTime() - start.getTime()))),
                       isRecurringData: true,
-                      originStartTime: new Date(event.startTime),
-                      originEndTime: new Date(event.endTime),
+                      originStartTime: convertToKST(new Date(event.startTime)),
+                      originEndTime: convertToKST(new Date(event.endTime)),
                     }
                     result.push(eventForm)
                   }
