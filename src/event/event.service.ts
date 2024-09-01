@@ -120,8 +120,8 @@ export class EventService {
     const daysOfWeek = recurringEvent.dayOfWeek?.length
       ? JSON.parse(recurringEvent.dayOfWeek).map(day => parseInt(day))
       : null
-    const daysOfMonth = recurringEvent.dayOfMonth
-      ? JSON.parse(recurringEvent.dayOfMonth).map(day => parseInt(day))
+    const daysOfMonth = recurringEvent.dateOfMonth
+      ? JSON.parse(recurringEvent.dateOfMonth).map(day => parseInt(day))
       : null
     const monthsOfYear = recurringEvent.monthOfYear
       ? JSON.parse(recurringEvent.monthOfYear).map(month => parseInt(month))
@@ -199,9 +199,9 @@ export class EventService {
           } else if (daysOfWeek && recurringEvent.weekOfMonth !== null) {
             const weekOfMonth = recurringEvent.weekOfMonth
             for (const day of daysOfWeek) {
-              const firstDayOfMonth = new Date(start.getFullYear(), start.getMonth(), 1)
-              const firstDayOfWeek = firstDayOfMonth.getDay()
-              const currentMonthWeekDay = new Date(firstDayOfMonth)
+              const firstdateOfMonth = new Date(start.getFullYear(), start.getMonth(), 1)
+              const firstDayOfWeek = firstdateOfMonth.getDay()
+              const currentMonthWeekDay = new Date(firstdateOfMonth)
               currentMonthWeekDay.setDate(currentMonthWeekDay.getDate() + ((day - firstDayOfWeek + 7) % 7))
               currentMonthWeekDay.setDate(currentMonthWeekDay.getDate() + (weekOfMonth - 1) * 7)
               if (
@@ -348,19 +348,19 @@ export class EventService {
   }
   async getMonthlyEvent(userId: string, year: number, month: number): Promise<EventResponseDto[][]> {
     const weeklyDate = []
-    const firstDayOfMonth = new Date(year, month - 1, 1)
-    const lastDayOfMonth = new Date(year, month, 0)
-    const currentDate = new Date(firstDayOfMonth)
-    const lastWeekNum = this.getWeekly(lastDayOfMonth)
+    const firstdateOfMonth = new Date(year, month - 1, 1)
+    const lastdateOfMonth = new Date(year, month, 0)
+    const currentDate = new Date(firstdateOfMonth)
+    const lastWeekNum = this.getWeekly(lastdateOfMonth)
 
-    while (currentDate <= lastDayOfMonth) {
+    while (currentDate <= lastdateOfMonth) {
       if (this.getWeekly(currentDate) < lastWeekNum && currentDate.getMonth() + 1 === month) {
         weeklyDate.push(currentDate.getDate())
       }
       currentDate.setDate(currentDate.getDate() + 7)
       // 마지막 주에서 월이 넘어간 경우
       if (currentDate.getMonth() !== month - 1) {
-        weeklyDate.push(lastDayOfMonth.getDate())
+        weeklyDate.push(lastdateOfMonth.getDate())
       }
     }
 

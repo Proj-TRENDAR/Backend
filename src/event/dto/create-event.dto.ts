@@ -119,7 +119,7 @@ export class CreateEventDto {
   @IsNumber()
   separationCount?: number
 
-  // TODO: isRecurring가 true일 경우, maxNumOfOccurrances, recurringEndTime 둘 중 한개만 값이 있어야 함
+  // TODO: isRecurring가 true일 경우, maxNumOfOccurrances, recurringEndTime 둘 중 한개만 값이 있어야 함 -> endTime은 무조건 있기로 바뀜
   @ApiPropertyOptional({
     example: 1,
     description: '(isRecurring이 true일 경우) 최대 반복 횟수',
@@ -154,7 +154,7 @@ export class CreateEventDto {
   @IsOptional()
   @Type(() => Number)
   @IsArray()
-  dayOfMonth?: number[]
+  dateOfMonth?: number[]
 
   @ApiPropertyOptional({
     example: 1,

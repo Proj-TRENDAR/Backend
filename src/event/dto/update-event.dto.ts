@@ -120,7 +120,7 @@ export class UpdateEventDto {
   @IsOptional()
   @Type(() => Number)
   @IsArray()
-  dayOfMonth?: number[]
+  dateOfMonth?: number[]
 
   @ApiPropertyOptional({
     example: 1,
