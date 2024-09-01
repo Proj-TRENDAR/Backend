@@ -159,7 +159,10 @@ export class EventService {
             const currentDay = new Date(start)
             currentDay.setDate(currentDay.getDate() - currentDay.getDay()) // 일요일로 변경
             currentDay.setDate(currentDay.getDate() + ((day - currentDay.getDay() + 7) % 7))
-            if (currentDay >= startOfWeek && currentDay <= endOfWeek && currentDay <= recurringEnd) {
+            if (
+              (currentDay >= startOfWeek && currentDay <= endOfWeek && currentDay <= recurringEnd) ||
+              (currentDay < startOfWeek && startOfWeek <= end && end <= endOfWeek)
+            ) {
               const eventForm = {
                 idx: event.idx,
                 title: event.title,
