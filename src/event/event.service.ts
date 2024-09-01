@@ -84,6 +84,9 @@ export class EventService {
   }
 
   private checkDateInRange(event: any, recurringEvent: any, startOfWeek: Date, endOfWeek: Date) {
+    // console.log('🚀recurringEvent', recurringEvent.idx)
+    // console.log('🚀startOfWeek', startOfWeek)
+    // console.log('🚀endOfWeek', endOfWeek)
     const start = new Date(event.startTime) // 이벤트 시작
     const end = new Date(event.endTime) // 이벤트 끝
     const result = []
@@ -120,8 +123,8 @@ export class EventService {
     const daysOfWeek = recurringEvent.dayOfWeek?.length
       ? JSON.parse(recurringEvent.dayOfWeek).map(day => parseInt(day))
       : null
-    const daysOfMonth = recurringEvent.dateOfMonth
-      ? JSON.parse(recurringEvent.dateOfMonth).map(day => parseInt(day))
+    const datesOfMonth = recurringEvent.dateOfMonth
+      ? JSON.parse(recurringEvent.dateOfMonth).map(date => parseInt(date))
       : null
     const monthsOfYear = recurringEvent.monthOfYear
       ? JSON.parse(recurringEvent.monthOfYear).map(month => parseInt(month))
@@ -177,8 +180,8 @@ export class EventService {
           end.setDate(end.getDate() + 7 * interval)
           break
         case 'M':
-          if (daysOfMonth) {
-            for (const day of daysOfMonth) {
+          if (datesOfMonth) {
+            for (const day of datesOfMonth) {
               const currentMonthDay = new Date(start.getFullYear(), start.getMonth(), day)
               if (currentMonthDay >= startOfWeek && currentMonthDay <= endOfWeek && currentMonthDay <= recurringEnd) {
                 const eventForm = {
@@ -231,8 +234,8 @@ export class EventService {
         case 'Y':
           if (monthsOfYear) {
             for (const month of monthsOfYear) {
-              if (daysOfMonth) {
-                for (const day of daysOfMonth) {
+              if (datesOfMonth) {
+                for (const day of datesOfMonth) {
                   const currentYearDay = new Date(start.getFullYear(), month - 1, day)
                   if (currentYearDay >= startOfWeek && currentYearDay <= endOfWeek && currentYearDay <= recurringEnd) {
                     const eventForm = {
