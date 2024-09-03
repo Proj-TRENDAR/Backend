@@ -19,10 +19,17 @@ export class RoutineService {
     private routineCompletedService: RoutineCompletedService
   ) {}
 
-  private async lastSequenceRoutine(): Promise<Pick<Routine, 'sequence'> | null> {
+  private async maxSequenceOfRoutine(
+    userId: string,
+    transaction: Transaction
+  ): Promise<Pick<Routine, 'sequence'> | null> {
     return await this.routineModel.findOne({
       attributes: ['sequence'],
+      where: {
+        userId,
+      },
       order: [['sequence', 'DESC']],
+      transaction,
     })
   }
 
@@ -69,7 +76,7 @@ export class RoutineService {
 
   async createRoutine(createRoutineDto: CreateRoutineDto, transaction: Transaction): Promise<RoutineResponseDto> {
     const { userId, title, color, description, weeklyCondition, days, startTime } = createRoutineDto
-    const lastRoutine = await this.lastSequenceRoutine()
+    const maxSequenceRoutine = await this.maxSequenceOfRoutine(userId, transaction)
     const createdRoutine = await this.routineModel.create(
       {
         userId,
@@ -78,7 +85,7 @@ export class RoutineService {
         description,
         weeklyCondition,
         startTime,
-        sequence: lastRoutine ? lastRoutine.sequence + 1 : 1,
+        sequence: maxSequenceRoutine ? maxSequenceRoutine.sequence + 1 : 1,
       },
       { transaction }
     )
