@@ -43,6 +43,11 @@ export class RoutineResponseDto {
   @Expose()
   completed: Date[]
 
+  @ApiProperty({ example: 1, description: '순서' })
+  @Expose()
+  sequence: number
+
+  // FIXME: 불필요 시 삭제
   @ApiProperty({ example: '2024-06-09 02:12:00', description: '루틴 삭제 날짜' })
   @Expose()
   deletedAt: Date | null
