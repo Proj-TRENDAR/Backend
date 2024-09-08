@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/sequelize'
 import { RoutineCompleted } from 'models'
-import { Transaction } from 'sequelize'
+import { Op, Transaction } from 'sequelize'
 import { CreateRoutineCompletedDto } from '../dto/create-routine-completed.dto'
 import { RoutineCompletedResponseDto } from '../dto/routine-completed-response.dto'
 
@@ -36,10 +36,15 @@ export class RoutineCompletedService {
     return new RoutineCompletedResponseDto(completedRoutine)
   }
 
-  async deleteRoutineCompleted(idx: number, transaction: Transaction): Promise<boolean> {
+  async deleteRoutineCompleted(routineIdx: number, date: string, transaction: Transaction): Promise<boolean> {
+    const startDate = `${date} 00:00:00`
+    const endDate = `${date} 23:59:59`
     const result = await this.routineCompletedModel.destroy({
       where: {
-        idx,
+        routineIdx,
+        completedAt: {
+          [Op.between]: [startDate, endDate],
+        },
       },
       transaction,
     })

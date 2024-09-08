@@ -163,8 +163,12 @@ export class RoutineController {
   })
   @ApiNoContentResponse({ description: '수행한 루틴 삭제 성공' })
   @ApiNotFoundResponse({ description: '수행한 루틴 삭제 실패' })
-  async deleteRoutineCompleted(@Body('idx') idx: number, @TransactionParam() transaction: Transaction): Promise<void> {
-    const result = await this.routineCompletedService.deleteRoutineCompleted(idx, transaction)
+  async deleteRoutineCompleted(
+    @Body('routineIdx') routineIdx: number,
+    @Body('date') date: string,
+    @TransactionParam() transaction: Transaction
+  ): Promise<void> {
+    const result = await this.routineCompletedService.deleteRoutineCompleted(routineIdx, date, transaction)
     if (!result) {
       throw new NotFoundException('Routine completed not found.')
     }
