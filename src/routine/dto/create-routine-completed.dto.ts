@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger'
-import { Type } from 'class-transformer'
+import { Transform } from 'class-transformer'
 import { IsDate, IsNotEmpty, IsNumber } from 'class-validator'
+import { format } from 'date-fns-tz'
 
 export class CreateRoutineCompletedDto {
   @ApiProperty({
@@ -18,7 +19,12 @@ export class CreateRoutineCompletedDto {
     required: true,
   })
   @IsNotEmpty()
-  @Type(() => Date)
+  @Transform(
+    ({ value }) => {
+      return format(value, 'yyyy-MM-dd')
+    },
+    { toPlainOnly: true }
+  )
   @IsDate()
   completedAt: Date
 }
