@@ -16,6 +16,7 @@ export class RoutineCompletedService {
     const completedRoutine = await this.routineCompletedModel.findAll({
       attributes: ['completedAt'],
       where: { routineIdx },
+      order: ['completedAt'],
       transaction,
     })
     return completedRoutine.map(item => item.completedAt)
