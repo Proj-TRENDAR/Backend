@@ -5,6 +5,7 @@ import { Todo } from 'models'
 import { CreateTodoDto } from 'src/todo/dto/create-todo.dto'
 import { UpdateTodoDto } from 'src/todo/dto/update-todo.dto'
 import { TodoResponseDto } from 'src/todo/dto/todo-response.dto'
+import { TodoNotFoundException } from './todo.errors'
 
 @Injectable()
 export class TodoService {
@@ -20,10 +21,15 @@ export class TodoService {
     return todo.map(item => new TodoResponseDto(item))
   }
 
-  async getTodo(idx: number): Promise<Todo> {
-    return await this.todoModel.findOne({
+  private async getTodo(idx: number, transaction: Transaction): Promise<Todo> {
+    const todo = await this.todoModel.findOne({
       where: { idx },
+      transaction,
     })
+
+    if (!todo) throw new TodoNotFoundException()
+
+    return todo
   }
 
   async createTodo(createTodoDto: CreateTodoDto, transaction: Transaction): Promise<TodoResponseDto> {
@@ -72,7 +78,7 @@ export class TodoService {
       }
     )
     if (updatedTodo[0]) {
-      const todo = await this.getTodo(idx)
+      const todo = await this.getTodo(idx, transaction)
       return { success: true, message: '업데이트 성공', data: todo }
     } else {
       return { success: false, message: '업데이트 실패(변경 사항 없음)', data: null }
@@ -80,7 +86,9 @@ export class TodoService {
   }
 
   async deleteTodo(idx: number, transaction: Transaction) {
-    return await this.todoModel.destroy({
+    await this.getTodo(idx, transaction)
+
+    await this.todoModel.destroy({
       where: {
         idx,
       },

@@ -15,9 +15,10 @@ import {
   ValidationPipe,
 } from '@nestjs/common'
 import {
-  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiCreatedResponse,
+  ApiNoContentResponse,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
@@ -99,13 +100,10 @@ export class TodoController {
   @UseInterceptors(TransactionInterceptor)
   @Delete(':todoIdx')
   @ApiOperation({ summary: 'ToDo 삭제', description: 'ToDo 삭제 API' })
-  @ApiOkResponse({ description: 'ToDo 삭제 성공' })
-  @ApiBadRequestResponse({ description: 'ToDo 삭제 실패' })
+  @ApiNoContentResponse({ description: 'ToDo 삭제 성공' })
+  @ApiNotFoundResponse({ description: 'ToDo 삭제 실패' })
   @UsePipes(ValidationPipe)
   async deleteTodo(@Param('todoIdx', ParseIntPipe) idx: number, @TransactionParam() transaction: Transaction) {
-    const result = await this.todoService.deleteTodo(idx, transaction)
-    if (!result) {
-      throw new BadRequestException('삭제 중 오류 발생')
-    }
+    await this.todoService.deleteTodo(idx, transaction)
   }
 }
