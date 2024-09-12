@@ -4,6 +4,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   ParseIntPipe,
   Post,
@@ -99,6 +101,7 @@ export class TodoController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(TransactionInterceptor)
   @Delete(':todoIdx')
+  @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'ToDo 삭제', description: 'ToDo 삭제 API' })
   @ApiNoContentResponse({ description: 'ToDo 삭제 성공' })
   @ApiNotFoundResponse({ description: 'ToDo 삭제 실패' })
