@@ -45,7 +45,7 @@ export class EventService {
    * @returns {number} The difference in days between the two dates
    */
   private getDaysDiff(date1: Date, date2: Date): number {
-    return differenceInCalendarDays(date2, date1)
+    return Math.abs(differenceInCalendarDays(date2, date1))
   }
 
   /**
