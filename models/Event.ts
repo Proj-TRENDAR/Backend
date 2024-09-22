@@ -1,4 +1,4 @@
-import { Model, Table, Column, DataType, Index, Sequelize, ForeignKey, BelongsTo, HasMany } from 'sequelize-typescript'
+import { Model, Table, Column, DataType, Index, ForeignKey, BelongsTo, HasMany } from 'sequelize-typescript'
 import { User } from './User'
 import { RecurringEvent } from './RecurringEvent'
 
@@ -6,7 +6,7 @@ export interface EventAttributes {
   idx?: number
   userId: string
   title: string
-  isAllDay?: number
+  isAllDay?: boolean
   startTime: Date
   endTime?: Date
   color?: number
@@ -14,7 +14,7 @@ export interface EventAttributes {
   description?: string
   createdAt?: Date
   updatedAt?: Date
-  isRecurring?: number
+  isRecurring?: boolean
 }
 
 @Table({ tableName: 'event', timestamps: true })
@@ -31,8 +31,8 @@ export class Event extends Model<EventAttributes, EventAttributes> implements Ev
   @Column({ type: DataType.STRING(80) })
   title!: string
 
-  @Column({ field: 'is_all_day', type: DataType.TINYINT, defaultValue: '0' })
-  isAllDay?: number
+  @Column({ field: 'is_all_day', type: DataType.BOOLEAN, defaultValue: false })
+  isAllDay?: boolean
 
   @Column({ field: 'start_time', type: DataType.DATE })
   startTime!: Date
@@ -55,8 +55,8 @@ export class Event extends Model<EventAttributes, EventAttributes> implements Ev
   @Column({ field: 'updated_at', allowNull: true, type: DataType.DATE })
   updatedAt?: Date
 
-  @Column({ field: 'is_recurring', type: DataType.TINYINT, defaultValue: '0' })
-  isRecurring?: number
+  @Column({ field: 'is_recurring', type: DataType.BOOLEAN, defaultValue: false })
+  isRecurring?: boolean
 
   @BelongsTo(() => User)
   User?: User
