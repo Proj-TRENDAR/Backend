@@ -352,21 +352,22 @@ export class EventService {
 
     return result
   }
+
   async getMonthlyEvent(userId: string, year: number, month: number): Promise<EventResponseDto[][]> {
     const weeklyDate = []
-    const firstdateOfMonth = new Date(year, month - 1, 1)
-    const lastdateOfMonth = new Date(year, month, 0)
-    const currentDate = new Date(firstdateOfMonth)
-    const lastWeekNum = this.getWeekly(lastdateOfMonth)
+    const firstDateOfMonth = startOfMonth(new Date(year, month - 1))
+    const lastDateOfMonth = endOfMonth(new Date(year, month - 1))
+    const lastWeekNum = this.getWeekly(lastDateOfMonth)
+    let currentDate = new Date(firstDateOfMonth)
 
-    while (currentDate <= lastdateOfMonth) {
-      if (this.getWeekly(currentDate) < lastWeekNum && currentDate.getMonth() + 1 === month) {
+    while (currentDate <= lastDateOfMonth) {
+      if (this.getWeekly(currentDate) < lastWeekNum && isSameMonth(currentDate, firstDateOfMonth)) {
         weeklyDate.push(currentDate.getDate())
       }
-      currentDate.setDate(currentDate.getDate() + 7)
+      currentDate = addDays(currentDate, 7)
       // 마지막 주에서 월이 넘어간 경우
-      if (currentDate.getMonth() !== month - 1) {
-        weeklyDate.push(lastdateOfMonth.getDate())
+      if (!isSameMonth(currentDate, firstDateOfMonth)) {
+        weeklyDate.push(lastDateOfMonth.getDate())
       }
     }
 
