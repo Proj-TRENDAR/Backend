@@ -1,6 +1,7 @@
 import { EventAttributes } from './Event'
 
-export interface EventResponse extends Pick<EventAttributes, 'idx' | 'color' | 'startTime' | 'endTime'> {
+export interface EventResponse
+  extends Pick<EventAttributes, 'idx' | 'color' | 'place' | 'description' | 'startTime' | 'endTime'> {
   isAllDay: boolean
   being?: number
   isRecurringData: boolean

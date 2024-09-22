@@ -19,6 +19,14 @@ export class EventResponseDto {
   @Expose()
   color: number
 
+  @ApiProperty({ example: '집', description: '장소' })
+  @Expose()
+  place: string | null
+
+  @ApiProperty({ example: '비고', description: '기타(추가) 내용 작성' })
+  @Expose()
+  description: string | null
+
   @ApiProperty({ example: 3, description: '몇일에 걸쳐있는지(없으면 null), 생성 및 수정시 undefined' })
   @Expose()
   being?: number | null
@@ -52,6 +60,6 @@ export class EventResponseDto {
   originEndTime?: Date | null
 
   constructor(event: EventResponse) {
-    Object.assign(this as any, plainToClass(EventResponseDto, event, { excludeExtraneousValues: true }))
+    Object.assign(this, plainToClass(EventResponseDto, event, { excludeExtraneousValues: true }))
   }
 }
