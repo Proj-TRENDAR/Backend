@@ -33,9 +33,9 @@ export class RoutineService {
     })
   }
 
-  private async getRoutine(idx: number, transaction: Transaction) {
+  private async getRoutine(idx: number, userId: string, transaction: Transaction) {
     const routine = await this.routineModel.findOne({
-      where: { idx },
+      where: { idx, userId },
       transaction,
     })
 
@@ -94,16 +94,17 @@ export class RoutineService {
       await Promise.all(days.map(day => this.routineDayService.createRoutineDay(createdRoutine.idx, day, transaction)))
     }
 
-    return await this.getRoutine(createdRoutine.idx, transaction)
+    return await this.getRoutine(createdRoutine.idx, userId, transaction)
   }
 
   async updateRoutine(
     idx: number,
+    userId: string,
     updateRoutineDto: UpdateRoutineDto,
     transaction: Transaction
   ): Promise<RoutineResponseDto> {
     const { title, color, description, weeklyCondition, days, startTime, endTime } = updateRoutineDto
-    const routine = await this.getRoutine(idx, transaction)
+    const routine = await this.getRoutine(idx, userId, transaction)
     let updateCheck = false
 
     if (JSON.stringify(days) !== JSON.stringify(routine.days)) {
@@ -122,11 +123,11 @@ export class RoutineService {
     if (!updateCheck && !result[0]) {
       return null
     }
-    return await this.getRoutine(idx, transaction)
+    return await this.getRoutine(idx, userId, transaction)
   }
 
-  async restoreRoutine(idx: number, transaction: Transaction): Promise<void> {
-    await this.getRoutine(idx, transaction)
+  async restoreRoutine(idx: number, userId: string, transaction: Transaction): Promise<void> {
+    await this.getRoutine(idx, userId, transaction)
     await this.routineModel.restore({
       where: {
         idx,
@@ -135,8 +136,8 @@ export class RoutineService {
     })
   }
 
-  async softDeleteRoutine(idx: number, transaction: Transaction): Promise<void> {
-    await this.getRoutine(idx, transaction)
+  async softDeleteRoutine(idx: number, userId: string, transaction: Transaction): Promise<void> {
+    await this.getRoutine(idx, userId, transaction)
     await this.routineModel.destroy({
       where: {
         idx,
@@ -145,7 +146,8 @@ export class RoutineService {
     })
   }
 
-  async hardDeleteRoutine(idx: number, transaction: Transaction): Promise<void> {
+  async hardDeleteRoutine(idx: number, userId: string, transaction: Transaction): Promise<void> {
+    await this.getRoutine(idx, userId, transaction)
     // days, completed의 FK delete가 cascade라서 가능하나 추가해주면 좋을듯 함
     await this.routineModel.destroy({
       force: true,

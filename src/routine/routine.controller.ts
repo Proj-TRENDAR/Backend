@@ -94,9 +94,10 @@ export class RoutineController {
   async updateRoutine(
     @Param('idx') idx: number,
     @Body() updateRoutineDto: UpdateRoutineDto,
+    @Req() req: IUserReq,
     @TransactionParam() transaction: Transaction
   ): Promise<RoutineResponseDto> {
-    return await this.routineService.updateRoutine(idx, updateRoutineDto, transaction)
+    return await this.routineService.updateRoutine(idx, req.user.id, updateRoutineDto, transaction)
   }
 
   @UseGuards(JwtAuthGuard)
@@ -106,8 +107,12 @@ export class RoutineController {
   @ApiOperation({ summary: '루틴 중단 해제', description: '루틴 중단 해제 API(restore)' })
   @ApiOkResponse({ description: '루틴 중단 해제 성공' })
   @ApiNotFoundResponse({ description: '존재하지 않는 루틴' })
-  async restoreRoutine(@Param('idx') idx: number, @TransactionParam() transaction: Transaction): Promise<void> {
-    await this.routineService.restoreRoutine(idx, transaction)
+  async restoreRoutine(
+    @Param('idx') idx: number,
+    @Req() req: IUserReq,
+    @TransactionParam() transaction: Transaction
+  ): Promise<void> {
+    await this.routineService.restoreRoutine(idx, req.user.id, transaction)
   }
 
   @UseGuards(JwtAuthGuard)
@@ -117,8 +122,12 @@ export class RoutineController {
   @ApiOperation({ summary: '루틴 중단', description: '루틴 중단 API(sort delete)' })
   @ApiNoContentResponse({ description: '루틴 중단 성공' })
   @ApiNotFoundResponse({ description: '존재하지 않는 루틴' })
-  async softDeleteRoutine(@Param('idx') idx: number, @TransactionParam() transaction: Transaction): Promise<void> {
-    await this.routineService.softDeleteRoutine(idx, transaction)
+  async softDeleteRoutine(
+    @Param('idx') idx: number,
+    @Req() req: IUserReq,
+    @TransactionParam() transaction: Transaction
+  ): Promise<void> {
+    await this.routineService.softDeleteRoutine(idx, req.user.id, transaction)
   }
 
   @UseGuards(JwtAuthGuard)
@@ -128,9 +137,13 @@ export class RoutineController {
   @UsePipes(ValidationPipe)
   @ApiOperation({ summary: '루틴 삭제', description: '루틴 삭제 API(hard delete)' })
   @ApiNoContentResponse({ description: '루틴 삭제 성공' })
-  @ApiNotFoundResponse({ description: '루틴 삭제 실패' })
-  async hardDeleteRoutine(@Param('idx') idx: number, @TransactionParam() transaction: Transaction): Promise<void> {
-    await this.routineService.hardDeleteRoutine(idx, transaction)
+  @ApiNotFoundResponse({ description: '존재하지 않는 루틴' })
+  async hardDeleteRoutine(
+    @Param('idx') idx: number,
+    @Req() req: IUserReq,
+    @TransactionParam() transaction: Transaction
+  ): Promise<void> {
+    await this.routineService.hardDeleteRoutine(idx, req.user.id, transaction)
   }
 
   @UseGuards(JwtAuthGuard)
