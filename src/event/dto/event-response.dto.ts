@@ -23,11 +23,11 @@ export class EventResponseDto {
   @Expose()
   being?: number | null
 
-  @ApiProperty({ example: '2024-05-04 00:00:00Z', description: '시작 시간' })
+  @ApiProperty({ example: '2024-05-04 00:00:00', description: '시작 시간' })
   @Expose()
   startTime: Date
 
-  @ApiProperty({ example: '2024-05-06 00:00:00Z', description: '종료 시간' })
+  @ApiProperty({ example: '2024-05-06 00:00:00', description: '종료 시간' })
   @Expose()
   endTime: Date
 
@@ -35,11 +35,19 @@ export class EventResponseDto {
   @Expose()
   isRecurringData: boolean
 
-  @ApiProperty({ example: true, description: '원본 시작 시간' })
+  @ApiProperty({ example: '2024-05-04 00:00:00', description: '반복 시작 시간' })
+  @Expose()
+  recurringStartTime?: Date | null
+
+  @ApiProperty({ example: '2024-05-06 00:00:00', description: '반복 종료 시간' })
+  @Expose()
+  recurringEndTime?: Date | null
+
+  @ApiProperty({ example: '2024-05-04 00:00:00', description: '원본 시작 시간' })
   @Expose()
   originStartTime?: Date | null
 
-  @ApiProperty({ example: true, description: '원본 종료 시간' })
+  @ApiProperty({ example: '2024-05-06 00:00:00', description: '원본 종료 시간' })
   @Expose()
   originEndTime?: Date | null
 

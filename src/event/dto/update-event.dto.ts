@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger'
 import { Transform, Type } from 'class-transformer'
-import { IsArray, IsDate, IsIn, IsNumber, IsOptional, IsString, MaxLength } from 'class-validator'
+import { IsArray, IsBoolean, IsDate, IsIn, IsNumber, IsOptional, IsString, MaxLength } from 'class-validator'
 
 export class UpdateEventDto {
   @ApiPropertyOptional({ description: '일정 제목' })
@@ -9,10 +9,10 @@ export class UpdateEventDto {
   @MaxLength(80)
   title: string
 
-  @ApiPropertyOptional({ description: '하루종일 여부' })
+  @ApiPropertyOptional({ example: true, description: '하루종일 여부' })
   @IsOptional()
-  @IsNumber()
-  isAllDay: number
+  @IsBoolean()
+  isAllDay: boolean
 
   @ApiPropertyOptional({
     example: '2024-01-11 11:20:00',
@@ -64,10 +64,10 @@ export class UpdateEventDto {
   @IsString()
   description: string | null
 
-  @ApiPropertyOptional({ example: 'true', description: '반복 여부' })
+  @ApiPropertyOptional({ example: true, description: '반복 여부' })
   @IsOptional()
   @IsNumber()
-  isRecurring: number
+  isRecurring: boolean
 
   @ApiPropertyOptional({
     example: 'D',

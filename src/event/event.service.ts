@@ -208,104 +208,104 @@ export class EventService {
           start = addDays(start, 7 * interval)
           end = addDays(end, 7 * interval)
           break
-        // case 'M':
-        //   if (datesOfMonth) {
-        //     // 월의 특정 일 설정한 경우
-        //     for (const day of datesOfMonth) {
-        //       const currentMonthDay = new Date(start.getFullYear(), start.getMonth(), day)
-        //       console.log(
-        //         '🚀event.startTime',
-        //         convertToKST(event.startTime),
-        //         new Date(event.startTime) <= currentMonthDay
-        //       )
-        //       console.log('🚀currentMonthDay', convertToKST(currentMonthDay))
-        //       console.log('🚀startOfTheWeek', convertToKST(startOfTheWeek))
-        //       console.log('🚀end', convertToKST(end))
-        //       console.log('🚀endOfTheWeek', convertToKST(endOfTheWeek))
-        //       console.log('🚀recurringEnd', convertToKST(recurringEnd), '\n\n')
-        //       if (
-        //         new Date(event.startTime) <= currentMonthDay &&
-        //         ((currentMonthDay >= startOfTheWeek &&
-        //           currentMonthDay <= endOfTheWeek &&
-        //           currentMonthDay <= recurringEnd) ||
-        //           (currentMonthDay <= startOfTheWeek && startOfTheWeek <= end && end <= endOfTheWeek))
-        //       ) {
-        //         const eventForm = {
-        //           idx: event.idx,
-        //           title: event.title,
-        //           isAllDay: !!event.isAllDay,
-        //           color: event.color,
-        //           being: null,
-        //           startTime: convertToKST(new Date(currentMonthDay)),
-        //           endTime: convertToKST(new Date(currentMonthDay.getTime() + (end.getTime() - start.getTime()))),
-        //           isRecurringData: true,
-        //           originStartTime: convertToKST(new Date(event.startTime)),
-        //           originEndTime: convertToKST(new Date(event.endTime)),
-        //         }
-        //         console.log('🚀eventForm', eventForm)
-        //         result.push(eventForm)
-        //       }
-        //     }
-        //   } else if (daysOfWeek && recurringEvent.weekOfMonth !== null) {
-        //     const weekOfMonth = recurringEvent.weekOfMonth
-        //     for (const day of daysOfWeek) {
-        //       const firstdateOfMonth = new Date(start.getFullYear(), start.getMonth(), 1)
-        //       const firstDayOfWeek = firstdateOfMonth.getDay()
-        //       const currentMonthWeekDay = new Date(firstdateOfMonth)
-        //       currentMonthWeekDay.setDate(currentMonthWeekDay.getDate() + ((day - firstDayOfWeek + 7) % 7))
-        //       currentMonthWeekDay.setDate(currentMonthWeekDay.getDate() + (weekOfMonth - 1) * 7)
-        //       if (
-        //         currentMonthWeekDay >= startOfTheWeek &&
-        //         currentMonthWeekDay <= endOfTheWeek &&
-        //         currentMonthWeekDay <= recurringEnd
-        //       ) {
-        //         const eventForm = {
-        //           idx: event.idx,
-        //           title: event.title,
-        //           isAllDay: !!event.isAllDay,
-        //           color: event.color,
-        //           being: null,
-        //           startTime: convertToKST(new Date(currentMonthWeekDay)),
-        //           endTime: convertToKST(new Date(currentMonthWeekDay.getTime() + (end.getTime() - start.getTime()))),
-        //           isRecurringData: true,
-        //           originStartTime: convertToKST(new Date(event.startTime)),
-        //           originEndTime: convertToKST(new Date(event.endTime)),
-        //         }
-        //         result.push(eventForm)
-        //       }
-        //     }
-        //   }
-        //   start.setMonth(start.getMonth() + interval)
-        //   end.setMonth(end.getMonth() + interval)
-        //   break
-        // case 'Y':
-        //   if (monthsOfYear) {
-        //     for (const month of monthsOfYear) {
-        //       if (datesOfMonth) {
-        //         for (const day of datesOfMonth) {
-        //           const currentYearDay = new Date(start.getFullYear(), month - 1, day)
-        //           if (currentYearDay >= startOfTheWeek && currentYearDay <= endOfTheWeek && currentYearDay <= recurringEnd) {
-        //             const eventForm = {
-        //               idx: event.idx,
-        //               title: event.title,
-        //               isAllDay: !!event.isAllDay,
-        //               color: event.color,
-        //               being: null,
-        //               startTime: convertToKST(new Date(currentYearDay)),
-        //               endTime: convertToKST(new Date(currentYearDay.getTime() + (end.getTime() - start.getTime()))),
-        //               isRecurringData: true,
-        //               originStartTime: convertToKST(new Date(event.startTime)),
-        //               originEndTime: convertToKST(new Date(event.endTime)),
-        //             }
-        //             result.push(eventForm)
-        //           }
-        //         }
-        //       }
-        //     }
-        //   }
-        //   start.setFullYear(start.getFullYear() + interval)
-        //   end.setFullYear(end.getFullYear() + interval)
-        //   break
+        case 'M':
+          // if (datesOfMonth) {
+          //   // 월의 특정 일 설정한 경우
+          //   for (const day of datesOfMonth) {
+          //     const currentMonthDay = new Date(start.getFullYear(), start.getMonth(), day)
+          //     console.log(
+          //       '🚀event.startTime',
+          //       convertToKST(event.startTime),
+          //       new Date(event.startTime) <= currentMonthDay
+          //     )
+          //     console.log('🚀currentMonthDay', convertToKST(currentMonthDay))
+          //     console.log('🚀startOfTheWeek', convertToKST(startOfTheWeek))
+          //     console.log('🚀end', convertToKST(end))
+          //     console.log('🚀endOfTheWeek', convertToKST(endOfTheWeek))
+          //     console.log('🚀recurringEnd', convertToKST(recurringEnd), '\n\n')
+          //     if (
+          //       new Date(event.startTime) <= currentMonthDay &&
+          //       ((currentMonthDay >= startOfTheWeek &&
+          //         currentMonthDay <= endOfTheWeek &&
+          //         currentMonthDay <= recurringEnd) ||
+          //         (currentMonthDay <= startOfTheWeek && startOfTheWeek <= end && end <= endOfTheWeek))
+          //     ) {
+          //       const eventForm = {
+          //         idx: event.idx,
+          //         title: event.title,
+          //         isAllDay: !!event.isAllDay,
+          //         color: event.color,
+          //         being: null,
+          //         startTime: convertToKST(new Date(currentMonthDay)),
+          //         endTime: convertToKST(new Date(currentMonthDay.getTime() + (end.getTime() - start.getTime()))),
+          //         isRecurringData: true,
+          //         originStartTime: convertToKST(new Date(event.startTime)),
+          //         originEndTime: convertToKST(new Date(event.endTime)),
+          //       }
+          //       console.log('🚀eventForm', eventForm)
+          //       result.push(eventForm)
+          //     }
+          //   }
+          // } else if (daysOfWeek && recurringEvent.weekOfMonth !== null) {
+          //   const weekOfMonth = recurringEvent.weekOfMonth
+          //   for (const day of daysOfWeek) {
+          //     const firstdateOfMonth = new Date(start.getFullYear(), start.getMonth(), 1)
+          //     const firstDayOfWeek = firstdateOfMonth.getDay()
+          //     const currentMonthWeekDay = new Date(firstdateOfMonth)
+          //     currentMonthWeekDay.setDate(currentMonthWeekDay.getDate() + ((day - firstDayOfWeek + 7) % 7))
+          //     currentMonthWeekDay.setDate(currentMonthWeekDay.getDate() + (weekOfMonth - 1) * 7)
+          //     if (
+          //       currentMonthWeekDay >= startOfTheWeek &&
+          //       currentMonthWeekDay <= endOfTheWeek &&
+          //       currentMonthWeekDay <= recurringEnd
+          //     ) {
+          //       const eventForm = {
+          //         idx: event.idx,
+          //         title: event.title,
+          //         isAllDay: !!event.isAllDay,
+          //         color: event.color,
+          //         being: null,
+          //         startTime: convertToKST(new Date(currentMonthWeekDay)),
+          //         endTime: convertToKST(new Date(currentMonthWeekDay.getTime() + (end.getTime() - start.getTime()))),
+          //         isRecurringData: true,
+          //         originStartTime: convertToKST(new Date(event.startTime)),
+          //         originEndTime: convertToKST(new Date(event.endTime)),
+          //       }
+          //       result.push(eventForm)
+          //     }
+          //   }
+          // }
+          start.setMonth(start.getMonth() + interval)
+          end.setMonth(end.getMonth() + interval)
+          break
+        case 'Y':
+          //   if (monthsOfYear) {
+          //     for (const month of monthsOfYear) {
+          //       if (datesOfMonth) {
+          //         for (const day of datesOfMonth) {
+          //           const currentYearDay = new Date(start.getFullYear(), month - 1, day)
+          //           if (currentYearDay >= startOfTheWeek && currentYearDay <= endOfTheWeek && currentYearDay <= recurringEnd) {
+          //             const eventForm = {
+          //               idx: event.idx,
+          //               title: event.title,
+          //               isAllDay: !!event.isAllDay,
+          //               color: event.color,
+          //               being: null,
+          //               startTime: convertToKST(new Date(currentYearDay)),
+          //               endTime: convertToKST(new Date(currentYearDay.getTime() + (end.getTime() - start.getTime()))),
+          //               isRecurringData: true,
+          //               originStartTime: convertToKST(new Date(event.startTime)),
+          //               originEndTime: convertToKST(new Date(event.endTime)),
+          //             }
+          //             result.push(eventForm)
+          //           }
+          //         }
+          //       }
+          //     }
+          //   }
+          start.setFullYear(start.getFullYear() + interval)
+          end.setFullYear(end.getFullYear() + interval)
+          break
       }
     }
     return result
@@ -315,13 +315,13 @@ export class EventService {
     const result = []
     const userRecurringEvents = await this.eventModel.findAll({
       where: {
-        userId: userId,
+        userId,
         isRecurring: true,
       },
     })
 
     for await (const event of userRecurringEvents) {
-      const recurringEvent = await this.eventRecurringService.getEventRecurringByEndTime(event.idx)
+      const recurringEvent = await this.eventRecurringService.getEventRecurring(event.idx)
       if (recurringEvent) {
         const rangeResult = this.checkDateInRange(event, recurringEvent, startOfTheWeek, endOfTheWeek)
         result.push(...rangeResult)

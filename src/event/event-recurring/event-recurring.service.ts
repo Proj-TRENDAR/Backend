@@ -20,14 +20,6 @@ export class EventRecurringService {
     })
   }
 
-  async getEventRecurringByEndTime(eventIdx: number) {
-    return await this.eventRecurringModel.findOne({
-      where: {
-        eventIdx,
-      },
-    })
-  }
-
   async createEventRecurring(eventIdx: number, createEventDto: CreateEventDto, transaction: Transaction) {
     const {
       recurringType,
