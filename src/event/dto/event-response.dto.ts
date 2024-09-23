@@ -43,6 +43,25 @@ export class EventResponseDto {
   @Expose()
   isRecurringData: boolean
 
+  @ApiProperty({ example: 'D', description: 'D(일) | W(주) | M(월) | Y(연)' })
+  @Expose()
+  recurringType: string
+
+  @ApiProperty({
+    example: 1,
+    description: '반복 주기 (interval)\nex)recurringType이 "D"이고 separationCount가 1일 경우: 격일 반복',
+  })
+  @Expose()
+  separationCount?: number | null
+
+  @ApiProperty({ example: 3, description: '최대 반복 횟수' })
+  @Expose()
+  maxNumOfOccurrances?: number | null
+
+  @ApiProperty({ example: '2024-05-10 00:00:00', description: '반복 일정 자체가 종료되는 시간' })
+  @Expose()
+  recurrenceFinalEndTime?: Date
+
   @ApiProperty({ example: '2024-05-04 00:00:00', description: '반복 시작 시간' })
   @Expose()
   recurringStartTime?: Date | null
