@@ -182,7 +182,9 @@ export class EventService {
           break
         case 'W':
           for (const day of daysOfWeek) {
-            const currentStart = addDays(startOfWeek(start), day)
+            const weekStart = startOfWeek(start)
+            weekStart.setHours(start.getHours(), start.getMinutes(), start.getSeconds(), start.getMilliseconds())
+            const currentStart = addDays(weekStart, day)
             const timeDifference = end.getTime() - start.getTime()
             const currentEnd = addMilliseconds(currentStart, timeDifference)
 
