@@ -318,34 +318,97 @@ export class EventService {
           end = addMonths(end, interval)
           break
         case 'Y':
-          //   if (monthsOfYear) {
-          //     for (const month of monthsOfYear) {
-          //       if (datesOfMonth) {
-          //         for (const day of datesOfMonth) {
-          //           const currentYearDay = new Date(start.getFullYear(), month - 1, day)
-          //           if (currentYearDay >= startOfTheWeek && currentYearDay <= endOfTheWeek && currentYearDay <= recurringEnd) {
-          //             const eventForm = {
-          //               idx: event.idx,
-          //               title: event.title,
-          //               isAllDay: !!event.isAllDay,
-          //               color: event.color,
-          //               place: event.place,
-          //               description: event.description,
-          //               being: null,
-          //               startTime: convertToKST(new Date(currentYearDay)),
-          //               endTime: convertToKST(new Date(currentYearDay.getTime() + (end.getTime() - start.getTime()))),
-          //               isRecurringData: true,
-          //               originStartTime: convertToKST(new Date(event.startTime)),
-          //               originEndTime: convertToKST(new Date(event.endTime)),
-          //             }
-          //             result.push(eventForm)
-          //           }
-          //         }
-          //       }
-          //     }
-          //   }
-          start.setFullYear(start.getFullYear() + interval)
-          end.setFullYear(end.getFullYear() + interval)
+          if (!weekOfMonth) {
+            for (const month of monthsOfYear) {
+              for (const date of datesOfMonth) {
+                const currentStart = new Date(start.getFullYear(), month - 1, date)
+                currentStart.setHours(start.getHours(), start.getMinutes(), start.getSeconds(), start.getMilliseconds())
+                const timeDifference = end.getTime() - start.getTime()
+                const currentEnd = addMilliseconds(currentStart, timeDifference)
+                if (
+                  currentStart <= recurringEnd &&
+                  ((startOfTheWeek <= currentStart && currentStart <= endOfTheWeek) ||
+                    (startOfTheWeek <= currentEnd && currentEnd <= endOfTheWeek) ||
+                    (currentStart < startOfTheWeek && startOfTheWeek <= currentEnd))
+                ) {
+                  const eventStart = currentStart < startOfTheWeek ? startOfTheWeek : currentStart // 이벤트 시작 시간이 주의 시작보다 이전이라면 주의 시작으로 조정
+                  const eventEnd = currentEnd > endOfTheWeek ? endOfTheWeek : currentEnd // 이벤트 종료 시간이 주의 끝보다 이후라면 주의 끝으로 조정
+                  const eventForm = {
+                    idx: event.idx,
+                    title: event.title,
+                    isAllDay: !!event.isAllDay,
+                    color: event.color,
+                    place: event.place,
+                    description: event.description,
+                    being: null,
+                    startTime: convertToKST(eventStart),
+                    endTime: convertToKST(eventEnd),
+                    isRecurringData: true,
+                    recurringType: recurringEvent.recurringType,
+                    separationCount: recurringEvent.separationCount,
+                    maxNumOfOccurrances: recurringEvent.maxNumOfOccurrances,
+                    recurrenceFinalEndTime: recurringEvent.endTime,
+                    recurringStartTime: convertToKST(currentStart),
+                    recurringEndTime: convertToKST(currentEnd),
+                    originStartTime: convertToKST(new Date(event.startTime)),
+                    originEndTime: convertToKST(new Date(event.endTime)),
+                  }
+                  result.push(eventForm)
+                }
+              }
+            }
+          } else {
+            for (const month of monthsOfYear) {
+              for (const day of daysOfWeek) {
+                // 달의 1일
+                const firstDateOfMonth = new Date(start.getFullYear(), month - 1, 1)
+                // 1일이 무슨 요일인지 확인
+                const firstDayOfWeek = firstDateOfMonth.getDay()
+                // 수요일 이전일 경우, 이번주부터 주차 계산, 날짜 계산
+                // 수요일 이후일 경우, 다음주부터 주차 계산, 날짜 계산
+                const calDay =
+                  firstDayOfWeek <= 3
+                    ? day - firstDayOfWeek + (weekOfMonth - 1) * 7
+                    : day - firstDayOfWeek + weekOfMonth * 7
+                const currentStart = addDays(firstDateOfMonth, calDay)
+                currentStart.setHours(start.getHours(), start.getMinutes(), start.getSeconds(), start.getMilliseconds())
+                const timeDifference = end.getTime() - start.getTime()
+                const currentEnd = addMilliseconds(currentStart, timeDifference)
+                if (
+                  currentStart <= recurringEnd &&
+                  ((startOfTheWeek <= currentStart && currentStart <= endOfTheWeek) ||
+                    (startOfTheWeek <= currentEnd && currentEnd <= endOfTheWeek) ||
+                    (currentStart < startOfTheWeek && startOfTheWeek <= currentEnd))
+                ) {
+                  const eventStart = currentStart < startOfTheWeek ? startOfTheWeek : currentStart // 이벤트 시작 시간이 주의 시작보다 이전이라면 주의 시작으로 조정
+                  const eventEnd = currentEnd > endOfTheWeek ? endOfTheWeek : currentEnd // 이벤트 종료 시간이 주의 끝보다 이후라면 주의 끝으로 조정
+                  const eventForm = {
+                    idx: event.idx,
+                    title: event.title,
+                    isAllDay: !!event.isAllDay,
+                    color: event.color,
+                    place: event.place,
+                    description: event.description,
+                    being: null,
+                    startTime: convertToKST(eventStart),
+                    endTime: convertToKST(eventEnd),
+                    isRecurringData: true,
+                    recurringType: recurringEvent.recurringType,
+                    separationCount: recurringEvent.separationCount,
+                    maxNumOfOccurrances: recurringEvent.maxNumOfOccurrances,
+                    recurrenceFinalEndTime: recurringEvent.endTime,
+                    recurringStartTime: convertToKST(currentStart),
+                    recurringEndTime: convertToKST(currentEnd),
+                    originStartTime: convertToKST(new Date(event.startTime)),
+                    originEndTime: convertToKST(new Date(event.endTime)),
+                  }
+                  result.push(eventForm)
+                }
+              }
+            }
+          }
+          start = addYears(start, interval)
+          end = addYears(end, interval)
           break
       }
     }
