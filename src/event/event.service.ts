@@ -18,6 +18,7 @@ import {
   addMilliseconds,
   addWeeks,
   addMonths,
+  addYears,
 } from 'date-fns'
 import { convertToKST } from 'src/common/date-time'
 
@@ -146,6 +147,7 @@ export class EventService {
     while (start <= recurringEnd) {
       // 반복 주기 설정
       const interval = recurringEvent.separationCount + 1
+      const weekOfMonth = recurringEvent.weekOfMonth
 
       switch (recurringEvent.recurringType) {
         case 'D':
@@ -221,7 +223,6 @@ export class EventService {
               result.push(eventForm)
             }
           }
-
           // 다음 주로 이동
           start = addWeeks(start, interval)
           end = addWeeks(end, interval)
@@ -229,8 +230,8 @@ export class EventService {
         case 'M':
           if (datesOfMonth) {
             // 월의 특정 일 설정한 경우
-            for (const day of datesOfMonth) {
-              const currentStart = new Date(start.getFullYear(), start.getMonth(), day)
+            for (const date of datesOfMonth) {
+              const currentStart = new Date(start.getFullYear(), start.getMonth(), date)
               currentStart.setHours(start.getHours(), start.getMinutes(), start.getSeconds(), start.getMilliseconds())
               const timeDifference = end.getTime() - start.getTime()
               const currentEnd = addMilliseconds(currentStart, timeDifference)
@@ -265,8 +266,7 @@ export class EventService {
                 result.push(eventForm)
               }
             }
-          } else if (daysOfWeek && recurringEvent.weekOfMonth !== null) {
-            const weekOfMonth = recurringEvent.weekOfMonth
+          } else if (daysOfWeek && weekOfMonth) {
             for (const day of daysOfWeek) {
               // 달의 1일
               const firstDateOfMonth = new Date(start.getFullYear(), start.getMonth(), 1)
