@@ -16,6 +16,8 @@ import {
   addDays,
   isSameMonth,
   addMilliseconds,
+  addWeeks,
+  addMonths,
 } from 'date-fns'
 import { convertToKST } from 'src/common/date-time'
 
@@ -221,82 +223,99 @@ export class EventService {
           }
 
           // 다음 주로 이동
-          start = addDays(start, 7 * interval)
-          end = addDays(end, 7 * interval)
+          start = addWeeks(start, interval)
+          end = addWeeks(end, interval)
           break
         case 'M':
-          // if (datesOfMonth) {
-          //   // 월의 특정 일 설정한 경우
-          //   for (const day of datesOfMonth) {
-          //     const currentMonthDay = new Date(start.getFullYear(), start.getMonth(), day)
-          //     console.log(
-          //       '🚀event.startTime',
-          //       convertToKST(event.startTime),
-          //       new Date(event.startTime) <= currentMonthDay
-          //     )
-          //     console.log('🚀currentMonthDay', convertToKST(currentMonthDay))
-          //     console.log('🚀startOfTheWeek', convertToKST(startOfTheWeek))
-          //     console.log('🚀end', convertToKST(end))
-          //     console.log('🚀endOfTheWeek', convertToKST(endOfTheWeek))
-          //     console.log('🚀recurringEnd', convertToKST(recurringEnd), '\n\n')
-          //     if (
-          //       new Date(event.startTime) <= currentMonthDay &&
-          //       ((currentMonthDay >= startOfTheWeek &&
-          //         currentMonthDay <= endOfTheWeek &&
-          //         currentMonthDay <= recurringEnd) ||
-          //         (currentMonthDay <= startOfTheWeek && startOfTheWeek <= end && end <= endOfTheWeek))
-          //     ) {
-          //       const eventForm = {
-          //         idx: event.idx,
-          //         title: event.title,
-          //         isAllDay: !!event.isAllDay,
-          //         color: event.color,
-          //         place: event.place,
-          //         description: event.description,
-          //         being: null,
-          //         startTime: convertToKST(new Date(currentMonthDay)),
-          //         endTime: convertToKST(new Date(currentMonthDay.getTime() + (end.getTime() - start.getTime()))),
-          //         isRecurringData: true,
-          //         originStartTime: convertToKST(new Date(event.startTime)),
-          //         originEndTime: convertToKST(new Date(event.endTime)),
-          //       }
-          //       console.log('🚀eventForm', eventForm)
-          //       result.push(eventForm)
-          //     }
-          //   }
-          // } else if (daysOfWeek && recurringEvent.weekOfMonth !== null) {
-          //   const weekOfMonth = recurringEvent.weekOfMonth
-          //   for (const day of daysOfWeek) {
-          //     const firstdateOfMonth = new Date(start.getFullYear(), start.getMonth(), 1)
-          //     const firstDayOfWeek = firstdateOfMonth.getDay()
-          //     const currentMonthWeekDay = new Date(firstdateOfMonth)
-          //     currentMonthWeekDay.setDate(currentMonthWeekDay.getDate() + ((day - firstDayOfWeek + 7) % 7))
-          //     currentMonthWeekDay.setDate(currentMonthWeekDay.getDate() + (weekOfMonth - 1) * 7)
-          //     if (
-          //       currentMonthWeekDay >= startOfTheWeek &&
-          //       currentMonthWeekDay <= endOfTheWeek &&
-          //       currentMonthWeekDay <= recurringEnd
-          //     ) {
-          //       const eventForm = {
-          //         idx: event.idx,
-          //         title: event.title,
-          //         isAllDay: !!event.isAllDay,
-          //         color: event.color,
-          //         place: event.place,
-          //         description: event.description,
-          //         being: null,
-          //         startTime: convertToKST(new Date(currentMonthWeekDay)),
-          //         endTime: convertToKST(new Date(currentMonthWeekDay.getTime() + (end.getTime() - start.getTime()))),
-          //         isRecurringData: true,
-          //         originStartTime: convertToKST(new Date(event.startTime)),
-          //         originEndTime: convertToKST(new Date(event.endTime)),
-          //       }
-          //       result.push(eventForm)
-          //     }
-          //   }
-          // }
-          start.setMonth(start.getMonth() + interval)
-          end.setMonth(end.getMonth() + interval)
+          if (datesOfMonth) {
+            // 월의 특정 일 설정한 경우
+            for (const day of datesOfMonth) {
+              const currentStart = new Date(start.getFullYear(), start.getMonth(), day)
+              currentStart.setHours(start.getHours(), start.getMinutes(), start.getSeconds(), start.getMilliseconds())
+              const timeDifference = end.getTime() - start.getTime()
+              const currentEnd = addMilliseconds(currentStart, timeDifference)
+              if (
+                currentStart <= recurringEnd &&
+                ((startOfTheWeek <= currentStart && currentStart <= endOfTheWeek) ||
+                  (startOfTheWeek <= currentEnd && currentEnd <= endOfTheWeek) ||
+                  (currentStart < startOfTheWeek && startOfTheWeek <= currentEnd))
+              ) {
+                const eventStart = currentStart < startOfTheWeek ? startOfTheWeek : currentStart // 이벤트 시작 시간이 주의 시작보다 이전이라면 주의 시작으로 조정
+                const eventEnd = currentEnd > endOfTheWeek ? endOfTheWeek : currentEnd // 이벤트 종료 시간이 주의 끝보다 이후라면 주의 끝으로 조정
+                const eventForm = {
+                  idx: event.idx,
+                  title: event.title,
+                  isAllDay: !!event.isAllDay,
+                  color: event.color,
+                  place: event.place,
+                  description: event.description,
+                  being: null,
+                  startTime: convertToKST(eventStart),
+                  endTime: convertToKST(eventEnd),
+                  isRecurringData: true,
+                  recurringType: recurringEvent.recurringType,
+                  separationCount: recurringEvent.separationCount,
+                  maxNumOfOccurrances: recurringEvent.maxNumOfOccurrances,
+                  recurrenceFinalEndTime: recurringEvent.endTime,
+                  recurringStartTime: convertToKST(currentStart),
+                  recurringEndTime: convertToKST(currentEnd),
+                  originStartTime: convertToKST(new Date(event.startTime)),
+                  originEndTime: convertToKST(new Date(event.endTime)),
+                }
+                result.push(eventForm)
+              }
+            }
+          } else if (daysOfWeek && recurringEvent.weekOfMonth !== null) {
+            const weekOfMonth = recurringEvent.weekOfMonth
+            for (const day of daysOfWeek) {
+              // 달의 1일
+              const firstDateOfMonth = new Date(start.getFullYear(), start.getMonth(), 1)
+              // 1일이 무슨 요일인지 확인
+              const firstDayOfWeek = firstDateOfMonth.getDay()
+              // 수요일 이전일 경우, 이번주부터 주차 계산, 날짜 계산
+              // 수요일 이후일 경우, 다음주부터 주차 계산, 날짜 계산
+              const calDay =
+                firstDayOfWeek <= 3
+                  ? day - firstDayOfWeek + (weekOfMonth - 1) * 7
+                  : day - firstDayOfWeek + weekOfMonth * 7
+              const currentStart = addDays(firstDateOfMonth, calDay)
+              currentStart.setHours(start.getHours(), start.getMinutes(), start.getSeconds(), start.getMilliseconds())
+              const timeDifference = end.getTime() - start.getTime()
+              const currentEnd = addMilliseconds(currentStart, timeDifference)
+              if (
+                currentStart <= recurringEnd &&
+                ((startOfTheWeek <= currentStart && currentStart <= endOfTheWeek) ||
+                  (startOfTheWeek <= currentEnd && currentEnd <= endOfTheWeek) ||
+                  (currentStart < startOfTheWeek && startOfTheWeek <= currentEnd))
+              ) {
+                const eventStart = currentStart < startOfTheWeek ? startOfTheWeek : currentStart // 이벤트 시작 시간이 주의 시작보다 이전이라면 주의 시작으로 조정
+                const eventEnd = currentEnd > endOfTheWeek ? endOfTheWeek : currentEnd // 이벤트 종료 시간이 주의 끝보다 이후라면 주의 끝으로 조정
+                const eventForm = {
+                  idx: event.idx,
+                  title: event.title,
+                  isAllDay: !!event.isAllDay,
+                  color: event.color,
+                  place: event.place,
+                  description: event.description,
+                  being: null,
+                  startTime: convertToKST(eventStart),
+                  endTime: convertToKST(eventEnd),
+                  isRecurringData: true,
+                  recurringType: recurringEvent.recurringType,
+                  separationCount: recurringEvent.separationCount,
+                  maxNumOfOccurrances: recurringEvent.maxNumOfOccurrances,
+                  recurrenceFinalEndTime: recurringEvent.endTime,
+                  recurringStartTime: convertToKST(currentStart),
+                  recurringEndTime: convertToKST(currentEnd),
+                  originStartTime: convertToKST(new Date(event.startTime)),
+                  originEndTime: convertToKST(new Date(event.endTime)),
+                }
+                result.push(eventForm)
+              }
+            }
+          }
+          start = addMonths(start, interval)
+          end = addMonths(end, interval)
           break
         case 'Y':
           //   if (monthsOfYear) {
