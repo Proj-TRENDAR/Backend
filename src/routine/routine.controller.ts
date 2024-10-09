@@ -118,9 +118,10 @@ export class RoutineController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(TransactionInterceptor)
   @Delete('soft/:idx')
+  @HttpCode(HttpStatus.NO_CONTENT)
   @UsePipes(ValidationPipe)
-  @ApiOperation({ summary: '루틴 중단', description: '루틴 중단 API(sort delete)' })
-  @ApiNoContentResponse({ description: '루틴 중단 성공' })
+  @ApiOperation({ summary: '루틴 중지', description: '루틴 중지 API(sort delete)' })
+  @ApiNoContentResponse({ description: '루틴 중지 성공' })
   @ApiNotFoundResponse({ description: '존재하지 않는 루틴' })
   async softDeleteRoutine(
     @Param('idx') idx: number,
