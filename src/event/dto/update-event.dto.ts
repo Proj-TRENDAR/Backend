@@ -66,7 +66,7 @@ export class UpdateEventDto {
 
   @ApiPropertyOptional({ example: true, description: '반복 여부' })
   @IsOptional()
-  @IsNumber()
+  @IsBoolean()
   isRecurring: boolean
 
   @ApiPropertyOptional({
