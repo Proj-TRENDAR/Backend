@@ -1,4 +1,4 @@
-import { Expose, plainToClass } from 'class-transformer'
+import { Exclude, Expose, plainToClass } from 'class-transformer'
 import { ApiProperty } from '@nestjs/swagger'
 import { RoutineResponse } from 'models/Routine.response'
 
@@ -33,15 +33,15 @@ export class RoutineResponseDto {
 
   @ApiProperty({ example: '2024-05-08 00:00:00', description: '루틴 시작 날짜' })
   @Expose()
-  startTime: Date
+  startTime: string
 
   @ApiProperty({ example: '2024-06-08 00:00:00', description: '루틴 종료 날짜' })
   @Expose()
-  endTime: Date | null
+  endTime: string | null
 
   @ApiProperty({ example: ['2024-05-11 11:25:00', '2024-05-13 14:37:00'], description: '완료한 시간' })
   @Expose()
-  completed: Date[]
+  completed: string[]
 
   @ApiProperty({ example: 1, description: '순서' })
   @Expose()
@@ -49,8 +49,8 @@ export class RoutineResponseDto {
 
   // FIXME: 불필요 시 삭제
   @ApiProperty({ example: '2024-06-09 02:12:00', description: '루틴 삭제 날짜' })
-  @Expose()
-  deletedAt: Date | null
+  @Exclude()
+  deletedAt: string | null
 
   constructor(routine: RoutineResponse) {
     Object.assign(this, plainToClass(RoutineResponseDto, routine, { excludeExtraneousValues: true }))
